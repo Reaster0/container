@@ -3,7 +3,6 @@
 
 int main()
 {
-	ft::vector <int>lol(int);
 
-	
+	std::vector<int>::iterator i;
 }

@@ -12,7 +12,7 @@ namespace ft
 			//all the alias
 			typedef typename Allocator::reference reference;
 			typedef typename Allocator::const_reference const_reference;
-			//typedef std::iterator iterator;
+			//typedef typename std::vector<T>::iterator iterator;
 			//typedef const std::iterator const_iterator;
 			typedef size_t size_type; //maybe wrong
 			// typedef implementation defined difference_type;
@@ -48,17 +48,17 @@ namespace ft
 				delete [] c;
 				c = x.c; //will not work wip
 			}
-			template <class InputIterator>
-			void assign(InputIterator first, InputIterator last)
-			{
-				erase(first, last);
-				insert(first, last, last);
-			}
-			void assign(size_type n, const T& u)
-			{
-				erase(first, last);
-				insert(first, n, u);
-			 }
+			// template <class InputIterator>
+			// void assign(InputIterator first, InputIterator last)
+			// {
+			// 	erase(first, last);
+			// 	insert(first, last, last);
+			// }
+			//void assign(size_type n, const T& u)
+			//{
+				// erase(first, last);
+				// insert(first, n, u);
+			 //}
 			allocator_type get_allocator() const
 			{
 				//wip
@@ -77,32 +77,32 @@ namespace ft
 			// //capacity
 			// size_type size() const;
 			// size_type max_size() const;
-			void resize(size_type sz, T c = T())
-			{
-				if (sz > size())
-				 insert(end(), sz - size(), c);
-				else if (sz < size())
-					erase(begin() + sz, end());
-				else
-				;
-			}
+			// void resize(size_type sz, T c = T())
+			// {
+			// 	if (sz > size())
+			// 	 insert(end(), sz - size(), c);
+			// 	else if (sz < size())
+			// 		erase(begin() + sz, end());
+			// 	else
+			// 	;
+			// }
 			size_type capacity() const
 			{
 				return sizeof(c / sizeof(*c)); //wip?
 			}
 			// bool empty() const;
-			void reserve(size_type n)
-			{
-				if (n > max_size())
-					throw length_error; //?
-				if (n <= capacity())
-					return;
-				T* new_c = Allocate(capacity() + n);
-				for (size_type i = 0, iterator iter = begin(); iter != end(); ++i, iter++)
-					new_c[i] = *(iter++);
-				delete[] c;
-				c = new_c;
-			}
+			// void reserve(size_type n)
+			// {
+			// 	if (n > max_size())
+			// 		throw length_error; //?
+			// 	if (n <= capacity())
+			// 		return;
+			// 	T* new_c = Allocate(capacity() + n);
+			// 	for (size_type i = 0, iterator iter = begin(); iter != end(); ++i, iter++)
+			// 		new_c[i] = *(iter++);
+			// 	delete[] c;
+			// 	c = new_c;
+			// }
 
 			//getter
 			// reference operator[](size_type n);
@@ -117,93 +117,93 @@ namespace ft
 			//setter
 			// void push_back(const T& x);
 			// void pop_back();
-			iterator insert(iterator position, const T& x)
-			{
-				try
-				{
-					*position;
-				}
-				catch (std::exception const& e)
-				{
-					std::cout << e.what() << std::endl;
-					return end();
-				}
-				if (position == end())
-					reserve(capacity() + 1)
-				*position = x;
-				return position;
-			}
-			void insert(iterator position, size_type n, const T& x)
-			{
-				try
-				{
-					*position;
-				}
-				catch(const std::exception& e)
-				{
-					std::cerr << e.what() << std::endl;
-					return;
-				}
-				if (std::distance(position, end()) + n > capacity()) //maybe i can get rid of the if by only using resize
-				{
-					resize(std::distance(position, end()) + n)
-				}
-				for (unsigned int i = 0, iterator iter = position; i < n; ++i, iter++)
-				{
-					*iter = x;
-				}
-			}
-			template <class InputIterator>
-			void insert(iterator position, InputIterator first, InputIterator last)
-			{
-				try
-				{
-					*position;
-				}
-				catch(const std::exception& e)
-				{
-					std::cerr << e.what() << std::endl;
-					return;
-				}
-				if (std::distance(first, last) + std::distance(position , end()) > capacity()) //maybe i can get rid of the if by only using resize
-				{
-					resize(std::distance(first, last) + std::distance(position , end()))
-				}
-				for (iterator iter = first; iter != last; iter++)
-				{
-					insert(position, *iter);
-				}
-			}
-			iterator erase(iterator position)
-			{
-				try
-				{
-					*position;
-				}
-				catch(const std::exception& e)
-				{
-					std::cerr << e.what() << std::endl;
-					return;
-				}
-				for (iterator iter = position; iter != end(); iter++)
-					iter = iter + 1;
-				return position + 1;
-			}
-			iterator erase(iterator first, iterator last)
-			{
-				try
-				{
-					*first;
-				}
-				catch(const std::exception& e)
-				{
-					std::cerr << e.what() << std::endl;
-					return;
-				}
-				for (iterator iter = first; iter != last; iter++)
-					iter = iter + 1;
-				return last;
-			}
+			// iterator insert(iterator position, const T& x)
+			// {
+			// 	try
+			// 	{
+			// 		*position;
+			// 	}
+			// 	catch (std::exception const& e)
+			// 	{
+			// 		std::cout << e.what() << std::endl;
+			// 		return end();
+			// 	}
+			// 	if (position == end())
+			// 		reserve(capacity() + 1)
+			// 	*position = x;
+			// 	return position;
+			// }
+			// void insert(iterator position, size_type n, const T& x)
+			// {
+			// 	try
+			// 	{
+			// 		*position;
+			// 	}
+			// 	catch(const std::exception& e)
+			// 	{
+			// 		std::cerr << e.what() << std::endl;
+			// 		return;
+			// 	}
+			// 	if (std::distance(position, end()) + n > capacity()) //maybe i can get rid of the if by only using resize
+			// 	{
+			// 		resize(std::distance(position, end()) + n)
+			// 	}
+			// 	for (unsigned int i = 0, iterator iter = position; i < n; ++i, iter++)
+			// 	{
+			// 		*iter = x;
+			// 	}
+			// }
+			// template <class InputIterator>
+			// void insert(iterator position, InputIterator first, InputIterator last)
+			// {
+			// 	try
+			// 	{
+			// 		*position;
+			// 	}
+			// 	catch(const std::exception& e)
+			// 	{
+			// 		std::cerr << e.what() << std::endl;
+			// 		return;
+			// 	}
+			// 	if (std::distance(first, last) + std::distance(position , end()) > capacity()) //maybe i can get rid of the if by only using resize
+			// 	{
+			// 		resize(std::distance(first, last) + std::distance(position , end()))
+			// 	}
+			// 	for (iterator iter = first; iter != last; iter++)
+			// 	{
+			// 		insert(position, *iter);
+			// 	}
+			// }
+			// iterator erase(iterator position)
+			// {
+			// 	try
+			// 	{
+			// 		*position;
+			// 	}
+			// 	catch(const std::exception& e)
+			// 	{
+			// 		std::cerr << e.what() << std::endl;
+			// 		return;
+			// 	}
+			// 	for (iterator iter = position; iter != end(); iter++)
+			// 		iter = iter + 1;
+			// 	return position + 1;
+			// }
+			// iterator erase(iterator first, iterator last)
+			// {
+			// 	try
+			// 	{
+			// 		*first;
+			// 	}
+			// 	catch(const std::exception& e)
+			// 	{
+			// 		std::cerr << e.what() << std::endl;
+			// 		return;
+			// 	}
+			// 	for (iterator iter = first; iter != last; iter++)
+			// 		iter = iter + 1;
+			// 	return last;
+			// }
 			// void swap(vector<T,Allocator>&);
 			// void clear();
 
