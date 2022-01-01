@@ -3,8 +3,7 @@
 
 int main()
 {
-	std::vector <int>lol2;
-	std::allocator<int> lol;
+	ft::vector <int>lol(int);
 
-	int *lol = lol.allocate(5);
+	
 }

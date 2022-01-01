@@ -12,21 +12,21 @@ namespace ft
 			//all the alias
 			typedef typename Allocator::reference reference;
 			typedef typename Allocator::const_reference const_reference;
-			// typedef implementation defined iterator;
-			// typedef implementation defined const_iterator;
-			typedef sizeof(T) defined size_type; //maybe wrong
+			//typedef std::iterator iterator;
+			//typedef const std::iterator const_iterator;
+			typedef size_t size_type; //maybe wrong
 			// typedef implementation defined difference_type;
 			typedef T value_type;
 			typedef Allocator allocator_type;
 			typedef typename Allocator::pointer pointer;
-			typedef typename Allocator::const_pointer const_pointer
-			typedef std::reverse_iterator<iterator> reverse_iterator;
-			typedef std::reverse_iterator<const_iterator> const_reverse_iterator;
+			typedef typename Allocator::const_pointer const_pointer;
+			//typedef std::reverse_iterator<iterator> reverse_iterator;
+			//typedef std::reverse_iterator<const_iterator> const_reverse_iterator;
 
 			//constructor and cie
 			explicit vector(const Allocator& = Allocator());
 			explicit vector(size_type n, const T& value = T(),
-			const Allocator& = Allocator());
+				const Allocator& = Allocator());
 			template <class InputIterator>
 			vector(InputIterator first, InputIterator last, const Allocator& = Allocator())
 			{
@@ -41,14 +41,15 @@ namespace ft
 			}
 			~vector()
 			{
-				delete(*this);
+				delete [] c;
 			}
 			vector<T,Allocator>& operator=(const vector<T,Allocator>& x)
 			{
-				//wip
+				delete [] c;
+				c = x.c; //will not work wip
 			}
 			template <class InputIterator>
-			void assign(InputIterator first, InputIterator last);
+			void assign(InputIterator first, InputIterator last)
 			{
 				erase(first, last);
 				insert(first, last, last);
@@ -57,25 +58,25 @@ namespace ft
 			{
 				erase(first, last);
 				insert(first, n, u);
-			}
+			 }
 			allocator_type get_allocator() const
 			{
 				//wip
 			}
 
 			//iterator
-			iterator begin();
-			const_iterator begin() const;
-			iterator end();
-			const_iterator end() const;
-			reverse_iterator rbegin();
-			const_reverse_iterator rbegin() const;
-			reverse_iterator rend();
-			const_reverse_iterator rend() const;
+			// iterator begin();
+			// const_iterator begin() const;
+			// iterator end();
+			// const_iterator end() const;
+			// reverse_iterator rbegin();
+			// const_reverse_iterator rbegin() const;
+			// reverse_iterator rend();
+			// const_reverse_iterator rend() const;
 
-			//capacity
-			size_type size() const;
-			size_type max_size() const;
+			// //capacity
+			// size_type size() const;
+			// size_type max_size() const;
 			void resize(size_type sz, T c = T())
 			{
 				if (sz > size())
@@ -89,7 +90,7 @@ namespace ft
 			{
 				return sizeof(c / sizeof(*c)); //wip?
 			}
-			bool empty() const;
+			// bool empty() const;
 			void reserve(size_type n)
 			{
 				if (n > max_size())
@@ -104,18 +105,18 @@ namespace ft
 			}
 
 			//getter
-			reference operator[](size_type n);
-			const_reference operator[](size_type n) const;
-			const_reference at(size_type n) const;
-			reference at(size_type n);
-			reference front();
-			const_reference front() const;
-			reference back();
-			const_reference back() const
+			// reference operator[](size_type n);
+			// const_reference operator[](size_type n) const;
+			// const_reference at(size_type n) const;
+			// reference at(size_type n);
+			// reference front();
+			// const_reference front() const;
+			// reference back();
+			// const_reference back() const;
 
 			//setter
-			void push_back(const T& x);
-			void pop_back();
+			// void push_back(const T& x);
+			// void pop_back();
 			iterator insert(iterator position, const T& x)
 			{
 				try
@@ -175,35 +176,60 @@ namespace ft
 			}
 			iterator erase(iterator position)
 			{
-				
+				try
+				{
+					*position;
+				}
+				catch(const std::exception& e)
+				{
+					std::cerr << e.what() << std::endl;
+					return;
+				}
+				for (iterator iter = position; iter != end(); iter++)
+					iter = iter + 1;
+				return position + 1;
 			}
-			iterator erase(iterator first, iterator last);
-			void swap(vector<T,Allocator>&);
-			void clear();
+			iterator erase(iterator first, iterator last)
+			{
+				try
+				{
+					*first;
+				}
+				catch(const std::exception& e)
+				{
+					std::cerr << e.what() << std::endl;
+					return;
+				}
+				for (iterator iter = first; iter != last; iter++)
+					iter = iter + 1;
+				return last;
+			}
+			// void swap(vector<T,Allocator>&);
+			// void clear();
 
 			//operator
-			template <class T, class Allocator>
-			bool operator==(const vector<T,Allocator>& x,
-			const vector<T,Allocator>& y);
-			template <class T, class Allocator>
-			bool operator< (const vector<T,Allocator>& x,
-			const vector<T,Allocator>& y);
-			template <class T, class Allocator>
-			bool operator!=(const vector<T,Allocator>& x,
-			const vector<T,Allocator>& y);
-			template <class T, class Allocator>
-			bool operator> (const vector<T,Allocator>& x,
-			const vector<T,Allocator>& y);
-			template <class T, class Allocator>
-			bool operator>=(const vector<T,Allocator>& x,
-			const vector<T,Allocator>& y);
-			template <class T, class Allocator>
-			bool operator<=(const vector<T,Allocator>& x,
-			const vector<T,Allocator>& y);
+			// template <class T, class Allocator>
+			// bool operator==(const vector<T,Allocator>& x,
+			// const vector<T,Allocator>& y);
+			// template <class T, class Allocator>
+			// bool operator< (const vector<T,Allocator>& x,
+			// const vector<T,Allocator>& y);
+			// template <class T, class Allocator>
+			// bool operator!=(const vector<T,Allocator>& x,
+			// const vector<T,Allocator>& y);
+			// template <class T, class Allocator>
+			// bool operator> (const vector<T,Allocator>& x,
+			// const vector<T,Allocator>& y);
+			// template <class T, class Allocator>
+			// bool operator>=(const vector<T,Allocator>& x,
+			// const vector<T,Allocator>& y);
+			// template <class T, class Allocator>
+			// bool operator<=(const vector<T,Allocator>& x,
+			// const vector<T,Allocator>& y);
 
 			//spe func
-			template <class T, class Allocator>
-			void swap(vector<T,Allocator>& x, vector<T,Allocator>& y);
+			// template <class T, class Allocator>
+			// void swap(vector<T,Allocator>& x, vector<T,Allocator>& y);
 
 		private:
 			T* c;
