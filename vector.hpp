@@ -129,7 +129,8 @@ namespace ft
 				}
 				if (position == end())
 					reserve(capacity() + 1)
-				*position = x;	
+				*position = x;
+				return position;
 			}
 			void insert(iterator position, size_type n, const T& x)
 			{
@@ -140,6 +141,7 @@ namespace ft
 				catch(const std::exception& e)
 				{
 					std::cerr << e.what() << std::endl;
+					return;
 				}
 				if (std::distance(position, end()) + n > capacity()) //maybe i can get rid of the if by only using resize
 				{
@@ -147,14 +149,36 @@ namespace ft
 				}
 				for (unsigned int i = 0, iterator iter = position; i < n; ++i, iter++)
 				{
-
+					*iter = x;
 				}
 			}
 			template <class InputIterator>
-			void insert(iterator position, InputIterator first, InputIterator last);
-			iterator erase(iterator position);
+			void insert(iterator position, InputIterator first, InputIterator last)
+			{
+				try
+				{
+					*position;
+				}
+				catch(const std::exception& e)
+				{
+					std::cerr << e.what() << std::endl;
+					return;
+				}
+				if (std::distance(first, last) + std::distance(position , end()) > capacity()) //maybe i can get rid of the if by only using resize
+				{
+					resize(std::distance(first, last) + std::distance(position , end()))
+				}
+				for (iterator iter = first; iter != last; iter++)
+				{
+					insert(position, *iter);
+				}
+			}
+			iterator erase(iterator position)
+			{
+				
+			}
 			iterator erase(iterator first, iterator last);
-			void swap(vector<T,Al
+			void swap(vector<T,Allocator>&);
 			void clear();
 
 			//operator
