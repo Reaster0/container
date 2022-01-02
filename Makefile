@@ -6,7 +6,7 @@
 #    By: earnaud <earnaud@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/09/20 13:35:59 by earnaud           #+#    #+#              #
-#    Updated: 2021/12/15 16:58:47 by earnaud          ###   ########.fr        #
+#    Updated: 2022/01/02 16:41:51 by earnaud          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -16,7 +16,7 @@ HEADER		:= vector.hpp
 OBJS		:= $(SRCS:.cpp=.o)
 NAME		:= container
 CC			:= clang++
-CFLAGS		:= -Wall -Wextra -Werror -std=c++98
+CFLAGS		:= -Wall -Wextra -Werror -std=c++98 -g -fstandalone-debug
 %.o:		%.cpp $(HEADER)
 			$(CC) $(CFLAGS) -c $< -o $@
 

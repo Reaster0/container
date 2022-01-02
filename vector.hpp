@@ -1,6 +1,8 @@
 #ifndef _vector_
 #define _vector_
 #include <memory>
+#include <iterator>
+#include <iostream>
 
 namespace ft
 {
@@ -15,7 +17,10 @@ namespace ft
 			//typedef typename std::vector<T>::iterator iterator;
 			//typedef const std::iterator const_iterator;
 			typedef size_t size_type; //maybe wrong
-			// typedef implementation defined difference_type;
+
+			typedef ptrdiff_t difference_type; //macos
+			//typedef __gnu_cxx::ptrdiff_t difference_type; //linux
+
 			typedef T value_type;
 			typedef Allocator allocator_type;
 			typedef typename Allocator::pointer pointer;
@@ -24,16 +29,32 @@ namespace ft
 			//typedef std::reverse_iterator<const_iterator> const_reverse_iterator;
 
 			//constructor and cie
-			explicit vector(const Allocator& = Allocator());
-			explicit vector(size_type n, const T& value = T(),
-				const Allocator& = Allocator());
+			explicit vector(const Allocator& = Allocator())
+			{
+				Allocator alloc;
+				c = alloc.allocate(0);
+				_capacity = 0;
+				_nbr_elem = 0;
+			}
+			explicit vector(size_type n, const T& value = T(), const Allocator& = Allocator())
+			{
+				Allocator alloc;
+				c = alloc.allocate(n);
+				_capacity = n;
+				_nbr_elem = n;
+				for (size_type i = 0; i < n; ++i)
+					alloc.construct(c + i, value);
+			}
 			template <class InputIterator>
 			vector(InputIterator first, InputIterator last, const Allocator& = Allocator())
 			{
-				c = Allocator(std::distance(first, last));
+				Allocator alloc;
+				c = alloc.allocate(last - first);
+				_capacity = last - first;
+				_nbr_elem = _capacity;
 				int i = 0;
-				while (first != last)
-					c[i++] = *(first++);
+				for (InputIterator it = first; it != last; ++it, i++)
+					alloc.construct(c + i, it);
 			}
 			vector(const vector<T,Allocator>& x)
 			{
@@ -41,26 +62,41 @@ namespace ft
 			}
 			~vector()
 			{
-				delete [] c;
+				Allocator alloc;
+				for (size_t i = 0; i < _nbr_elem; i++)
+				{
+					alloc.destroy(c + i);
+				}
+				alloc.deallocate(c, _capacity);
 			}
 			vector<T,Allocator>& operator=(const vector<T,Allocator>& x)
 			{
-				delete [] c;
-				c = x.c; //will not work wip
+				Allocator alloc;
+				for (size_t i = 0; i < _nbr_elem; i++)
+				{
+					alloc.destroy(c + i);
+				}
+				alloc.deallocate(c, _capacity);
+				alloc.allocate(x.nbr_elem());
+				for (size_t i = 0; i < _nbr_elem; i++)
+				{
+					//alloc.construct(c + i, x.); //wip
+				}
 			}
-			// template <class InputIterator>
-			// void assign(InputIterator first, InputIterator last)
-			// {
-			// 	erase(first, last);
-			// 	insert(first, last, last);
-			// }
+			//template <class InputIterator>
+			//void assign(InputIterator first, InputIterator last)
+			//{
+				//erase(first, last);
+				//insert(first, last, last);
+			//}
 			//void assign(size_type n, const T& u)
 			//{
-				// erase(first, last);
-				// insert(first, n, u);
+				//erase(first, last);
+			//	insert(first, n, u);
 			 //}
 			allocator_type get_allocator() const
 			{
+				return Allocator();
 				//wip
 			}
 
@@ -86,9 +122,15 @@ namespace ft
 			// 	else
 			// 	;
 			// }
+
+			size_type nbr_elem() const 
+			{ 
+				return _nbr_elem;
+			}
+
 			size_type capacity() const
 			{
-				return sizeof(c / sizeof(*c)); //wip?
+				return _capacity; //wip?
 			}
 			// bool empty() const;
 			// void reserve(size_type n)
@@ -115,8 +157,18 @@ namespace ft
 			// const_reference back() const;
 
 			//setter
-			// void push_back(const T& x);
-			// void pop_back();
+			void push_back(const T& x)
+			{
+				Allocator alloc;
+				if (_nbr_elem == capacity())
+					expand();
+				alloc.construct(c + _nbr_elem++, x);
+			}
+			void pop_back()
+			{
+				Allocator alloc;
+				alloc.destroy(c + _nbr_elem--);
+			}
 			// iterator insert(iterator position, const T& x)
 			// {
 			// 	try
@@ -129,7 +181,7 @@ namespace ft
 			// 		return end();
 			// 	}
 			// 	if (position == end())
-			// 		reserve(capacity() + 1)
+			// 		reserve(capacity() * 2)
 			// 	*position = x;
 			// 	return position;
 			// }
@@ -231,8 +283,44 @@ namespace ft
 			// template <class T, class Allocator>
 			// void swap(vector<T,Allocator>& x, vector<T,Allocator>& y);
 
+
+			void print_debug(void) const
+			{
+				std::cout << "---------------------------" << std::endl;
+				for (size_type i = 0; i < _nbr_elem; i++)
+					std::cout << c[i] << std::endl;
+				std::cout << "---------------------------" << std::endl;
+			} //only for debug, need to be removed
+
 		private:
 			T* c;
+			size_type _nbr_elem;
+			size_type _capacity;
+			
+			//memory
+			void expand(void)
+			{
+				T* new_c;
+				Allocator alloc;
+				size_type old_capacity = _capacity;
+				if (_capacity)
+				{				
+					new_c = alloc.allocate(capacity() * 2);
+					_capacity *= 2;
+				}
+				else
+				{
+					new_c = alloc.allocate(1);
+					_capacity = 1;
+				}
+				for (size_type i = 0; i < _nbr_elem; i++)
+				{
+					new_c[i] = c[i];
+					alloc.destroy(c + i);
+				}
+				alloc.deallocate(c, old_capacity);
+				c = new_c;
+			}
 	};
 }
 

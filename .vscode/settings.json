@@ -1,5 +1,13 @@
 {
 	"files.associations": {
-		"vector": "cpp"
+		"vector": "cpp",
+		"__node_handle": "cpp",
+		"deque": "cpp",
+		"memory_resource": "cpp",
+		"map": "cpp",
+		"sstream": "cpp",
+		"string": "cpp",
+		"unordered_map": "cpp",
+		"iterator": "cpp"
 	}
 }
