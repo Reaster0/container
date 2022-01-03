@@ -5,24 +5,22 @@
 int main()
 {
 	ft::vector<int> v;
+	ft::vector<int> v2;
+
+	std::cout << "\\\\\\\\\\\\\\\\\\" << std::endl;
 	v.push_back(42);
-	v.push_back(1);
-	std::cout << v.capacity() << std::endl;
-	v.reserve(3);
-	std::cout << v.capacity() << std::endl;
-	v.print_debug();
-	v.push_back(112);
-	v.push_back(111);
-	v.print_debug();
-	std::cout << v.capacity() << std::endl;
-	v.resize(10);
-	v.print_debug();
-	std::cout << v.capacity() << std::endl;
-	std::cout << v.front() << std::endl;
-	std::cout << v.back() << std::endl;
-	std::cout << v.at(2) << std::endl;
-	v[3] = 90;
-	std::cout << v[3] << std::endl;
-	v.print_debug();
-	std::cout << v.empty() << std::endl;
+	v.push_back(42);
+	v.push_back(42);
+	v.push_back(42);
+	v.push_back(42);
+
+	v2 = v;
+	v.assign(1, 10);
+
+	ft::vector<int> result(5, 10);
+	ft::vector<int> result2(5, 10);
+	result[5] = 11;
+	std::cout << "------------------\n" 
+	<< (result <= result2) << std::endl;
+
 }

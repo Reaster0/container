@@ -19,8 +19,12 @@ namespace ft
 			//typedef const std::iterator const_iterator;
 			typedef size_t size_type; //maybe wrong
 
+			#ifdef __APPLE__
 			typedef ptrdiff_t difference_type; //macos
-			//typedef __gnu_cxx::ptrdiff_t difference_type; //linux
+			#endif
+			#ifdef __linux__
+			typedef __gnu_cxx::ptrdiff_t difference_type; //linux
+			#endif
 
 			typedef T value_type;
 			typedef Allocator allocator_type;
@@ -65,40 +69,47 @@ namespace ft
 			{
 				Allocator alloc;
 				for (size_t i = 0; i < _nbr_elem; i++)
-				{
 					alloc.destroy(c + i);
-				}
 				alloc.deallocate(c, _capacity);
 			}
 			vector<T,Allocator>& operator=(const vector<T,Allocator>& x)
 			{
 				Allocator alloc;
 				for (size_t i = 0; i < _nbr_elem; i++)
-				{
 					alloc.destroy(c + i);
-				}
 				alloc.deallocate(c, _capacity);
-				alloc.allocate(x.nbr_elem());
-				for (size_t i = 0; i < _nbr_elem; i++)
-				{
-					//alloc.construct(c + i, x.); //wip
-				}
+				c = alloc.allocate(x.size());
+				for (size_t i = 0; i < x.size(); i++)
+					alloc.construct(c + i, x[i]);
+				_capacity = x.capacity();
+				_nbr_elem = x.size();
+				return *this;
 			}
-			//template <class InputIterator>
-			//void assign(InputIterator first, InputIterator last)
-			//{
-				//erase(first, last);
-				//insert(first, last, last);
-			//}
-			//void assign(size_type n, const T& u)
-			//{
-				//erase(first, last);
-			//	insert(first, n, u);
-			 //}
+			// template <class InputIterator>
+			// void assign(InputIterator first, InputIterator last)
+			// {
+			// 	Allocator alloc;
+			// 	for (size_t i = 0; i < _nbr_elem; i++)
+			// 		alloc.destroy(c + i);
+			// 	alloc.deallocate(c, _capacity);
+			// 	for (InputIterator i = first; i != last; ++i)
+			// 		push_back(*i);
+			// }
+			void assign(size_type n, const value_type& val)
+			{
+				Allocator alloc;
+				for (size_t i = 0; i < _nbr_elem; i++)
+					alloc.destroy(c + i);
+				alloc.deallocate(c, _capacity);
+				c = alloc.allocate(n);
+				_capacity = n;
+				_nbr_elem = n;
+				for (size_t i = 0; i < n; i++)
+					alloc.construct(c + i, val);
+			}
 			allocator_type get_allocator() const
 			{
 				return Allocator();
-				//wip
 			}
 
 			//iterator
@@ -130,7 +141,7 @@ namespace ft
 						 pop_back();
 				_capacity = n;
 			}
-			
+
 			size_type capacity() const
 			{
 				return _capacity; //wip?
@@ -294,33 +305,20 @@ namespace ft
 			// 		iter = iter + 1;
 			// 	return last;
 			// }
-			// void swap(vector<T,Allocator>&);
-			// void clear();
-
-			//operator
-			// template <class T, class Allocator>
-			// bool operator==(const vector<T,Allocator>& x,
-			// const vector<T,Allocator>& y);
-			// template <class T, class Allocator>
-			// bool operator< (const vector<T,Allocator>& x,
-			// const vector<T,Allocator>& y);
-			// template <class T, class Allocator>
-			// bool operator!=(const vector<T,Allocator>& x,
-			// const vector<T,Allocator>& y);
-			// template <class T, class Allocator>
-			// bool operator> (const vector<T,Allocator>& x,
-			// const vector<T,Allocator>& y);
-			// template <class T, class Allocator>
-			// bool operator>=(const vector<T,Allocator>& x,
-			// const vector<T,Allocator>& y);
-			// template <class T, class Allocator>
-			// bool operator<=(const vector<T,Allocator>& x,
-			// const vector<T,Allocator>& y);
-
-			//spe func
-			// template <class T, class Allocator>
-			// void swap(vector<T,Allocator>& x, vector<T,Allocator>& y);
-
+			void swap(vector& x)
+			{
+				Allocator alloc;
+				ft::vector<value_type> tmp(x);
+				*this = x;
+				x = tmp;
+			}
+			void clear()
+			{
+				Allocator alloc;
+				for (size_type i = 0; i < _nbr_elem; ++i)
+					alloc.destroy(c + i);
+				_nbr_elem = 0;
+			}
 
 			void print_debug(void) const
 			{
@@ -360,6 +358,49 @@ namespace ft
 				c = new_c;
 			}
 	};
+		//operator
+	template <class T, class Allocator>
+	bool operator==(const ft::vector<T,Allocator>& x, const ft::vector<T,Allocator>& y)
+	{
+		if (x.size() != y.size())
+			return false;
+		for (size_t i = 0; i < x.size(); ++i)
+			if (x[i] != y[i])
+				return false;
+		return true;
+	}
+	template <class T, class Allocator>
+	bool operator< (const ft::vector<T,Allocator>& x, const ft::vector<T,Allocator>& y)
+	{
+		return x.size() < y.size();
+	}
+	template <class T, class Allocator>
+	bool operator!=(const ft::vector<T,Allocator>& x, const ft::vector<T,Allocator>& y)
+	{
+		return !(x == y);
+	}
+	template <class T, class Allocator>
+	bool operator> (const ft::vector<T,Allocator>& x, const ft::vector<T,Allocator>& y)
+	{
+		return x < y;
+	}
+	template <class T, class Allocator>
+	bool operator>=(const vector<T,Allocator>& x, const vector<T,Allocator>& y)
+	{
+		return !(x < y);
+	}
+	template <class T, class Allocator>
+	bool operator<=(const vector<T,Allocator>& x, const vector<T,Allocator>& y)
+	{
+		return !(x > y);
+	}
+
+	//spe func
+	template <class T, class Allocator>
+	void swap(ft::vector<T,Allocator>& x, ft::vector<T,Allocator>& y)
+	{
+		x.swap(y);
+	}
 }
 
 #endif
