@@ -3,6 +3,7 @@
 #include <memory>
 #include <iterator>
 #include <iostream>
+#include <stdexcept>
 
 namespace ft
 {
@@ -111,50 +112,87 @@ namespace ft
 			// const_reverse_iterator rend() const;
 
 			// //capacity
-			// size_type size() const;
-			// size_type max_size() const;
-			// void resize(size_type sz, T c = T())
-			// {
-			// 	if (sz > size())
-			// 	 insert(end(), sz - size(), c);
-			// 	else if (sz < size())
-			// 		erase(begin() + sz, end());
-			// 	else
-			// 	;
-			// }
-
-			size_type nbr_elem() const 
-			{ 
+			size_type size() const
+			{
 				return _nbr_elem;
 			}
-
+			size_type max_size() const
+			{
+				return Allocator().max_size();
+			}
+			void resize(size_type n, value_type val = value_type())
+			{
+				if (n > _nbr_elem)
+				 	for (size_type i = _nbr_elem; i < n; i++)
+						 push_back(val);
+				else if (n < _nbr_elem)
+				 	for (size_type i = _nbr_elem; i > n; i--)
+						 pop_back();
+				_capacity = n;
+			}
+			
 			size_type capacity() const
 			{
 				return _capacity; //wip?
 			}
-			// bool empty() const;
-			// void reserve(size_type n)
-			// {
-			// 	if (n > max_size())
-			// 		throw length_error; //?
-			// 	if (n <= capacity())
-			// 		return;
-			// 	T* new_c = Allocate(capacity() + n);
-			// 	for (size_type i = 0, iterator iter = begin(); iter != end(); ++i, iter++)
-			// 		new_c[i] = *(iter++);
-			// 	delete[] c;
-			// 	c = new_c;
-			// }
+			bool empty() const
+			{
+				if (!_nbr_elem)
+					return true;
+				return false;
+			}
+			void reserve(size_type n)
+			{
+				if (n > max_size())
+					throw std::length_error("vector");
+				if (n <= capacity())
+					return;
+				Allocator alloc;
+				T* new_c = alloc.allocate(capacity() + n);
+				for (size_type i = 0; i < _nbr_elem; i++)
+					new_c[i] = c[i];
+				alloc.deallocate(c, _capacity);
+				c = new_c;
+				_capacity = n;
+			}
 
 			//getter
-			// reference operator[](size_type n);
-			// const_reference operator[](size_type n) const;
-			// const_reference at(size_type n) const;
-			// reference at(size_type n);
-			// reference front();
-			// const_reference front() const;
-			// reference back();
-			// const_reference back() const;
+			reference operator[](size_type n)
+			{
+				return c[n];
+			}
+			const_reference operator[](size_type n) const
+			{
+				return c[n];
+			}
+			const_reference at(size_type n) const
+			{
+				if (n >= _nbr_elem)
+					throw (std::out_of_range("vector index out of range"));
+				return c[n];
+			}
+			reference at(size_type n)
+			{
+				if (n >= _nbr_elem)
+					throw (std::out_of_range("vector index out of range"));
+				return c[n];
+			}
+			reference front()
+			{
+				return *c;
+			}
+			const_reference front() const
+			{
+				return *c;
+			}
+			reference back()
+			{
+				return c[_nbr_elem];
+			}
+			const_reference back() const
+			{
+				return c[_nbr_elem];
+			}
 
 			//setter
 			void push_back(const T& x)

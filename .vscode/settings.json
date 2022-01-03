@@ -8,6 +8,10 @@
 		"sstream": "cpp",
 		"string": "cpp",
 		"unordered_map": "cpp",
-		"iterator": "cpp"
+		"iterator": "cpp",
+		"__hash_table": "cpp",
+		"__split_buffer": "cpp",
+		"__tree": "cpp",
+		"memory": "cpp"
 	}
 }
