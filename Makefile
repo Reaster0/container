@@ -6,12 +6,13 @@
 #    By: earnaud <earnaud@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/09/20 13:35:59 by earnaud           #+#    #+#              #
-#    Updated: 2022/01/03 20:24:06 by earnaud          ###   ########.fr        #
+#    Updated: 2022/01/04 17:47:47 by earnaud          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 SRCS		:= main.cpp
-HEADER		:= vector.hpp
+HEADER		:= vector.hpp \
+				iterator.hpp
 
 OBJS		:= $(SRCS:.cpp=.o)
 NAME		:= container

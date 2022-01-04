@@ -4,9 +4,13 @@
 #include <iterator>
 #include <iostream>
 #include <stdexcept>
+#include "iterator.hpp"
 
 namespace ft
 {
+	template <typename vector>
+	class iterator;
+
 	template <class T, class Allocator = std::allocator<T> >
 	class vector
 	{
@@ -15,8 +19,8 @@ namespace ft
 			//all the alias
 			typedef typename Allocator::reference reference;
 			typedef typename Allocator::const_reference const_reference;
-			//typedef typename std::vector<T>::iterator iterator;
-			//typedef const std::iterator const_iterator;
+			typedef ft::iterator<vector<T> > iterator;
+			typedef const ft::iterator<vector<T> > const_iterator;
 			typedef size_t size_type; //maybe wrong
 
 			#ifdef __APPLE__
@@ -113,9 +117,15 @@ namespace ft
 			}
 
 			//iterator
-			// iterator begin();
+			iterator begin()
+			{
+				return iterator(c);
+			}
 			// const_iterator begin() const;
-			// iterator end();
+			iterator end()
+			{
+				return iterator(c + _nbr_elem);
+			}
 			// const_iterator end() const;
 			// reverse_iterator rbegin();
 			// const_reverse_iterator rbegin() const;
@@ -161,7 +171,7 @@ namespace ft
 				Allocator alloc;
 				T* new_c = alloc.allocate(capacity() + n);
 				for (size_type i = 0; i < _nbr_elem; i++)
-					new_c[i] = c[i];
+					new_c[i] = c[i]; //need to construct
 				alloc.deallocate(c, _capacity);
 				c = new_c;
 				_capacity = n;
@@ -358,7 +368,8 @@ namespace ft
 				c = new_c;
 			}
 	};
-		//operator
+
+		//operator vector
 	template <class T, class Allocator>
 	bool operator==(const ft::vector<T,Allocator>& x, const ft::vector<T,Allocator>& y)
 	{
