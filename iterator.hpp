@@ -26,12 +26,22 @@ namespace ft
 			{
 			}
 
+			iterator operator+(size_t nbr)
+			{
+				return iterator(_ptr + nbr);
+			}
+
+			iterator operator-(size_t nbr)
+			{
+				return iterator(_ptr - nbr);
+			}
+
 			iterator& operator++()
 			{
 				_ptr++;
 				return *this;
 			}
-			iterator& operator++(int)
+			iterator operator++(int)
 			{
 				iterator tmp = *this;
 				_ptr++;
@@ -42,7 +52,7 @@ namespace ft
 				_ptr--;
 				return *this;
 			}
-			iterator& operator--(int)
+			iterator operator--(int)
 			{
 				iterator tmp = *this;
 				_ptr--;
@@ -61,6 +71,12 @@ namespace ft
 				return *_ptr;
 			}
 
+			iterator& operator=(const iterator& other)
+			{
+				_ptr = other._ptr;
+				return *this;
+			}
+
 			bool operator==(const iterator& other) const
 			{
 				return _ptr == other._ptr;
@@ -68,16 +84,7 @@ namespace ft
 
 			bool operator!=(const iterator& other) const
 			{
-				return !(*this == other);
-			}
-
-			void test(void) const
-			{
-				std::cout << "this is a test" << std::endl;
-			}
-			pointer test2(void)
-			{
-				return _ptr;
+				return !(_ptr == other._ptr);
 			}
 		private:
 

@@ -7,10 +7,29 @@
 		{
 			"type": "lldb",
 			"request": "launch",
-			"name": "Debug",
+			"name": "Launch",
 			"program": "${workspaceFolder}/container",
 			"args": [],
 			"cwd": "${workspaceFolder}"
+		},
+		{
+			"name": "(gdb) Launch",
+			"type": "cppdbg",
+			"request": "launch",
+			"program": "/home/42-Work/container/container",
+			"args": [],
+			"stopAtEntry": false,
+			"cwd": "${fileDirname}",
+			"environment": [],
+			"externalConsole": false,
+			"MIMode": "gdb",
+			"setupCommands": [
+				{
+					"description": "Enable pretty-printing for gdb",
+					"text": "-enable-pretty-printing",
+					"ignoreFailures": true
+				}
+			]
 		}
 	]
 }

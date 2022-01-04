@@ -89,16 +89,20 @@ namespace ft
 				_nbr_elem = x.size();
 				return *this;
 			}
-			// template <class InputIterator>
-			// void assign(InputIterator first, InputIterator last)
-			// {
-			// 	Allocator alloc;
-			// 	for (size_t i = 0; i < _nbr_elem; i++)
-			// 		alloc.destroy(c + i);
-			// 	alloc.deallocate(c, _capacity);
-			// 	for (InputIterator i = first; i != last; ++i)
-			// 		push_back(*i);
-			// }
+			template <class InputIterator>
+			void assign(InputIterator first, InputIterator last)
+			{
+				Allocator alloc;
+				for (size_t i = 0; i < _nbr_elem; i++)
+					alloc.destroy(c + i);
+				alloc.deallocate(c, _capacity);
+				alloc.allocate(std::distance(first, last));
+				size_t i = 0;
+				for (InputIterator it = first; it != last; ++it, ++i)
+					alloc.construct(c + i, *it);
+				_capacity = std::distance(first, last);
+				_nbr_elem = _capacity;
+			}
 			void assign(size_type n, const value_type& val)
 			{
 				Allocator alloc;
@@ -121,7 +125,7 @@ namespace ft
 			{
 				return iterator(c);
 			}
-			// const_iterator begin() const;
+			//const_iterator begin() const;
 			iterator end()
 			{
 				return iterator(c + _nbr_elem);
@@ -154,7 +158,7 @@ namespace ft
 
 			size_type capacity() const
 			{
-				return _capacity; //wip?
+				return _capacity;
 			}
 			bool empty() const
 			{
@@ -171,7 +175,7 @@ namespace ft
 				Allocator alloc;
 				T* new_c = alloc.allocate(capacity() + n);
 				for (size_type i = 0; i < _nbr_elem; i++)
-					new_c[i] = c[i]; //need to construct
+					alloc.construct(new_c + i, c[i]);
 				alloc.deallocate(c, _capacity);
 				c = new_c;
 				_capacity = n;
@@ -228,22 +232,18 @@ namespace ft
 				Allocator alloc;
 				alloc.destroy(c + _nbr_elem--);
 			}
-			// iterator insert(iterator position, const T& x)
-			// {
-			// 	try
-			// 	{
-			// 		*position;
-			// 	}
-			// 	catch (std::exception const& e)
-			// 	{
-			// 		std::cout << e.what() << std::endl;
-			// 		return end();
-			// 	}
-			// 	if (position == end())
-			// 		reserve(capacity() * 2)
-			// 	*position = x;
-			// 	return position;
-			// }
+			iterator insert(iterator position, const T& x)
+			{
+				if (!(_capacity - _nbr_elem))
+					expand();
+				for (iterator it = position; it != end(); ++it)
+				{
+					std::cout << *it << std::endl;
+					swap(*it, *(it + 1));
+				}
+				*position = x;
+				return position;
+			}
 			// void insert(iterator position, size_type n, const T& x)
 			// {
 			// 	try
@@ -346,7 +346,7 @@ namespace ft
 			//memory
 			void expand(void)
 			{
-				T* new_c;
+				value_type* new_c;
 				Allocator alloc;
 				size_type old_capacity = _capacity;
 				if (_capacity)
@@ -361,11 +361,18 @@ namespace ft
 				}
 				for (size_type i = 0; i < _nbr_elem; i++)
 				{
-					new_c[i] = c[i];
+					alloc.construct(new_c + i, c[i]);
 					alloc.destroy(c + i);
 				}
 				alloc.deallocate(c, old_capacity);
 				c = new_c;
+			}
+			//util
+			void swap(value_type& a, value_type& b)
+			{
+				value_type temp = a;
+				a = b;
+				b = temp;
 			}
 	};
 
