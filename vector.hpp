@@ -5,6 +5,7 @@
 #include <iostream>
 #include <stdexcept>
 #include "iterator.hpp"
+#include "rev_iterator.hpp"
 
 namespace ft
 {
@@ -21,6 +22,8 @@ namespace ft
 			typedef typename Allocator::const_reference const_reference;
 			typedef ft::iterator<vector<T> > iterator;
 			typedef const ft::iterator<vector<T> > const_iterator;
+			typedef ft::reverse_iterator<vector<T> > reverse_iterator;
+			typedef const ft::reverse_iterator<vector<T> > const_reverse_iterator;
 			typedef size_t size_type; //maybe wrong
 
 			#ifdef __APPLE__
@@ -34,8 +37,6 @@ namespace ft
 			typedef Allocator allocator_type;
 			typedef typename Allocator::pointer pointer;
 			typedef typename Allocator::const_pointer const_pointer;
-			//typedef std::reverse_iterator<iterator> reverse_iterator;
-			//typedef std::reverse_iterator<const_iterator> const_reverse_iterator;
 
 			//constructor and cie
 			explicit vector(const Allocator& = Allocator())
@@ -125,12 +126,18 @@ namespace ft
 			{
 				return iterator(c);
 			}
-			//const_iterator begin() const;
+			// const_iterator begin() const
+			// {
+			// 	return const iterator(c);
+			// }
 			iterator end()
 			{
 				return iterator(c + _nbr_elem);
 			}
 			// const_iterator end() const;
+			// {
+			// 	return const iterator(c + _nbr_elem);
+			// }
 			// reverse_iterator rbegin();
 			// const_reverse_iterator rbegin() const;
 			// reverse_iterator rend();
@@ -173,7 +180,7 @@ namespace ft
 				if (n <= capacity())
 					return;
 				Allocator alloc;
-				T* new_c = alloc.allocate(capacity() + n);
+				T* new_c = alloc.allocate(capacity() + n); //maybe i need the +1 even if it's really weird
 				for (size_type i = 0; i < _nbr_elem; i++)
 					alloc.construct(new_c + i, c[i]);
 				alloc.deallocate(c, _capacity);
@@ -232,89 +239,114 @@ namespace ft
 				Allocator alloc;
 				alloc.destroy(c + _nbr_elem--);
 			}
-			iterator insert(iterator position, const T& x)
+			iterator insert(iterator position, const value_type& x)
 			{
+				Allocator alloc;
 				if (!(_capacity - _nbr_elem))
-					expand();
-				for (iterator it = position; it != end(); ++it)
 				{
-					std::cout << *it << std::endl;
-					swap(*it, *(it + 1));
+					size_t index = ft::distance(begin(), position);
+					reserve(capacity() + 1);
+					position = begin() + index;
 				}
-				*position = x;
+				for (iterator it = end(); it > position; --it)
+				{
+					alloc.construct(it._ptr, *(it - 1));
+					alloc.destroy((it - 1)._ptr);
+				}
+				alloc.construct(position._ptr, x);
+				_nbr_elem++;
 				return position;
 			}
-			// void insert(iterator position, size_type n, const T& x)
-			// {
-			// 	try
-			// 	{
-			// 		*position;
-			// 	}
-			// 	catch(const std::exception& e)
-			// 	{
-			// 		std::cerr << e.what() << std::endl;
-			// 		return;
-			// 	}
-			// 	if (std::distance(position, end()) + n > capacity()) //maybe i can get rid of the if by only using resize
-			// 	{
-			// 		resize(std::distance(position, end()) + n)
-			// 	}
-			// 	for (unsigned int i = 0, iterator iter = position; i < n; ++i, iter++)
-			// 	{
-			// 		*iter = x;
-			// 	}
-			// }
-			// template <class InputIterator>
-			// void insert(iterator position, InputIterator first, InputIterator last)
-			// {
-			// 	try
-			// 	{
-			// 		*position;
-			// 	}
-			// 	catch(const std::exception& e)
-			// 	{
-			// 		std::cerr << e.what() << std::endl;
-			// 		return;
-			// 	}
-			// 	if (std::distance(first, last) + std::distance(position , end()) > capacity()) //maybe i can get rid of the if by only using resize
-			// 	{
-			// 		resize(std::distance(first, last) + std::distance(position , end()))
-			// 	}
-			// 	for (iterator iter = first; iter != last; iter++)
-			// 	{
-			// 		insert(position, *iter);
-			// 	}
-			// }
-			// iterator erase(iterator position)
-			// {
-			// 	try
-			// 	{
-			// 		*position;
-			// 	}
-			// 	catch(const std::exception& e)
-			// 	{
-			// 		std::cerr << e.what() << std::endl;
-			// 		return;
-			// 	}
-			// 	for (iterator iter = position; iter != end(); iter++)
-			// 		iter = iter + 1;
-			// 	return position + 1;
-			// }
-			// iterator erase(iterator first, iterator last)
-			// {
-			// 	try
-			// 	{
-			// 		*first;
-			// 	}
-			// 	catch(const std::exception& e)
-			// 	{
-			// 		std::cerr << e.what() << std::endl;
-			// 		return;
-			// 	}
-			// 	for (iterator iter = first; iter != last; iter++)
-			// 		iter = iter + 1;
-			// 	return last;
-			// }
+			void insert(iterator position, size_type n, const value_type& x)
+			{
+				Allocator alloc;
+				if ((_capacity - _nbr_elem) < n)
+				{
+					size_t index = ft::distance(begin(), position);
+					reserve(capacity() + n);
+					position = begin() + index;
+				}
+				for (iterator it = end() + n; it > position; --it)
+				{
+					alloc.construct(it._ptr, *(it - n));
+					alloc.destroy((it - n)._ptr);
+				}
+				for (size_t i = 0; i < n; ++i)
+					alloc.construct((position + i)._ptr, x);
+				_nbr_elem += n;
+			}
+			template <class InputIterator>
+			void insert(iterator position, InputIterator first, InputIterator last)
+			{
+				Allocator alloc;
+				size_t len = ft::distance(first, last);
+				if ((_capacity - _nbr_elem) < len)
+				{
+					size_t index = ft::distance(begin(), position);
+					reserve(capacity() + len);
+					position = begin() + index;
+				}
+				for (iterator it = end() + len; it > position; --it)
+				{
+					alloc.construct(it._ptr, *(it - len));
+					alloc.destroy((it - len)._ptr);
+				}
+				for (size_t i = 0; i < len; ++i)
+					alloc.construct((position + i)._ptr, *(first++));
+				_nbr_elem += len;
+			}
+			iterator erase(iterator position)
+			{
+				Allocator alloc;
+				if (position == end())
+				{
+					alloc.destroy((position._ptr));
+					_nbr_elem--;
+					return end();
+				}
+				value_type* new_c = alloc.allocate(ft::distance(begin(), end()) - 1);
+				size_t index = ft::distance(begin(), position);
+				size_t i = 0;
+				for (iterator iter = begin(); iter != end(); iter++)
+				{
+					if (iter != position)
+						alloc.construct(new_c + i++, *iter);
+					alloc.destroy(iter._ptr);
+				}
+				alloc.deallocate(c, _capacity);
+				c = new_c;
+				position = begin() + index;
+				_nbr_elem--;
+				_capacity = _nbr_elem;
+				return position;
+			}
+			iterator erase(iterator first, iterator last)
+			{
+				Allocator alloc;
+				size_t len = ft::distance(first, last);
+				if (first == end())
+				{ //there isn't a segfault here where it should when last is out of bounds
+					for (iterator iter = first; iter != last; iter++)
+						alloc.destroy((iter._ptr));
+					_nbr_elem -= len;
+					return end();
+				}
+				value_type* new_c = alloc.allocate(len);
+				size_t index_start = ft::distance(begin(), first);
+				size_t i = 0;
+				for (iterator iter = begin(); iter != end(); iter++)
+				{
+					if (iter < first || iter >= last)
+						alloc.construct(new_c + i++, *iter);
+					alloc.destroy(iter._ptr);
+				}
+				alloc.deallocate(c, _capacity);
+				c = new_c;
+				first = begin() + index_start;
+				_nbr_elem -= len;
+				_capacity = _nbr_elem;
+				return first;
+			}
 			void swap(vector& x)
 			{
 				Allocator alloc;
@@ -329,14 +361,6 @@ namespace ft
 					alloc.destroy(c + i);
 				_nbr_elem = 0;
 			}
-
-			void print_debug(void) const
-			{
-				std::cout << "---------------------------" << std::endl;
-				for (size_type i = 0; i < _nbr_elem; i++)
-					std::cout << c[i] << std::endl;
-				std::cout << "---------------------------" << std::endl;
-			} //only for debug, need to be removed
 
 		private:
 			T* c;

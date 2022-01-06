@@ -18,6 +18,7 @@ namespace ft
 			typedef typename vector::value_type*   pointer;
 			typedef typename vector::reference& reference;
 			typedef typename std::random_access_iterator_tag  iterator_category;
+			pointer _ptr;
 		
 			iterator(pointer ptr = 0) : _ptr(ptr)
 			{
@@ -79,16 +80,52 @@ namespace ft
 
 			bool operator==(const iterator& other) const
 			{
-				return _ptr == other._ptr;
+				return (_ptr == other._ptr);
 			}
 
 			bool operator!=(const iterator& other) const
 			{
 				return !(_ptr == other._ptr);
 			}
-		private:
 
-			pointer _ptr;
+			bool operator<(const iterator& other) const
+			{
+				return (_ptr < other._ptr);
+			}
+
+			bool operator>(const iterator& other) const
+			{
+				return (_ptr > other._ptr);
+			}
+
+			bool operator<=(const iterator& other) const
+			{
+				return !(_ptr > other._ptr);
+			}
+			
+			bool operator>=(const iterator& other) const
+			{
+				return !(_ptr < other._ptr);
+			}
+
+			// operator iterator<const value_type>() const
+			// {
+    		// 	return (iterator<const value_type>(_ptr));
+			// }
+
 	};
+
+	//func
+	template<class InputIterator>
+	size_t distance(InputIterator first, InputIterator last)
+	{
+		size_t result = 0;
+		while (first != last)
+		{
+			result++;
+			++first;
+		}
+		return result;
+	}
 }
 #endif
