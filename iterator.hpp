@@ -9,6 +9,7 @@ namespace ft
 	class vector;
 
 	template <typename vector>
+	//template <class T>
 	class iterator
 	{
 		public:
@@ -17,6 +18,10 @@ namespace ft
 			typedef typename vector::difference_type  difference_type;
 			typedef typename vector::value_type*   pointer;
 			typedef typename vector::reference& reference;
+			// typedef T	value_type;
+			// typedef ptrdiff_t	difference_type;
+			// typedef T*	pointer;
+			// typedef T&	reference;
 			typedef typename std::random_access_iterator_tag  iterator_category;
 			pointer _ptr;
 		
@@ -108,9 +113,14 @@ namespace ft
 				return !(_ptr < other._ptr);
 			}
 
-			// operator iterator<const value_type>() const
+			operator iterator<const ft::vector<const value_type, std::allocator<value_type> > >() const
+			{
+    			return (iterator<ft::vector<const value_type, std::allocator<value_type> > >(_ptr));
+			}
+
+			// operator vector_iterator<const T>() const //the version with template<T>
 			// {
-    		// 	return (iterator<const value_type>(_ptr));
+			//     return (vector_iterator<const T>(_ptr));
 			// }
 
 	};

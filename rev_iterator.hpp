@@ -108,7 +108,12 @@ namespace ft
 				return !(_ptr > other._ptr);
 			}
 
-			// operator reverse_iterator<const value_type>() const
+			operator reverse_iterator<const ft::vector<const value_type, std::allocator<value_type> > >() const
+			{
+    			return (reverse_iterator<ft::vector<const value_type, std::allocator<value_type> > >(_ptr));
+			}
+
+			// operator reverse_iterator<const value_type>() const //version with template<T>
 			// {
     		// 	return (reverse_iterator<const value_type>(_ptr));
 			// }

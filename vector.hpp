@@ -10,6 +10,7 @@
 namespace ft
 {
 	template <typename vector>
+	//template <class T>
 	class iterator;
 
 	template <class T, class Allocator = std::allocator<T> >
@@ -22,6 +23,8 @@ namespace ft
 			typedef typename Allocator::const_reference const_reference;
 			typedef ft::iterator<vector<T> > iterator;
 			typedef const ft::iterator<vector<T> > const_iterator;
+			//typedef ft::iterator<T>	iterator;
+			//typedef ft::iterator<const T> const_iterator;
 			typedef ft::reverse_iterator<vector<T> > reverse_iterator;
 			typedef const ft::reverse_iterator<vector<T> > const_reverse_iterator;
 			typedef size_t size_type; //maybe wrong
@@ -126,22 +129,34 @@ namespace ft
 			{
 				return iterator(c);
 			}
-			// const_iterator begin() const
-			// {
-			// 	return const iterator(c);
-			// }
+			const_iterator begin() const
+			{
+				return itterator(c);
+			}
 			iterator end()
 			{
 				return iterator(c + _nbr_elem);
 			}
-			// const_iterator end() const;
-			// {
-			// 	return const iterator(c + _nbr_elem);
-			// }
-			// reverse_iterator rbegin();
-			// const_reverse_iterator rbegin() const;
-			// reverse_iterator rend();
-			// const_reverse_iterator rend() const;
+			const_iterator end() const
+			{
+				return iterator(c + _nbr_elem);
+			}
+			reverse_iterator rbegin()
+			{
+				return reverse_iterator(c + _nbr_elem);
+			}
+			const_reverse_iterator rbegin() const
+			{
+				return reverse_iterator(c + _nbr_elem);
+			}
+			reverse_iterator rend()
+			{
+				return reverse_iterator(c);
+			}
+			const_reverse_iterator rend() const
+			{
+				return reverse_iterator(c);
+			}
 
 			// //capacity
 			size_type size() const
