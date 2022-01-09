@@ -9,8 +9,8 @@
 
 namespace ft
 {
-	template <typename vector>
-	//template <class T>
+	//template <typename vector>
+	template <class T>
 	class iterator;
 
 	template <class T, class Allocator = std::allocator<T> >
@@ -21,10 +21,10 @@ namespace ft
 			//all the alias
 			typedef typename Allocator::reference reference;
 			typedef typename Allocator::const_reference const_reference;
-			typedef ft::iterator<vector<T> > iterator;
-			typedef const ft::iterator<vector<T> > const_iterator;
-			//typedef ft::iterator<T>	iterator;
-			//typedef ft::iterator<const T> const_iterator;
+			//typedef ft::iterator<vector<T> > iterator;
+			//typedef const ft::iterator<vector<T> > const_iterator;
+			typedef ft::iterator<T>	iterator;
+			typedef ft::iterator<const T> const_iterator;
 			typedef ft::reverse_iterator<vector<T> > reverse_iterator;
 			typedef const ft::reverse_iterator<vector<T> > const_reverse_iterator;
 			typedef size_t size_type; //maybe wrong

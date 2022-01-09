@@ -7,7 +7,7 @@ int main()
 	ft::vector<int> v;
 	ft::vector<int> v2;
 	ft::vector<int>::iterator it;
-	//ft::iterator<int> it3;
+	std::iterator<std::random_access_iterator_tag, int> lol;
 	v.push_back(11);
 	v.push_back(12);
 	v.push_back(13);

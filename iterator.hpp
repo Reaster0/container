@@ -2,27 +2,28 @@
 #define _iterator_
 #include <cstddef>
 #include "vector.hpp"
+#include "iterator_traits.hpp"
 
 namespace ft
 {
 	template <class T, class Allocator >
 	class vector;
 
-	template <typename vector>
-	//template <class T>
+	//template <typename vector>
+	template <class T>
 	class iterator
 	{
 		public:
 
-			typedef typename vector::value_type	value_type;
-			typedef typename vector::difference_type  difference_type;
-			typedef typename vector::value_type*   pointer;
-			typedef typename vector::reference& reference;
-			// typedef T	value_type;
-			// typedef ptrdiff_t	difference_type;
-			// typedef T*	pointer;
-			// typedef T&	reference;
-			typedef typename std::random_access_iterator_tag  iterator_category;
+			// typedef typename vector::value_type	value_type;
+			// typedef typename vector::difference_type  difference_type;
+			// typedef typename vector::value_type*   pointer;
+			// typedef typename vector::reference& reference;
+			typedef T	value_type;
+			typedef ptrdiff_t	difference_type;
+			typedef T*	pointer;
+			typedef T&	reference;
+			typedef typename ft::random_access_iterator_tag  iterator_category;
 			pointer _ptr;
 		
 			iterator(pointer ptr = 0) : _ptr(ptr)
@@ -113,15 +114,15 @@ namespace ft
 				return !(_ptr < other._ptr);
 			}
 
-			operator iterator<const ft::vector<const value_type, std::allocator<value_type> > >() const
-			{
-    			return (iterator<ft::vector<const value_type, std::allocator<value_type> > >(_ptr));
-			}
-
-			// operator vector_iterator<const T>() const //the version with template<T>
+			// operator iterator<const ft::vector<const value_type, std::allocator<value_type> > >() const
 			// {
-			//     return (vector_iterator<const T>(_ptr));
+    		// 	return (iterator<ft::vector<const value_type, std::allocator<value_type> > >(_ptr));
 			// }
+
+			operator iterator<const T>() const //the version with template<T>
+			{
+			    return (iterator<const T>(_ptr));
+			}
 
 	};
 
