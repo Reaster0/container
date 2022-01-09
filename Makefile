@@ -6,7 +6,7 @@
 #    By: earnaud <earnaud@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/09/20 13:35:59 by earnaud           #+#    #+#              #
-#    Updated: 2022/01/09 16:10:58 by earnaud          ###   ########.fr        #
+#    Updated: 2022/01/09 18:05:18 by earnaud          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -15,7 +15,8 @@ HEADER		:= vector.hpp \
 				iterator.hpp \
 				reverse_iterator.hpp \
 				stack.hpp \
-				iterator_traits.hpp
+				iterator_traits.hpp \
+				utils.hpp
 
 OBJS		:= $(SRCS:.cpp=.o)
 NAME		:= container

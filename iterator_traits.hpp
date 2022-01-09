@@ -1,7 +1,7 @@
 #ifndef _iterator_traits_
 #define _iterator_traits_
 
-ft:
+namespace ft
 {
 		class input_iterator_tag {};
 		class output_iterator_tag {};
@@ -50,22 +50,6 @@ ft:
 			  		diff++;
 				return diff;
 		  }
-		
-		template <bool Cond, class T = void>
-		struct enable_if
-		{
-			if (Cond)
-				typedef T type;
-		}
-
-		//maybe this
-		template<bool Cond, class T = void>
-		struct enable_if {};
-
-		template<class T>
-		struct enable_if<true, T> { typedef T type; };
-		
-
 	
 }
 
