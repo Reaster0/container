@@ -16,7 +16,7 @@
 			"name": "(gdb) Launch",
 			"type": "cppdbg",
 			"request": "launch",
-			"program": "/home/42-Work/container/container",
+			"program": "/home/42-Work/container/containers_test/a.out",
 			"args": [],
 			"stopAtEntry": true,
 			"cwd": "${fileDirname}",

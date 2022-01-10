@@ -66,7 +66,6 @@ namespace ft
 				c = alloc.allocate(ft::distance(first, last));
 				_capacity = ft::distance(first, last);
 				_nbr_elem = _capacity;
-				std::cout << "capacity = " << _capacity << std::endl;
 				int i = 0;
 				for (InputIterator it = first; it != last; ++it, i++)
 					alloc.construct(c + i, *it);
@@ -106,7 +105,9 @@ namespace ft
 				for (size_t i = 0; i < _nbr_elem; i++)
 					alloc.destroy(c + i);
 				alloc.deallocate(c, _capacity);
-				alloc.allocate(ft::distance(first, last));
+				size_t val_test = ft::distance(first, last);
+				(void)val_test;
+				c = alloc.allocate(ft::distance(first, last));
 				size_t i = 0;
 				for (InputIterator it = first; it != last; ++it, ++i)
 					alloc.construct(c + i, *it);
@@ -244,7 +245,7 @@ namespace ft
 			}
 			const_reference back() const
 			{
-				return c[_nbr_elem];
+				return c[_nbr_elem - 1];
 			}
 
 			//setter
@@ -422,7 +423,7 @@ namespace ft
 	};
 
 		//operator vector
-	template <class T, class Allocator>
+	template <class T, class Allocator> //need to make a ft::equal
 	bool operator==(const ft::vector<T,Allocator>& x, const ft::vector<T,Allocator>& y)
 	{
 		if (x.size() != y.size())
@@ -433,7 +434,7 @@ namespace ft
 		return true;
 	}
 	template <class T, class Allocator>
-	bool operator< (const ft::vector<T,Allocator>& x, const ft::vector<T,Allocator>& y)
+	bool operator<(const ft::vector<T,Allocator>& x, const ft::vector<T,Allocator>& y)
 	{
 		return x.size() < y.size();
 	}
@@ -443,7 +444,7 @@ namespace ft
 		return !(x == y);
 	}
 	template <class T, class Allocator>
-	bool operator> (const ft::vector<T,Allocator>& x, const ft::vector<T,Allocator>& y)
+	bool operator>(const ft::vector<T,Allocator>& x, const ft::vector<T,Allocator>& y)
 	{
 		return x < y;
 	}

@@ -34,16 +34,24 @@ namespace ft
 			{
 			}
 
-			iterator operator+(size_t nbr)
+			iterator operator+(const size_t nbr)
 			{
 				return iterator(_ptr + nbr);
 			}
 
-			iterator operator-(size_t nbr)
+			iterator operator-(const size_t nbr)
 			{
 				return iterator(_ptr - nbr);
 			}
-
+			
+			difference_type operator+(const iterator& other) const
+			{
+				return this->_ptr + other._ptr;
+			}
+			difference_type operator-(const iterator& other) const
+			{
+				return this->_ptr - other._ptr;
+			}
 			iterator& operator++()
 			{
 				_ptr++;
@@ -66,6 +74,16 @@ namespace ft
 				_ptr--;
 				return tmp;
 			}
+			iterator& operator+=(const size_t nbr)
+			{
+				_ptr += nbr;
+				return *this;
+			}
+			iterator& operator-=(const size_t nbr)
+			{
+				_ptr -= nbr;
+				return *this;
+			}
 			value_type& operator[](int index)
 			{
 				return _ptr[index];
@@ -85,35 +103,35 @@ namespace ft
 				return *this;
 			}
 
-			bool operator==(const iterator& other) const
-			{
-				return (_ptr == other._ptr);
-			}
+			// bool operator==(const iterator& other) const
+			// {
+			// 	return (_ptr == other._ptr);
+			// }
 
-			bool operator!=(const iterator& other) const
-			{
-				return !(_ptr == other._ptr);
-			}
+			// bool operator!=(const iterator& other) const
+			// {
+			// 	return !(_ptr == other._ptr);
+			// }
 
-			bool operator<(const iterator& other) const
-			{
-				return (_ptr < other._ptr);
-			}
+			// bool operator<(const iterator& other) const
+			// {
+			// 	return (_ptr < other._ptr);
+			// }
 
-			bool operator>(const iterator& other) const
-			{
-				return (_ptr > other._ptr);
-			}
+			// bool operator>(const iterator& other) const
+			// {
+			// 	return (_ptr > other._ptr);
+			// }
 
-			bool operator<=(const iterator& other) const
-			{
-				return !(_ptr > other._ptr);
-			}
+			// bool operator<=(const iterator& other) const
+			// {
+			// 	return !(_ptr > other._ptr);
+			// }
 			
-			bool operator>=(const iterator& other) const
-			{
-				return !(_ptr < other._ptr);
-			}
+			// bool operator>=(const iterator& other) const
+			// {
+			// 	return !(_ptr < other._ptr);
+			// }
 
 			// operator iterator<const ft::vector<const value_type, std::allocator<value_type> > >() const
 			// {
@@ -127,10 +145,59 @@ namespace ft
 
 	};
 
+	//iterator operator
+
+	template <class T, class U>
+	bool operator==(const ft::iterator<T>& A, const ft::iterator<U>& B)
+	{
+		return (A._ptr == B._ptr);
+	}
+
+	template <class T, class U>
+	bool operator!=(const ft::iterator<T>& A, const ft::iterator<U>& B)
+	{
+		return !(A._ptr == B._ptr);
+	}
+
+	template <class T, class U>
+	bool operator<(const ft::iterator<T>& A, const ft::iterator<U>& B)
+	{
+		return (A._ptr < B._ptr);
+	}
+
+	template <class T, class U>
+	bool operator>(const ft::iterator<T>& A, const ft::iterator<U>& B)
+	{
+		return (A._ptr > B._ptr);
+	}
+
+	template <class T, class U>
+	bool operator<=(const ft::iterator<T>& A, const ft::iterator<U>& B)
+	{
+		return !(A._ptr > B._ptr);
+	}
+
+	template <class T, class U>
+	bool operator>=(const ft::iterator<T>& A, const ft::iterator<U>& B)
+	{
+		return !(A._ptr < B._ptr);
+	}
+
+
+	template <class T>
+	ft::iterator<T> operator+(const size_t nbr, const iterator<T> iter)
+	{
+		return ft::iterator<T>(iter) + nbr;
+	}
+	template <class T>
+	ft::iterator<T> operator-(const size_t nbr, const iterator<T> iter)
+	{
+		return ft::iterator<T>(iter) - nbr;
+	}
+
 	//func
 	template<class InputIterator>
-	//size_t
-	typename ft::enable_if<!ft::is_integral<InputIterator>::value, size_t>::type distance(InputIterator first, InputIterator last) // need to add a enable_if
+	typename ft::enable_if<!ft::is_integral<InputIterator>::value, size_t>::type distance(InputIterator first, InputIterator last)
 	{
 
 		size_t result = 0;
