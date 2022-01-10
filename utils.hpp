@@ -3,19 +3,19 @@
 
 namespace ft
 {		
-	template <bool Cond, class T = void>
-	struct enable_if
-	{
-		if (Cond)
-			typedef T type;
-	};
+	// template <bool Cond, class T = void>
+	// struct enable_if
+	// {
+	// 	if (Cond)
+	// 		typedef T type;
+	// };
 
-		//maybe this
-		// template<bool Cond, class T = void>
-		// struct enable_if {};
+	//maybe this
+	template<bool B, class T = void>
+	struct enable_if {};
 
-		// template<class T>
-		// struct enable_if<true, T> { typedef T type; };
+	template<class T>
+	struct enable_if<true, T> { typedef T type; };
 
 	template <typename T>
     struct is_integral {

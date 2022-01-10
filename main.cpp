@@ -1,29 +1,35 @@
 #include <vector>
 #include "vector.hpp"
 #include "iterator.hpp"
+#define TESTED_TYPE int
+#define TESTED_NAMESPACE ft
 
 int main()
 {
-	ft::vector<int> v;
-	ft::vector<int> v2;
-	ft::vector<int>::iterator it;
-	std::iterator<std::random_access_iterator_tag, int> lol;
-	v.push_back(11);
-	v.push_back(12);
-	v.push_back(13);
-	v.push_back(14);
-	v.push_back(111);
-	v2.push_back(21);
-	v2.push_back(22);
-	v2.push_back(23);
-	v2.push_back(24);
-	v2.push_back(25);
+		TESTED_NAMESPACE::vector<TESTED_TYPE> vct(7);
 
-	it = v.begin();
+	for (unsigned long int i = 0; i < vct.size(); ++i)
+	{
+			vct.at(i) = (vct.size() - i) * 3;
+			std::cout << "vct.at(): " << vct.at(i) << " | ";
+			std::cout << "vct[]: " << vct[i] << std::endl;
+	}
+	//printSize(vct);
+	
 
-	v.insert(v.end() - 2, v2.begin(), v2.end() - 1);
-	v.erase(v.end(), v.end());
-	std::cout << "\\\\\\\\\\\\\\\\\\" << std::endl;
-	for (size_t i = 0; i < v.size(); i++)
-		std::cout << v[i] << std::endl;
+	TESTED_NAMESPACE::vector<TESTED_TYPE> const vct_c(vct);
+
+	std::cout << "front(): " << vct.front() << " " << vct_c.front() << std::endl;
+	std::cout << "back(): " << vct.back() << " " <<  vct_c.back() << std::endl;
+
+	try {
+			vct.at(10) = 42;
+	}
+	catch (std::out_of_range &e) {
+			std::cout << "Catch out_of_range exception!" << std::endl;
+	}
+	catch (std::exception &e) {
+			std::cout << "Catch exception: " << e.what() << std::endl;
+	}
+	return (0);
 }

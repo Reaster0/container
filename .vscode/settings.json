@@ -12,6 +12,12 @@
 		"__hash_table": "cpp",
 		"__split_buffer": "cpp",
 		"__tree": "cpp",
-		"memory": "cpp"
+		"memory": "cpp",
+		"algorithm": "cpp",
+		"functional": "cpp",
+		"list": "cpp",
+		"locale": "cpp",
+		"*.tcc": "cpp",
+		"random": "cpp"
 	}
 }

@@ -3,6 +3,7 @@
 #include <cstddef>
 #include "vector.hpp"
 #include "iterator_traits.hpp"
+#include "utils.hpp"
 
 namespace ft
 {
@@ -128,8 +129,10 @@ namespace ft
 
 	//func
 	template<class InputIterator>
-	size_t distance(InputIterator first, InputIterator last)
+	//size_t
+	typename ft::enable_if<!ft::is_integral<InputIterator>::value, size_t>::type distance(InputIterator first, InputIterator last) // need to add a enable_if
 	{
+
 		size_t result = 0;
 		while (first != last)
 		{

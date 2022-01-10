@@ -8,7 +8,7 @@
 			"type": "lldb",
 			"request": "launch",
 			"name": "Launch",
-			"program": "${workspaceFolder}/container",
+			"program": "${workspaceFolder}/containers_test/a.out",
 			"args": [],
 			"cwd": "${workspaceFolder}"
 		},
@@ -18,7 +18,7 @@
 			"request": "launch",
 			"program": "/home/42-Work/container/container",
 			"args": [],
-			"stopAtEntry": false,
+			"stopAtEntry": true,
 			"cwd": "${fileDirname}",
 			"environment": [],
 			"externalConsole": false,

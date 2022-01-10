@@ -6,6 +6,7 @@
 #include <stdexcept>
 #include "iterator.hpp"
 #include "rev_iterator.hpp"
+#include "utils.hpp"
 
 namespace ft
 {
@@ -59,18 +60,23 @@ namespace ft
 					alloc.construct(c + i, value);
 			}
 			template <class InputIterator>
-			vector(InputIterator first, InputIterator last, const Allocator& = Allocator())
+			vector(InputIterator first, InputIterator last, const Allocator& = Allocator(), typename ft::enable_if<!ft::is_integral<InputIterator>::value >::type* = NULL)
 			{
 				Allocator alloc;
-				c = alloc.allocate(last - first);
-				_capacity = last - first;
+				c = alloc.allocate(ft::distance(first, last));
+				_capacity = ft::distance(first, last);
 				_nbr_elem = _capacity;
+				std::cout << "capacity = " << _capacity << std::endl;
 				int i = 0;
 				for (InputIterator it = first; it != last; ++it, i++)
-					alloc.construct(c + i, it);
+					alloc.construct(c + i, *it);
 			}
 			vector(const vector<T,Allocator>& x)
 			{
+				Allocator alloc;
+				c = alloc.allocate(0);
+				_capacity = 0;
+				_nbr_elem = 0;
 				*this = x;
 			}
 			~vector()
@@ -94,17 +100,17 @@ namespace ft
 				return *this;
 			}
 			template <class InputIterator>
-			void assign(InputIterator first, InputIterator last)
+			typename ft::enable_if<!ft::is_integral<InputIterator>::value, void>::type assign(InputIterator first, InputIterator last)
 			{
 				Allocator alloc;
 				for (size_t i = 0; i < _nbr_elem; i++)
 					alloc.destroy(c + i);
 				alloc.deallocate(c, _capacity);
-				alloc.allocate(std::distance(first, last));
+				alloc.allocate(ft::distance(first, last));
 				size_t i = 0;
 				for (InputIterator it = first; it != last; ++it, ++i)
 					alloc.construct(c + i, *it);
-				_capacity = std::distance(first, last);
+				_capacity = ft::distance(first, last);
 				_nbr_elem = _capacity;
 			}
 			void assign(size_type n, const value_type& val)
@@ -131,7 +137,7 @@ namespace ft
 			}
 			const_iterator begin() const
 			{
-				return itterator(c);
+				return iterator(c);
 			}
 			iterator end()
 			{
@@ -234,7 +240,7 @@ namespace ft
 			}
 			reference back()
 			{
-				return c[_nbr_elem];
+				return c[_nbr_elem - 1];
 			}
 			const_reference back() const
 			{
@@ -291,7 +297,7 @@ namespace ft
 				_nbr_elem += n;
 			}
 			template <class InputIterator>
-			void insert(iterator position, InputIterator first, InputIterator last)
+			typename ft::enable_if<!ft::is_integral<InputIterator>::value, void>::type insert(iterator position, InputIterator first, InputIterator last)
 			{
 				Allocator alloc;
 				size_t len = ft::distance(first, last);

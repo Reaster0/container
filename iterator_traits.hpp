@@ -18,7 +18,7 @@ namespace ft
 			typedef typename Iter::difference_type distance_type;
 			typedef typename Iter::pointer pointer;
 			typedef typename Iter::iterator::reference reference;
-		}
+		};
 
 		template <class T>
 		struct iterator_traits<T*>
@@ -28,7 +28,7 @@ namespace ft
 			typedef	T*			pointer;
 			typedef T&			reference;
 			typedef ptrdiff_t	difference_type;
-		}
+		};
 
 		template <class T>
 		struct iterator_traits<const T*>
@@ -37,20 +37,19 @@ namespace ft
 			typedef T	value_type;
 			typedef const T*	pointer;
 			typedef const T&	reference;
-		}
+		};
 
-		template<class InputIterator>
- 		 typename iterator_traits<InputIterator>::difference_type
-		  distance (InputIterator first, InputIterator last)
-		  {
-			  ft::iterator_traits<InputIterator>::difference_type = diff;
-			  //check if the iterator is random to make last - first
-			  diff = 0;
-			  for (InputIterator i = first; i != last; i++)
-			  		diff++;
-				return diff;
-		  }
+		// template<class InputIterator> //maybe don't usefull
+ 		//  typename iterator_traits<InputIterator>::difference_type distance(InputIterator first, InputIterator last)
+		//   {
+		// 	  typename iterator_traits<InputIterator>::difference_type	 diff;
+		// 	  //check if the iterator is random to make last - first
+		// 	  diff = 0;
+		// 	  for (InputIterator i = first; i != last; i++)
+		// 	  		diff++;
+		// 		return diff;
+		//   }
 	
 }
 
-#endif;
+#endif
