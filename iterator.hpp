@@ -103,41 +103,6 @@ namespace ft
 				return *this;
 			}
 
-			// bool operator==(const iterator& other) const
-			// {
-			// 	return (_ptr == other._ptr);
-			// }
-
-			// bool operator!=(const iterator& other) const
-			// {
-			// 	return !(_ptr == other._ptr);
-			// }
-
-			// bool operator<(const iterator& other) const
-			// {
-			// 	return (_ptr < other._ptr);
-			// }
-
-			// bool operator>(const iterator& other) const
-			// {
-			// 	return (_ptr > other._ptr);
-			// }
-
-			// bool operator<=(const iterator& other) const
-			// {
-			// 	return !(_ptr > other._ptr);
-			// }
-			
-			// bool operator>=(const iterator& other) const
-			// {
-			// 	return !(_ptr < other._ptr);
-			// }
-
-			// operator iterator<const ft::vector<const value_type, std::allocator<value_type> > >() const
-			// {
-    		// 	return (iterator<ft::vector<const value_type, std::allocator<value_type> > >(_ptr));
-			// }
-
 			operator iterator<const T>() const //the version with template<T>
 			{
 			    return (iterator<const T>(_ptr));

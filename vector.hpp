@@ -298,7 +298,8 @@ namespace ft
 				_nbr_elem += n;
 			}
 			template <class InputIterator>
-			typename ft::enable_if<!ft::is_integral<InputIterator>::value, void>::type insert(iterator position, InputIterator first, InputIterator last)
+			typename ft::enable_if<!ft::is_integral<InputIterator>::value, void>::type
+			insert(iterator position, InputIterator first, InputIterator last)
 			{
 				Allocator alloc;
 				size_t len = ft::distance(first, last);
@@ -371,8 +372,7 @@ namespace ft
 			}
 			void swap(vector& x)
 			{
-				Allocator alloc;
-				ft::vector<value_type> tmp(x);
+				ft::vector<value_type> tmp(*this);
 				*this = x;
 				x = tmp;
 			}
@@ -414,29 +414,55 @@ namespace ft
 				c = new_c;
 			}
 			//util
-			void swap(value_type& a, value_type& b)
-			{
-				value_type temp = a;
-				a = b;
-				b = temp;
-			}
+			// void swap(value_type& a, value_type& b)
+			// {
+			// 	value_type temp = a;
+			// 	a = b;
+			// 	b = temp;
+			// }
 	};
 
-		//operator vector
+	//put elsewhere
+	template <class InputIterator, class InputIterator2>		//maybe only |
+	typename ft::enable_if<!ft::is_integral<InputIterator>::value || !ft::is_integral<InputIterator2>::value, bool>::type
+	lexicographical_compare(InputIterator begin1, InputIterator end1, InputIterator2 begin2, InputIterator2 end2)
+	{
+		for (InputIterator it = begin1, it2 = begin2; it2 != end2; ++it, ++it2)
+		{	if (it == end1 || *it < *it2)
+				return true;
+			if (*it2 < *it)
+				return false;
+		}
+		return false;
+	}
+	template <class InputIterator, class InputIterator2>		//maybe only |
+	typename ft::enable_if<!ft::is_integral<InputIterator>::value || !ft::is_integral<InputIterator2>::value, bool>::type
+	equal(InputIterator begin1, InputIterator end1, InputIterator2 begin2, InputIterator2 end2)
+	{
+		for (InputIterator it = begin1, it2 = begin2; it != end1 && it2 != end2; ++it, ++it2)
+			if (*it != *it2)
+				return false;
+		return true;
+	}
+
+
+	//operator vector
 	template <class T, class Allocator> //need to make a ft::equal
 	bool operator==(const ft::vector<T,Allocator>& x, const ft::vector<T,Allocator>& y)
 	{
 		if (x.size() != y.size())
 			return false;
-		for (size_t i = 0; i < x.size(); ++i)
-			if (x[i] != y[i])
-				return false;
-		return true;
+		// for (size_t i = 0; i < x.size() && i < y.size(); ++i)
+		// 	if (x[i] != y[i])
+		// 		return false;
+		// return true;
+		return equal(x.begin(), x.end(), y.begin(), y.end());
 	}
 	template <class T, class Allocator>
 	bool operator<(const ft::vector<T,Allocator>& x, const ft::vector<T,Allocator>& y)
 	{
-		return x.size() < y.size();
+		return lexicographical_compare(x.begin(), x.end(), y.begin(), y.end());
+		//return x.size() < y.size();
 	}
 	template <class T, class Allocator>
 	bool operator!=(const ft::vector<T,Allocator>& x, const ft::vector<T,Allocator>& y)
@@ -446,7 +472,7 @@ namespace ft
 	template <class T, class Allocator>
 	bool operator>(const ft::vector<T,Allocator>& x, const ft::vector<T,Allocator>& y)
 	{
-		return x < y;
+		return (y < x);
 	}
 	template <class T, class Allocator>
 	bool operator>=(const vector<T,Allocator>& x, const vector<T,Allocator>& y)
