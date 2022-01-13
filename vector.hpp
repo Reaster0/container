@@ -14,6 +14,9 @@ namespace ft
 	template <class T>
 	class iterator;
 
+	template <class Iterator>
+	class rev_iterator;
+
 	template <class T, class Allocator = std::allocator<T> >
 	class vector
 	{
@@ -26,8 +29,8 @@ namespace ft
 			//typedef const ft::iterator<vector<T> > const_iterator;
 			typedef ft::iterator<T>	iterator;
 			typedef ft::iterator<const T> const_iterator;
-			typedef ft::reverse_iterator<vector<T> > reverse_iterator;
-			typedef const ft::reverse_iterator<vector<T> > const_reverse_iterator;
+			typedef ft::reverse_iterator<iterator> reverse_iterator;
+			typedef ft::reverse_iterator<const_iterator> const_reverse_iterator;
 			typedef size_t size_type; //maybe wrong
 
 			#ifdef __APPLE__
@@ -372,9 +375,9 @@ namespace ft
 			}
 			void swap(vector& x)
 			{
-				ft::vector<value_type> tmp(*this);
-				*this = x;
-				x = tmp;
+				std::swap(this->c, x.c);
+				std::swap(this->_capacity, x._capacity);
+				std::swap(this->_nbr_elem, x._nbr_elem);
 			}
 			void clear()
 			{

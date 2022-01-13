@@ -30,6 +30,10 @@ namespace ft
 			iterator(pointer ptr = 0) : _ptr(ptr)
 			{
 			}
+			iterator(const iterator& other) : _ptr(other._ptr)
+			{
+
+			}
 			~iterator()
 			{
 			}

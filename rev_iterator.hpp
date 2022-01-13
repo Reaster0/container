@@ -3,14 +3,15 @@
 #include <cstddef>
 #include "vector.hpp"
 #include "iterator_traits.hpp"
+#include "iterator"
 
 namespace ft
 {
-	template <class T, class Allocator >
-	class vector;
+	// template <class T, class Allocator >
+	// class vector;
 
 	//template <typename vector>
-	template <class T>
+	template <class Iterator>
 	class reverse_iterator
 	{
 		public:
@@ -19,14 +20,25 @@ namespace ft
 			// typedef typename vector::difference_type  difference_type;
 			// typedef typename vector::value_type*   pointer;
 			// typedef typename vector::reference& reference;
-			typedef T	value_type;
-			typedef ptrdiff_t	difference_type;
-			typedef T*	pointer;
-			typedef T&	reference;
-			typedef typename std::random_access_iterator_tag  iterator_category;
+			typedef Iterator	iterator_type;
+			typedef typename ft::iterator_traits<Iterator>::value_type	value_type;
+			typedef typename ft::iterator_traits<Iterator>::difference_type	difference_type;
+			typedef typename ft::iterator_traits<Iterator>::pointer	pointer;
+			typedef typename ft::iterator_traits<Iterator>::reference	reference;
+			typedef typename ft::iterator_traits<Iterator>::iterator_category  iterator_category;
 			pointer _ptr;
 		
-			reverse_iterator(pointer ptr = 0) : _ptr(ptr)
+			reverse_iterator(iterator_type other) : _ptr(other._ptr)
+			{
+			}
+			// reverse_iterator(pointer ptr = 0) : _ptr(ptr)
+			// {
+			// }
+			reverse_iterator() : _ptr()
+			{
+			}
+			template <class T>
+			reverse_iterator(const reverse_iterator<T>& other) : _ptr(other._ptr)
 			{
 			}
 			~reverse_iterator()
@@ -78,7 +90,8 @@ namespace ft
 				return *_ptr;
 			}
 
-			reverse_iterator& operator=(const reverse_iterator& other)
+			template <class T>
+			reverse_iterator& operator=(const reverse_iterator<T>& other)
 			{
 				_ptr = other._ptr;
 				return *this;
@@ -119,9 +132,9 @@ namespace ft
     		// 	return (reverse_iterator<ft::vector<const value_type, std::allocator<value_type> > >(_ptr));
 			// }
 
-			operator reverse_iterator<const value_type>() const //version with template<T>
+			operator reverse_iterator<const Iterator>() const
 			{
-    			return (reverse_iterator<const value_type>(_ptr));
+    			return (reverse_iterator<const Iterator>(_ptr));
 			}
 
 	};
