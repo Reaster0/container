@@ -38,12 +38,12 @@ namespace ft
 			{
 			}
 
-			iterator operator+(const size_t nbr)
+			iterator operator+(size_t nbr) const
 			{
 				return iterator(_ptr + nbr);
 			}
 
-			iterator operator-(const size_t nbr)
+			iterator operator-(size_t nbr) const
 			{
 				return iterator(_ptr - nbr);
 			}
@@ -56,6 +56,7 @@ namespace ft
 			{
 				return this->_ptr - other._ptr;
 			}
+
 			iterator& operator++()
 			{
 				_ptr++;
