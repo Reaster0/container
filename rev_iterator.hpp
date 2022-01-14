@@ -128,8 +128,6 @@ namespace ft
 			iterator_type base() const
 			{
 				return _iter;
-				//return iterator_type(_iter._ptr - 1);
-				//return iterator_type(_iter._ptr + 1);
 			}
 	};
 

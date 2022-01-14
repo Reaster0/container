@@ -351,7 +351,7 @@ namespace ft
 				Allocator alloc;
 				size_t len = ft::distance(first, last);
 				if (first == end())
-				{ //there isn't a segfault here where it should when last is out of bounds
+				{
 					for (iterator iter = first; iter != last; iter++)
 						alloc.destroy((iter._ptr));
 					_nbr_elem -= len;
@@ -416,50 +416,14 @@ namespace ft
 				alloc.deallocate(c, old_capacity);
 				c = new_c;
 			}
-			//util
-			// void swap(value_type& a, value_type& b)
-			// {
-			// 	value_type temp = a;
-			// 	a = b;
-			// 	b = temp;
-			// }
 	};
-
-	//put elsewhere
-	template <class InputIterator, class InputIterator2>		//maybe only |
-	typename ft::enable_if<!ft::is_integral<InputIterator>::value || !ft::is_integral<InputIterator2>::value, bool>::type
-	lexicographical_compare(InputIterator begin1, InputIterator end1, InputIterator2 begin2, InputIterator2 end2)
-	{
-		for (InputIterator it = begin1, it2 = begin2; it2 != end2; ++it, ++it2)
-		{	if (it == end1 || *it < *it2)
-				return true;
-			if (*it2 < *it)
-				return false;
-		}
-		return false;
-	}
-	template <class InputIterator, class InputIterator2>		//maybe only |
-	typename ft::enable_if<!ft::is_integral<InputIterator>::value || !ft::is_integral<InputIterator2>::value, bool>::type
-	equal(InputIterator begin1, InputIterator end1, InputIterator2 begin2, InputIterator2 end2)
-	{
-		for (InputIterator it = begin1, it2 = begin2; it != end1 && it2 != end2; ++it, ++it2)
-			if (*it != *it2)
-				return false;
-		return true;
-	}
-
-
 	//operator vector
 	template <class T, class Allocator> //need to make a ft::equal
 	bool operator==(const ft::vector<T,Allocator>& x, const ft::vector<T,Allocator>& y)
 	{
 		if (x.size() != y.size())
 			return false;
-		// for (size_t i = 0; i < x.size() && i < y.size(); ++i)
-		// 	if (x[i] != y[i])
-		// 		return false;
-		// return true;
-		return equal(x.begin(), x.end(), y.begin(), y.end());
+		return ft::equal(x.begin(), x.end(), y.begin(), y.end());
 	}
 	template <class T, class Allocator>
 	bool operator<(const ft::vector<T,Allocator>& x, const ft::vector<T,Allocator>& y)
