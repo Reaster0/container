@@ -74,7 +74,8 @@ namespace ft
 	lexicographical_compare(InputIterator begin1, InputIterator end1, InputIterator2 begin2, InputIterator2 end2)
 	{
 		for (InputIterator it = begin1, it2 = begin2; it2 != end2; ++it, ++it2)
-		{	if (it == end1 || *it < *it2)
+		{
+			if (it == end1 || *it < *it2)
 				return true;
 			if (*it2 < *it)
 				return false;
@@ -89,6 +90,64 @@ namespace ft
 			if (*it != *it2)
 				return false;
 		return true;
+	}
+
+	template <class T, class U>
+	struct pair
+	{
+		T _first;
+		U _second;
+		pair(const T& first = NULL, const U& second = NULL) : _first(first), _second(second) {};
+		pair(const pair<T, U>& other) : _first(other._first), _second(other._second) {};
+
+		pair<T, U>& operator=(const pair<T, U>& other)
+		{
+			_first = other._first;
+			_second = other._second;
+			return *this;
+		}
+	};
+
+	template <class T, class U>
+	pair<T, U> make_pair(const T& first, const U& second)
+	{
+		return pair<T, U>(first, second);
+	}
+
+	template <class T, class U>
+	bool operator==(const pair<T, U>& lhs, const pair<T, U>& rhs)
+	{
+		return lhs._first == rhs._first && lhs._second == rhs._second;
+	}
+
+	template <class T, class U>
+	bool operator!=(const pair<T, U>& lhs, const pair<T, U>& rhs)
+	{
+		return !(lhs == rhs);
+	}
+
+	template <class T, class U>
+	bool operator<(const pair<T, U> &lhs, const pair<T, U> &rhs)
+	{
+		return lhs._first < rhs._first || !(rhs._first < lhs._first && lhs._second < rhs._second);
+	}
+
+	template <class T, class U>
+	bool operator<=(const pair<T, U> &lhs, const pair<T, U> &rhs)
+	{
+		return !(rhs < lhs);
+	}
+
+	template <class T, class U>
+	bool operator>(const pair<T, U> &lhs, const pair<T, U> &rhs)
+	{
+		return !(lhs <= rhs);
+	}
+
+	template <class T, class U>
+	bool operator>=(const pair<T, U> &lhs, const pair<T, U> &rhs)
+	{
+		return rhs < lhs;
 	}
 }
 
