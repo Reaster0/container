@@ -8,7 +8,7 @@
 			"type": "lldb",
 			"request": "launch",
 			"name": "Launch",
-			"program": "${workspaceFolder}/containers_test/a.out",
+			"program": "${workspaceFolder}/container",
 			"args": [],
 			"cwd": "${workspaceFolder}"
 		},
@@ -16,7 +16,7 @@
 			"name": "(gdb) Launch",
 			"type": "cppdbg",
 			"request": "launch",
-			"program": "/home/42-Work/container/containers_test/a.out",
+			"program": "/home/42-Work/container/container",
 			"args": [],
 			"stopAtEntry": true,
 			"cwd": "${fileDirname}",

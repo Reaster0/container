@@ -6,7 +6,7 @@
 #    By: earnaud <earnaud@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/09/20 13:35:59 by earnaud           #+#    #+#              #
-#    Updated: 2022/01/10 16:29:58 by earnaud          ###   ########.fr        #
+#    Updated: 2022/01/14 18:55:28 by earnaud          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -16,13 +16,14 @@ HEADER		:= vector.hpp \
 				reverse_iterator.hpp \
 				stack.hpp \
 				iterator_traits.hpp \
-				utils.hpp
+				utils.hpp \
+				rb_tree.hpp
 
 OBJS		:= $(SRCS:.cpp=.o)
 NAME		:= container
 CC			:= clang++
 CFLAGS		:= -Wall -Wextra -Werror -std=c++98 -g -fstandalone-debug
-%.o:		%.cpp $(HEADER)
+%.o:		%.cpp #$(HEADER)
 			$(CC) $(CFLAGS) -c $< -o $@
 
 all:		$(NAME)
