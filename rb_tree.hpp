@@ -47,24 +47,83 @@ namespace ft
 	{
 		typedef T value_type;
 		typedef	Key key_type;
+		typedef node<Key, T> node_type;
 
+		private:
+			Allocator alloc;
+			node_type* best_place(const node_type& start_node, const node<Key, T>& new_node) const
+			{
+				if (start_node._key > new_node._key)
+				{
+					if (!start_node._left)
+						return start_node._left;
+					return best_place(start_node._left, new_node);
+				}
+				else if (start_node._key < new_node._key)
+				{
+					if (!start_node._right)
+						return start_node._right;
+					return best_place(start_node._right, new_node);
+				}
+				return 0;
+			}
+			void fill_test(node_type* start_node, int limit, int i = 0)
+			{
+				if (i >= limit)
+					return;
+				start_node->_left = alloc.allocate(1);
+				alloc.construct(start_node->_left, node_type(i, limit, RED));
+				start_node->_left->_parent = start_node;
+				fill_test(start_node->_left, limit, i + 1);
+			}
+			void fill_test_right(node_type* start_node, int limit, int i = 0, int from = 0)
+			{
+				if (i >= limit)
+					return;
+				if (from && start_node->_left)
+					fill_test_right(start_node->_left, limit, i, from - 1);
+				else
+				{
+					start_node->_right = alloc.allocate(1);
+					alloc.construct(start_node->_right, node_type(from, i, RED));
+					start_node->_right->_parent = start_node;
+					fill_test_right(start_node->_right, limit, i + 1);
+				}
+			}
+		
 		public:
+			node_type* nodes;
 			rb_tree()
 			{
 				nodes = alloc.allocate(1);
-				alloc.construct(nodes, node<int, std::string>(42 ,"lol mdr", RED));
+				alloc.construct(nodes, node<int, int>(42 , 99, RED));
+				fill_test(nodes, 10);
+				fill_test_right(nodes, 2, 0, 5);
 			}
 			~rb_tree()
 			{
 				// alloc.destroy(nodes);
 				// alloc.deallocate(nodes, 1);
 			}
-		
-		private:
-			node<Key, T>* nodes;
-			Allocator alloc;
+			void add_node(const node_type& node)
+			{
+				node_type* node_placement = best_place(nodes, node);
+				node_placement = alloc.allocate(1);
+				alloc.construct(node_placement, node);
+			}
+			void print_nodes(node_type& node, size_t level = 0, bool left_branch = false, bool left_branch = false) const
+			{
+				if (node._left && !left_branch)
+					print_nodes(*(node._left), level + 1, false);
+				else if (node._right && !left_branch)
+					print_nodes(*(node._right), level + 1, true);
+				for (size_t i = level; i ; i--) 
+					std::cout << '	';
+				std::cout << "{" << node._key << ":" << node._value << "}" << std::endl;
+				if (node._parent)
+					print_nodes(*(node._parent), level - 1, true);
+			}
 	};
-
 }
 
 #endif

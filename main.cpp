@@ -7,4 +7,5 @@
 int main()
 {
 	ft::rb_tree<int, int> lol;
+	lol.print_nodes(*lol.nodes);
 }
