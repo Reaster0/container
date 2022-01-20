@@ -6,6 +6,5 @@
 
 int main()
 {
-	ft::rb_tree<int, std::string> lol;
-	std::cout << "haha" << std::endl;
+	ft::rb_tree<int, int> lol;
 }
