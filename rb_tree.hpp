@@ -111,18 +111,19 @@ namespace ft
 				node_placement = alloc.allocate(1);
 				alloc.construct(node_placement, node);
 			}
-			void print_nodes(node_type& node, size_t level = 0, bool left_branch = false, bool left_branch = false) const
+			void print_nodes(node_type* nodes, int spaces = 0)
 			{
-				if (node._left && !left_branch)
-					print_nodes(*(node._left), level + 1, false);
-				else if (node._right && !left_branch)
-					print_nodes(*(node._right), level + 1, true);
-				for (size_t i = level; i ; i--) 
-					std::cout << '	';
-				std::cout << "{" << node._key << ":" << node._value << "}" << std::endl;
-				if (node._parent)
-					print_nodes(*(node._parent), level - 1, true);
+				if (!nodes)
+					return;
+				spaces++;
+				print_nodes(nodes->_left, spaces);
+				std::cout << std::endl;
+				for (int i = 1; i < spaces; i++)
+					std::cout << "	";
+				std::cout << nodes->_key << ":" << nodes->_value << std::endl;
+				print_nodes(nodes->_right, spaces);
 			}
+
 	};
 }
 
