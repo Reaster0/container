@@ -9,6 +9,8 @@ namespace ft
 	template <class Key, class T>
 	struct node
 	{
+		typedef node<Key, T> node_type;
+
 		Key _key;
 		T _value;
 		bool _color;
@@ -29,6 +31,15 @@ namespace ft
 			_right = other._right;
 			_parent = other._parent;
 			return *this;
+		}
+		node_type* uncle()//node_type* node)
+		{
+			if (!_parent || !_parent->_parent)
+				return 0;
+			if (_parent->_parent->_left == _parent)
+				return _parent->_parent->_right;
+			else
+				return _parent->_parent->_left;
 		}
 		// operator node<const Key, const T>() const
 		// {

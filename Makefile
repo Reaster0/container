@@ -6,7 +6,7 @@
 #    By: earnaud <earnaud@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/09/20 13:35:59 by earnaud           #+#    #+#              #
-#    Updated: 2022/01/20 16:34:47 by earnaud          ###   ########.fr        #
+#    Updated: 2022/01/23 20:14:50 by earnaud          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -23,7 +23,7 @@ OBJS		:= $(SRCS:.cpp=.o)
 DEP			:= $(SRCS:.cpp=.d)
 NAME		:= container
 CXX			:= clang++
-CXXFLAGS	:= -Wall -Wextra -Werror -std=c++98 -g -fstandalone-debug -MMD -MP
+CXXFLAGS	:= -std=c++98 -g -fstandalone-debug -MMD -MP #-Wall -Wextra -Werror
 
 all:		$(NAME)
 

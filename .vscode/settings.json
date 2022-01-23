@@ -40,6 +40,8 @@
 		"tuple": "cpp",
 		"type_traits": "cpp",
 		"utility": "cpp",
-		"stop_token": "cpp"
+		"stop_token": "cpp",
+		"__functional_base": "cpp",
+		"__locale": "cpp"
 	}
 }
