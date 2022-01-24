@@ -11,6 +11,7 @@ int main()
 	lol.insert(ft::node<int, char> (20, 'P'));
 	lol.insert(ft::node<int, char> (5, 'C'));
 	lol.insert(ft::node<int, char> (30, 'A'));
+	lol.insert(ft::node<int, char> (4, 'L'));
 	lol.insert(ft::node<int, char> (7, 'E'));
 	lol.print_nodes(lol.nodes);
 	lol.insert(ft::node<int, char> (15, 'B'));

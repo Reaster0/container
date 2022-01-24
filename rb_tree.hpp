@@ -65,62 +65,45 @@ namespace ft
 			// }
 			void collor_node(node_type** node)
 			{
-				// if (!(*node)->_parent)
-				// 	(*node)->_color = BLACK;
-				// else if ((*node)->uncle())
-				// {
-				// 	if ((*node).uncle()->_color == RED)
-				// 	{
-				// 		(*node)->_color = RED;
-				// 		(*node)->_parent->_color = BLACK;
-				// 		(*node)->_parent->_parent->_color = RED;
-				// 		(*node)->uncle()->_color = BLACK;
-				// 	}
+				if (!(*node)->_parent)
+					(*node)->_color = BLACK;
+				else if ((*node)->uncle())
+				{
+					if ((*node)->uncle()->_color == RED)
+					{
+						(*node)->_color = RED;
+						(*node)->_parent->_color = BLACK;
+						(*node)->_parent->_parent->_color = RED;
+						(*node)->uncle()->_color = BLACK;
+					}
 					//triangle case
-					// else if ((*node)->uncle()->_color == BLACK)
-					// {
-						// if ((*node) == (*node)->_parent->_right && (*node)->_parent == (*node)->_parent->_parent->_left) // case triangle right
-						// {
+					else if ((*node)->uncle()->_color == BLACK)
+					{
+						if ((*node) == (*node)->_parent->_right && (*node)->_parent == (*node)->_parent->_parent->_left) // case triangle right
+						{
 							node_type* P = *node;
-							P->_parent->_left = P->_left;
-							if (P->_left)
-							 	P->_left->_parent = P->_parent;
-							P->_left = P->_parent;
-							node_type* tempNodeRight = P->_right;
-							P->_right = P->_parent->_right;
-							 if (P->_right)
-							 	P->_right->_parent = P;
-							P->_parent->_right = tempNodeRight;
-							if (tempNodeRight)
-							 	tempNodeRight->_parent = P->_parent;
+							P->_right = P->_parent;
+							P->_parent->_left = nullptr;
 							node_type* tempParentParent = P->_parent->_parent;
 							if (tempParentParent)
 								tempParentParent->_right = P;
 							P->_parent->_parent = P;
 							P->_parent = tempParentParent;
-						//}
-						// else if ((*node) == (*node)->_parent->_right && (*node)->_parent == (*node)->_parent->_parent->_left)) // case triangle left
-						// {
-							// node_type* P = *node;
-							// P->_parent->_right = P->_right;
-							// if (P->_right)
-							//  	P->_right->_parent = P->_parent;
-							// P->_right = P->_parent;
-							// node_type* tempNodeLeft = P->_left;
-							// P->_left = P->_parent->_left;
-							//  if (P->_left)
-							//  	P->_left->_parent = P;
-							// P->_parent->_left = tempNodeLeft;
-							// if (tempNodeLeft)
-							//  	tempNodeLeft->_parent = P->_parent;
-							// node_type* tempParentParent = P->_parent->_parent;
-							// if (tempParentParent)
-							// 	tempParentParent->_left = P;
-							// P->_parent->_parent = P;
-							// P->_parent = tempParentParent;
-						// }
-					//}
-				//}
+						}
+						else if ((*node) == (*node)->_parent->_right && (*node)->_parent == (*node)->_parent->_parent->_left) // case triangle left
+						{
+							node_type* P = *node;
+							P->_left = P->_parent;
+							P->_parent->_right = nullptr;
+							node_type* tempParentParent = P->_parent->_parent;
+							if (tempParentParent)
+								tempParentParent->_left = P;
+							P->_parent->_parent = P;
+							P->_parent = tempParentParent;
+						}
+					}
+				
+				}
 			}
 
 			void insert_util(const node_type& node, node_type** start_node, node_type* parent = nullptr)
@@ -130,8 +113,7 @@ namespace ft
 					*start_node = alloc.allocate(1);
 					alloc.construct(*start_node, node);
 					(*start_node)->_parent = parent;
-					if ((*start_node)->_value == 'B')
-						collor_node(start_node);
+					collor_node(start_node);
 				}
 				else if (node > **start_node)
 					insert_util(node, &((*start_node)->_right), *start_node);
