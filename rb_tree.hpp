@@ -63,7 +63,7 @@ namespace ft
 			// 		fill_test_right(start_node->_right, limit, i + 1);
 			// 	}
 			// }
-			void collor_node(node_type* node)
+			void collor_node(node_type** node)
 			{
 				// if (!(*node)->_parent)
 				// 	(*node)->_color = BLACK;
@@ -79,26 +79,46 @@ namespace ft
 					//triangle case
 					// else if ((*node)->uncle()->_color == BLACK)
 					// {
-						// if ((*node) == (*node)->_parent->_right && (*node)->_parent == (*node)->_parent->_parent->_left) //right rotation
+						// if ((*node) == (*node)->_parent->_right && (*node)->_parent == (*node)->_parent->_parent->_left) // case triangle right
 						// {
-							node_type* P = node;
-							P->_parent->_right = P->_right;
-							P->_right->_parent = P->_parent;
-							P->_right = P->_parent;
-							node_type* tempNodeLeft = P->_left;
-							P->_left = P->_parent->_left;
-							P->_left->_parent = P;
-							P->_parent->_left = tempNodeLeft;
-							tempNodeLeft->_parent = P->_parent;
+							node_type* P = *node;
+							P->_parent->_left = P->_left;
+							if (P->_left)
+							 	P->_left->_parent = P->_parent;
+							P->_left = P->_parent;
+							node_type* tempNodeRight = P->_right;
+							P->_right = P->_parent->_right;
+							 if (P->_right)
+							 	P->_right->_parent = P;
+							P->_parent->_right = tempNodeRight;
+							if (tempNodeRight)
+							 	tempNodeRight->_parent = P->_parent;
 							node_type* tempParentParent = P->_parent->_parent;
+							if (tempParentParent)
+								tempParentParent->_right = P;
 							P->_parent->_parent = P;
 							P->_parent = tempParentParent;
 						//}
-						// else if ((*node) == (*node)->_parent->_left && (*node)->_parent == (*node)->_parent->_parent->_right)) //left rotation
+						// else if ((*node) == (*node)->_parent->_right && (*node)->_parent == (*node)->_parent->_parent->_left)) // case triangle left
 						// {
-
+							// node_type* P = *node;
+							// P->_parent->_right = P->_right;
+							// if (P->_right)
+							//  	P->_right->_parent = P->_parent;
+							// P->_right = P->_parent;
+							// node_type* tempNodeLeft = P->_left;
+							// P->_left = P->_parent->_left;
+							//  if (P->_left)
+							//  	P->_left->_parent = P;
+							// P->_parent->_left = tempNodeLeft;
+							// if (tempNodeLeft)
+							//  	tempNodeLeft->_parent = P->_parent;
+							// node_type* tempParentParent = P->_parent->_parent;
+							// if (tempParentParent)
+							// 	tempParentParent->_left = P;
+							// P->_parent->_parent = P;
+							// P->_parent = tempParentParent;
 						// }
-
 					//}
 				//}
 			}
@@ -110,8 +130,8 @@ namespace ft
 					*start_node = alloc.allocate(1);
 					alloc.construct(*start_node, node);
 					(*start_node)->_parent = parent;
-					if ((*start_node)->_value == 'P')
-						collor_node(*start_node);
+					if ((*start_node)->_value == 'B')
+						collor_node(start_node);
 				}
 				else if (node > **start_node)
 					insert_util(node, &((*start_node)->_right), *start_node);
