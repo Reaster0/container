@@ -8,13 +8,26 @@ int main()
 {
 	ft::rb_tree<int, char> lol;
 	lol.insert(ft::node<int, char> (10, 'Q'));
+	std::cout << "---------------------------------\n";
+		lol.print_nodes();
 	lol.insert(ft::node<int, char> (20, 'P'));
+		std::cout << "---------------------------------\n";
+		lol.print_nodes();
 	lol.insert(ft::node<int, char> (5, 'C'));
-	lol.insert(ft::node<int, char> (30, 'A'));
-	lol.insert(ft::node<int, char> (4, 'L'));
+		std::cout << "---------------------------------\n";
+		lol.print_nodes();
 	lol.insert(ft::node<int, char> (7, 'E'));
-	lol.print_nodes(lol.nodes);
+		std::cout << "---------------------------------\n";
+	lol.print_nodes();
 	lol.insert(ft::node<int, char> (15, 'B'));
+		std::cout << "---------------------------------\n";
+		lol.print_nodes();
+	lol.insert(ft::node<int, char> (30, 'A'));
+		std::cout << "---------------------------------\n";
+	lol.print_nodes();
+	lol.insert(ft::node<int, char> (4, 'L'));
+		std::cout << "---------------------------------\n";
+		lol.print_nodes();
 
 	std::cout << "------------------" << std::endl;
 	// ft::node<int, char>* P = lol.find_node(30);
@@ -33,6 +46,6 @@ int main()
 
 
 
-	lol.print_nodes(lol.nodes);
+	lol.print_nodes();
 
 }

@@ -24,50 +24,11 @@ namespace ft
 
 		private:
 			Allocator alloc;
-			// node_type* best_place(const node_type& start_node, const node<Key, T>& new_node) const
-			// {
-			// 	if (start_node._key > new_node._key)
-			// 	{
-			// 		if (!start_node._left)
-			// 			return start_node._left;
-			// 		return best_place(start_node._left, new_node);
-			// 	}
-			// 	else if (start_node._key < new_node._key)
-			// 	{
-			// 		if (!start_node._right)
-			// 			return start_node._right;
-			// 		return best_place(start_node._right, new_node);
-			// 	}
-			// 	return 0;
-			// }
-			// void fill_test(node_type* start_node, int limit, int i = 0)
-			// {
-			// 	if (i >= limit)
-			// 		return;
-			// 	start_node->_left = alloc.allocate(1);
-			// 	alloc.construct(start_node->_left, node_type(i, limit, RED));
-			// 	start_node->_left->_parent = start_node;
-			// 	fill_test(start_node->_left, limit, i + 1);
-			// }
-			// void fill_test_right(node_type* start_node, int limit, int i = 0, int from = 0)
-			// {
-			// 	if (i >= limit)
-			// 		return;
-			// 	if (from && start_node->_left)
-			// 		fill_test_right(start_node->_left, limit, i, from - 1);
-			// 	else
-			// 	{
-			// 		start_node->_right = alloc.allocate(1);
-			// 		alloc.construct(start_node->_right, node_type(from, i, RED));
-			// 		start_node->_right->_parent = start_node;
-			// 		fill_test_right(start_node->_right, limit, i + 1);
-			// 	}
-			// }
 			void collor_node(node_type** node)
 			{
-				if (!(*node)->_parent)
+				if (!(*node)->_parent) //case root
 					(*node)->_color = BLACK;
-				else if ((*node)->uncle())
+				else if ((*node)->uncle()) //other cases
 				{
 					if ((*node)->uncle()->_color == RED)
 					{
@@ -76,10 +37,10 @@ namespace ft
 						(*node)->_parent->_parent->_color = RED;
 						(*node)->uncle()->_color = BLACK;
 					}
-					//triangle case
 					else if ((*node)->uncle()->_color == BLACK)
 					{
-						if ((*node) == (*node)->_parent->_right && (*node)->_parent == (*node)->_parent->_parent->_left) // case triangle right
+						//triangle case
+						if ((*node) == (*node)->_parent->_left && (*node)->_parent == (*node)->_parent->_parent->_right) // case triangle right
 						{
 							node_type* P = *node;
 							P->_right = P->_parent;
@@ -89,7 +50,9 @@ namespace ft
 								tempParentParent->_right = P;
 							P->_parent->_parent = P;
 							P->_parent = tempParentParent;
+							//maybe an issue here with many node
 						}
+						//triangle case rev
 						else if ((*node) == (*node)->_parent->_right && (*node)->_parent == (*node)->_parent->_parent->_left) // case triangle left
 						{
 							node_type* P = *node;
@@ -100,10 +63,42 @@ namespace ft
 								tempParentParent->_left = P;
 							P->_parent->_parent = P;
 							P->_parent = tempParentParent;
+							//maybe an issue here with many node
+						}
+						//line rotation left
+						else if ((*node) == (*node)->_parent->_left && (*node)->_parent == (*node)->_parent->_parent->_left)
+						{
+							node_type* P = (*node)->_parent;
+							P->_parent->_left = P->_right;
+							P->_right->_parent = P->_parent;
+							P->_right = P->_parent;
+							node_type* tempParentParent = P->_parent->_parent;
+							P->_parent->_parent = P;
+							P->_parent = tempParentParent;
+							P->_color = BLACK;
+							P->_right->_color = RED;
+							P->_left->_color = RED;
+							//maybe an issue here with many node
+						}
+						//line rotation right
+						else if ((*node) == (*node)->_parent->_right && (*node)->_parent == (*node)->_parent->_parent->_right)
+						{
+							node_type* P = (*node)->_parent;
+							P->_parent->_right = P->_left;
+							P->_left->_parent = P->_parent;
+							P->_left = P->_parent;
+							node_type* tempParentParent = P->_parent->_parent;
+							P->_parent->_parent = P;
+							P->_parent = tempParentParent;
+							P->_color = BLACK;
+							P->_right->_color = RED;
+							P->_left->_color = RED;
+							//maybe an issue here with many node
 						}
 					}
-				
 				}
+				else
+					(*node)->_color = RED;
 			}
 
 			void insert_util(const node_type& node, node_type** start_node, node_type* parent = nullptr)
@@ -113,6 +108,7 @@ namespace ft
 					*start_node = alloc.allocate(1);
 					alloc.construct(*start_node, node);
 					(*start_node)->_parent = parent;
+					//if ((*start_node)->_value == 'L')
 					collor_node(start_node);
 				}
 				else if (node > **start_node)
@@ -144,34 +140,12 @@ namespace ft
 				else
 					return find_node_util(value, node->_left);
 			}
-		
-		public:
-			node_type* nodes;
-			rb_tree()
-			{
-				nodes = nullptr;
-				// nodes = alloc.allocate(1);
-				// alloc.construct(nodes, node<int, int>(42 , 99, RED));
-				// fill_test(nodes, 10);
-				// fill_test_right(nodes, 2, 0, 5);
-			}
-			~rb_tree()
-			{
-				// alloc.destroy(nodes);
-				// alloc.deallocate(nodes, 1);
-			}
-			// void add_node(const node_type& node)
-			// {
-			// 	node_type* node_placement = best_place(nodes, node);
-			// 	node_placement = alloc.allocate(1);
-			// 	alloc.construct(node_placement, node);
-			// }
-			void print_nodes(node_type* nodes, int spaces = 0)
+			void print_nodes_utils(node_type* nodes, int spaces = 0)
 			{
 				if (!nodes)
 					return;
 				spaces++;
-				print_nodes(nodes->_left, spaces);
+				print_nodes_utils(nodes->_left, spaces);
 				std::cout << std::endl;
 				for (int i = 1; i < spaces; i++)
 					std::cout << "	";
@@ -191,7 +165,30 @@ namespace ft
 					else
 						std::cout << std::endl;
 				}
-				print_nodes(nodes->_right, spaces);
+				print_nodes_utils(nodes->_right, spaces);
+			}
+			node_type* root_node(void)
+			{
+				node_type* node = nodes;
+				while (node && node->_parent)
+					node = node->_parent;
+				return node;
+			}
+		
+		public:
+			node_type* nodes;
+			rb_tree()
+			{
+				nodes = nullptr;
+			}
+			~rb_tree()
+			{
+				// alloc.destroy(nodes);
+				// alloc.deallocate(nodes, 1);
+			}
+			void print_nodes()
+			{
+				print_nodes_utils(root_node());
 			}
 			void insert(const node_type& node)
 			{
