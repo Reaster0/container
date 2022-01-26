@@ -26,79 +26,90 @@ namespace ft
 			Allocator alloc;
 			void collor_node(node_type** node)
 			{
-				if (!(*node)->_parent) //case root
-					(*node)->_color = BLACK;
-				else if ((*node)->uncle()) //other cases
+				//node_type* P = (*node); //to make the loop i need to use a P temp
+				do
 				{
-					if ((*node)->uncle()->_color == RED)
+					//*node = check_pointer;
+					if (!(*node)->_parent) //case root
+						(*node)->_color = BLACK;
+					else if ((*node)->uncle()) //other cases
 					{
+						if ((*node)->uncle()->_color == RED)
+						{
+							(*node)->_color = RED;
+							(*node)->_parent->_color = BLACK;
+							(*node)->_parent->_parent->_color = RED;
+							(*node)->uncle()->_color = BLACK;
+						}
+						else if ((*node)->uncle()->_color == BLACK)
+						{
+							//triangle case
+							if ((*node) == (*node)->_parent->_left && (*node)->_parent == (*node)->_parent->_parent->_right) // case triangle right
+							{
+								node_type* P = *node;
+								P->_right = P->_parent;
+								P->_parent->_left = nullptr;
+								node_type* tempParentParent = P->_parent->_parent;
+								if (tempParentParent)
+									tempParentParent->_right = P;
+								P->_parent->_parent = P;
+								P->_parent = tempParentParent;
+								//*node = P;
+								//maybe an issue here with many node
+							}
+							//triangle case rev
+							else if ((*node) == (*node)->_parent->_right && (*node)->_parent == (*node)->_parent->_parent->_left) // case triangle left
+							{
+								node_type* P = *node;
+								P->_left = P->_parent;
+								P->_parent->_right = nullptr;
+								node_type* tempParentParent = P->_parent->_parent;
+								if (tempParentParent)
+									tempParentParent->_left = P;
+								P->_parent->_parent = P;
+								P->_parent = tempParentParent;
+								//*node = P;
+								//maybe an issue here with many node
+							}
+							//line rotation left
+							else if ((*node) == (*node)->_parent->_left && (*node)->_parent == (*node)->_parent->_parent->_left)
+							{
+								node_type* P = (*node)->_parent;
+								P->_parent->_left = P->_right;
+								P->_right->_parent = P->_parent;
+								P->_right = P->_parent;
+								node_type* tempParentParent = P->_parent->_parent;
+								P->_parent->_parent = P;
+								P->_parent = tempParentParent;
+								P->_color = BLACK;
+								P->_right->_color = RED;
+								P->_left->_color = RED;
+								//*node = P;
+								//maybe an issue here with many node
+							}
+							//line rotation right
+							else if ((*node) == (*node)->_parent->_right && (*node)->_parent == (*node)->_parent->_parent->_right)
+							{
+								node_type* P = (*node)->_parent;
+								P->_parent->_right = P->_left;
+								P->_left->_parent = P->_parent;
+								P->_left = P->_parent;
+								node_type* tempParentParent = P->_parent->_parent;
+								P->_parent->_parent = P;
+								P->_parent = tempParentParent;
+								P->_color = BLACK;
+								P->_right->_color = RED;
+								P->_left->_color = RED;
+								//*node = P;
+								//maybe an issue here with many node
+							}
+						}
+					}
+					else
 						(*node)->_color = RED;
-						(*node)->_parent->_color = BLACK;
-						(*node)->_parent->_parent->_color = RED;
-						(*node)->uncle()->_color = BLACK;
-					}
-					else if ((*node)->uncle()->_color == BLACK)
-					{
-						//triangle case
-						if ((*node) == (*node)->_parent->_left && (*node)->_parent == (*node)->_parent->_parent->_right) // case triangle right
-						{
-							node_type* P = *node;
-							P->_right = P->_parent;
-							P->_parent->_left = nullptr;
-							node_type* tempParentParent = P->_parent->_parent;
-							if (tempParentParent)
-								tempParentParent->_right = P;
-							P->_parent->_parent = P;
-							P->_parent = tempParentParent;
-							//maybe an issue here with many node
-						}
-						//triangle case rev
-						else if ((*node) == (*node)->_parent->_right && (*node)->_parent == (*node)->_parent->_parent->_left) // case triangle left
-						{
-							node_type* P = *node;
-							P->_left = P->_parent;
-							P->_parent->_right = nullptr;
-							node_type* tempParentParent = P->_parent->_parent;
-							if (tempParentParent)
-								tempParentParent->_left = P;
-							P->_parent->_parent = P;
-							P->_parent = tempParentParent;
-							//maybe an issue here with many node
-						}
-						//line rotation left
-						else if ((*node) == (*node)->_parent->_left && (*node)->_parent == (*node)->_parent->_parent->_left)
-						{
-							node_type* P = (*node)->_parent;
-							P->_parent->_left = P->_right;
-							P->_right->_parent = P->_parent;
-							P->_right = P->_parent;
-							node_type* tempParentParent = P->_parent->_parent;
-							P->_parent->_parent = P;
-							P->_parent = tempParentParent;
-							P->_color = BLACK;
-							P->_right->_color = RED;
-							P->_left->_color = RED;
-							//maybe an issue here with many node
-						}
-						//line rotation right
-						else if ((*node) == (*node)->_parent->_right && (*node)->_parent == (*node)->_parent->_parent->_right)
-						{
-							node_type* P = (*node)->_parent;
-							P->_parent->_right = P->_left;
-							P->_left->_parent = P->_parent;
-							P->_left = P->_parent;
-							node_type* tempParentParent = P->_parent->_parent;
-							P->_parent->_parent = P;
-							P->_parent = tempParentParent;
-							P->_color = BLACK;
-							P->_right->_color = RED;
-							P->_left->_color = RED;
-							//maybe an issue here with many node
-						}
-					}
-				}
-				else
-					(*node)->_color = RED;
+					if (root_node()->_color == RED)
+						root_node()->_color = BLACK;
+				} while (0);//(*node)->_parent && (*node)->_parent->_color == RED); //need to make a loop like that
 			}
 
 			void insert_util(const node_type& node, node_type** start_node, node_type* parent = nullptr)
