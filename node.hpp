@@ -17,7 +17,7 @@ namespace ft
 		node* _left;
 		node* _right;
 		node* _parent;
-		node(const Key& key, const T& value, const bool& color = BLACK, node* left = nullptr, node* right = nullptr, node* parent = nullptr) : _key(key), _value(value), _color(color), _left(left), _right(right), _parent(parent)
+		node(const Key& key, const T& value, const bool& color = RED, node* left = nullptr, node* right = nullptr, node* parent = nullptr) : _key(key), _value(value), _color(color), _left(left), _right(right), _parent(parent)
 		{
 		}
 		~node()
@@ -40,6 +40,15 @@ namespace ft
 				return _parent->_parent->_right;
 			else
 				return _parent->_parent->_left;
+		}
+		int uncle_color()
+		{
+			if (!_parent || !_parent->_parent)
+				return 42;
+			if (_parent->_parent->_left == _parent)
+				return _parent->_parent->_right->_color;
+			else
+				return _parent->_parent->_left->_color;
 		}
 		// operator node<const Key, const T>() const
 		// {
