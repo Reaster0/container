@@ -24,6 +24,7 @@ namespace ft
 
 		private:
 			Allocator alloc;
+			node_type* nodes;
 
 			void RightLineRotation(node_type* P)
 			{
@@ -84,14 +85,14 @@ namespace ft
 					if (!(*node)->_parent) //case root
 						(*node)->_color = BLACK;
 					 	//other cases
-						if ((*node)->uncle_color() == RED))
+						if ((*node)->uncle_color() == RED)
 						{
 							(*node)->_color = RED;
 							(*node)->_parent->_color = BLACK;
 							(*node)->_parent->_parent->_color = RED;
 							(*node)->uncle()->_color = BLACK;
 						}
-						else if ((*node)->uncle_color() == BLACK))
+						else if ((*node)->uncle_color() == BLACK)
 						{
 							//triangle case
 							//if ((*node) == (*node)->_parent->_left && (*node)->_parent == (*node)->_parent->_parent->_right) // case triangle right
@@ -200,16 +201,7 @@ namespace ft
 				}
 				print_nodes_utils(nodes->_right, spaces);
 			}
-			node_type* root_node(void)
-			{
-				node_type* node = nodes;
-				while (node && node->_parent)
-					node = node->_parent;
-				return node;
-			}
-		
 		public:
-			node_type* nodes;
 			rb_tree()
 			{
 				nodes = nullptr;
@@ -235,6 +227,13 @@ namespace ft
 			{
 				return find_node_util(value, nodes);
 			}
+			node_type* root_node(void)
+			{
+				node_type* node = nodes;
+				while (node && node->_parent)
+					node = node->_parent;
+				return node;
+			}	
 	};
 }
 
