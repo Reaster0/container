@@ -95,13 +95,13 @@ namespace ft
 						else if ((*node)->uncle_color() == BLACK)
 						{
 							//triangle case
-							// if ((*node) == (*node)->_parent->_left && (*node)->_parent == (*node)->_parent->_parent->_right && (*node)->_parent->_color == RED) // case triangle right
-							// {
-							// 	node_type* P = *node;
-							// 	LeftTriangleRotation(P);
-							// 	LeftLineRotation(P);
+							if ((*node) == (*node)->_parent->_left && (*node)->_parent == (*node)->_parent->_parent->_right && (*node)->_parent->_color == RED) // case triangle right
+							{
+								node_type* P = *node;
+								LeftTriangleRotation(P);
+								LeftLineRotation(P);
 								//maybe an issue here with many node
-							//}
+							}
 							//triangle case rev
 							// else if ((*node) == (*node)->_parent->_right && (*node)->_parent == (*node)->_parent->_parent->_left) // case triangle left
 							// {
@@ -134,6 +134,28 @@ namespace ft
 					if (root_node()->_color == RED)
 						root_node()->_color = BLACK;
 			}
+			
+			node_type* check_collor(node_type* node)
+			{
+				if (!node)
+					return 0;
+				if (((node->_parent && ((node->_parent->_color != RED && node->_color != RED) || node->_parent->_color != node->_color))) || !node->_parent)
+					return (node_type*)((size_t)check_collor(node->_left) + (size_t)check_collor(node->_right));
+				else
+					return node;
+			}
+
+			void fix_color(node_type** node)
+			{
+				collor_node(node); //fait les rotations et la couleur correcte pour la node
+				node_type* P = check_collor(root_node()); //donne un pointeur vers la node mal placée
+				while (P)
+				{
+					collor_node(&P);
+					P = check_collor(root_node()); 
+				}
+
+			}
 
 			void insert_util(const node_type& node, node_type** start_node, node_type* parent = 0)
 			{
@@ -142,10 +164,7 @@ namespace ft
 					*start_node = alloc.allocate(1);
 					alloc.construct(*start_node, node);
 					(*start_node)->_parent = parent;
-					//if ((*start_node)->_value == 'L')
-					collor_node(start_node);
-					//while (check_collor(root_node()))
-						
+					fix_color(start_node);
 				}
 				else if (node > **start_node)
 					insert_util(node, &((*start_node)->_right), *start_node);
