@@ -45,10 +45,12 @@ namespace ft
 		{
 			if (!_parent || !_parent->_parent)
 				return 42;
-			if (_parent->_parent->_left == _parent)
+			if (_parent->_parent->_left == _parent && _parent->_parent->_right)
 				return _parent->_parent->_right->_color;
-			else
+			else if (_parent->_parent->_right == _parent && _parent->_parent->_left)
 				return _parent->_parent->_left->_color;
+			else
+				return BLACK;
 		}
 		// operator node<const Key, const T>() const
 		// {
