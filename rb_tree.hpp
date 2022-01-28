@@ -61,7 +61,7 @@ namespace ft
 			void LeftTriangleRotation(node_type* P) //depreciated
 			{
 				P->_right = P->_parent;
-				P->_parent->_left = nullptr;
+				P->_parent->_left = 0;
 				node_type* tempParentParent = P->_parent->_parent;
 				if (tempParentParent)
 					tempParentParent->_right = P;
@@ -71,7 +71,7 @@ namespace ft
 			void RightTriangleRotation(node_type* P) //depreciated
 			{
 				P->_left = P->_parent;
-				P->_parent->_right = nullptr;
+				P->_parent->_right = 0;
 				node_type* tempParentParent = P->_parent->_parent;
 				if (tempParentParent)
 					tempParentParent->_left = P;
@@ -95,12 +95,12 @@ namespace ft
 						else if ((*node)->uncle_color() == BLACK)
 						{
 							//triangle case
-							//if ((*node) == (*node)->_parent->_left && (*node)->_parent == (*node)->_parent->_parent->_right) // case triangle right
-							//{
-								// node_type* P = *node;
-								// LeftTriangleRotation(P);
-								// LeftLineRotation(P);
-								////maybe an issue here with many node
+							// if ((*node) == (*node)->_parent->_left && (*node)->_parent == (*node)->_parent->_parent->_right && (*node)->_parent->_color == RED) // case triangle right
+							// {
+							// 	node_type* P = *node;
+							// 	LeftTriangleRotation(P);
+							// 	LeftLineRotation(P);
+								//maybe an issue here with many node
 							//}
 							//triangle case rev
 							// else if ((*node) == (*node)->_parent->_right && (*node)->_parent == (*node)->_parent->_parent->_left) // case triangle left
@@ -135,7 +135,7 @@ namespace ft
 						root_node()->_color = BLACK;
 			}
 
-			void insert_util(const node_type& node, node_type** start_node, node_type* parent = nullptr)
+			void insert_util(const node_type& node, node_type** start_node, node_type* parent = 0)
 			{
 				if (!*start_node)
 				{
@@ -144,6 +144,8 @@ namespace ft
 					(*start_node)->_parent = parent;
 					//if ((*start_node)->_value == 'L')
 					collor_node(start_node);
+					//while (check_collor(root_node()))
+						
 				}
 				else if (node > **start_node)
 					insert_util(node, &((*start_node)->_right), *start_node);
@@ -173,6 +175,15 @@ namespace ft
 					return find_node_util(value, node->_right);
 				else
 					return find_node_util(value, node->_left);
+			}
+			void free_nodes(node_type* node)
+			{
+				if (!node)
+					return;
+				free_nodes(node->_left);
+				free_nodes(node->_right);
+				alloc.destroy(node);
+				alloc.deallocate(node, 1);
 			}
 			void print_nodes_utils(node_type* nodes, int spaces = 0)
 			{
@@ -204,12 +215,11 @@ namespace ft
 		public:
 			rb_tree()
 			{
-				nodes = nullptr;
+				nodes = 0;
 			}
 			~rb_tree()
 			{
-				// alloc.destroy(nodes);
-				// alloc.deallocate(nodes, 1);
+				free_nodes(root_node());
 			}
 			void print_nodes()
 			{

@@ -17,7 +17,7 @@ namespace ft
 		node* _left;
 		node* _right;
 		node* _parent;
-		node(const Key& key, const T& value, const bool& color = RED, node* left = nullptr, node* right = nullptr, node* parent = nullptr) : _key(key), _value(value), _color(color), _left(left), _right(right), _parent(parent)
+		node(const Key& key, const T& value, const bool& color = RED, node* left = 0, node* right = 0, node* parent = 0) : _key(key), _value(value), _color(color), _left(left), _right(right), _parent(parent)
 		{
 		}
 		~node()
