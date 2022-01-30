@@ -279,7 +279,19 @@ namespace ft
 				while (node && node->_parent)
 					node = node->_parent;
 				return node;
-			}	
+			}
+			node_type* right(node_type* node)
+			{
+				if (!node || !node->_right)
+					return 0;
+				return node->_right;
+			}
+			node_type* left(node_type* node)
+			{
+				if (!node || !node->_left)
+					return 0;
+				return node->_left;
+			}
 	};
 }
 
