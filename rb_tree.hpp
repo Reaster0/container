@@ -33,8 +33,10 @@ namespace ft
 					P->_right->_parent = P->_parent;
 				P->_right = P->_parent;
 				node_type* tempParentParent = P->_parent->_parent;
-				if (tempParentParent)
+				if (tempParentParent && tempParentParent->_left == P->_parent)
 					tempParentParent->_left = P;
+				else if (tempParentParent && tempParentParent->_right == P->_parent)
+					tempParentParent->_right = P;
 				P->_parent->_parent = P;
 				P->_parent = tempParentParent;
 				P->_color = BLACK;
@@ -49,7 +51,9 @@ namespace ft
 					P->_left->_parent = P->_parent;
 				P->_left = P->_parent;
 				node_type* tempParentParent = P->_parent->_parent;
-				if (tempParentParent)
+				if (tempParentParent && tempParentParent->_left == P->_parent)
+					tempParentParent->_left = P;
+				else if (tempParentParent && tempParentParent->_right == P->_parent)
 					tempParentParent->_right = P;
 				P->_parent->_parent = P;
 				P->_parent = tempParentParent;
@@ -58,7 +62,7 @@ namespace ft
 					//P->_right->_color = RED; //maybe not usefull
 				P->_left->_color = RED;
 			}
-			void LeftTriangleRotation(node_type* P) //depreciated
+			void LeftTriangleRotation(node_type* P)
 			{
 				P->_right = P->_parent;
 				P->_parent->_left = 0;
@@ -68,7 +72,7 @@ namespace ft
 				P->_parent->_parent = P;
 				P->_parent = tempParentParent;
 			}
-			void RightTriangleRotation(node_type* P) //depreciated
+			void RightTriangleRotation(node_type* P)
 			{
 				P->_left = P->_parent;
 				P->_parent->_right = 0;
@@ -103,15 +107,15 @@ namespace ft
 								//maybe an issue here with many node
 							}
 							//triangle case rev
-							// else if ((*node) == (*node)->_parent->_right && (*node)->_parent == (*node)->_parent->_parent->_left) // case triangle left
-							// {
-							// 	node_type* P = *node;
-							// 	RightTriangleRotation(P);
-							// 	RightLineRotation(P);
-							// 	//maybe an issue here with many node
-							// }
+							else if ((*node) == (*node)->_parent->_right && (*node)->_parent == (*node)->_parent->_parent->_left && (*node)->_parent->_color == RED) // case triangle left
+							{
+								node_type* P = *node;
+								RightTriangleRotation(P);
+								RightLineRotation(P);
+								//maybe an issue here with many node
+							}
 							//line rotation left
-							if ((*node) == (*node)->_parent->_left && (*node)->_parent == (*node)->_parent->_parent->_left && (*node)->_parent->_color == RED)
+							else if ((*node) == (*node)->_parent->_left && (*node)->_parent == (*node)->_parent->_parent->_left && (*node)->_parent->_color == RED)
 							{
 								node_type* P = *node;
 								while (P->_parent->_color == RED)
@@ -140,14 +144,27 @@ namespace ft
 				if (!node)
 					return 0;
 				if (((node->_parent && ((node->_parent->_color != RED && node->_color != RED) || node->_parent->_color != node->_color))) || !node->_parent)
-					return (node_type*)((size_t)check_collor(node->_left) + (size_t)check_collor(node->_right));
+					return (node_type*)((size_t)check_collor(node->_left) + (size_t)check_collor(node->_right)); //can fail if there is both error but that would be weird
 				else
 					return node;
 			}
 
 			void fix_color(node_type** node)
 			{
+				int debug = 0;
+				if (debug)
+				{
+					std::cout << "-------------------------------------\n";
+					print_nodes();
+					std::cout << "-------------------------------------\n";
+				}
 				collor_node(node); //fait les rotations et la couleur correcte pour la node
+				if (debug)
+				{
+					std::cout << "-------------------------------------\n";
+					print_nodes();
+					std::cout << "-------------------------------------\n";
+				}
 				node_type* P = check_collor(root_node()); //donne un pointeur vers la node mal placée
 				while (P)
 				{

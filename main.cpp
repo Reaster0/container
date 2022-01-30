@@ -37,16 +37,16 @@ int main()
 	lol.insert(ft::node<int, char> (45, 'O'));
 		std::cout << "---------------------------------\n";
 		lol.print_nodes();
-	lol.insert(ft::node<int, char> (21, 'X'));
+	lol.insert(ft::node<int, char> (21, 'Y'));
 		std::cout << "---------------------------------\n";
 		lol.print_nodes();
 	lol.insert(ft::node<int, char> (11, 'X'));
 		std::cout << "---------------------------------\n";
 		lol.print_nodes();
-	lol.insert(ft::node<int, char> (9, 'X'));
+	lol.insert(ft::node<int, char> (9, 'Z'));
 		std::cout << "---------------------------------\n";
 		lol.print_nodes();
-	lol.insert(ft::node<int, char> (8, 'X'));
+	lol.insert(ft::node<int, char> (8, 'G'));
 		std::cout << "---------------------------------\n";
 		lol.print_nodes();
 
