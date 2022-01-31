@@ -15,12 +15,13 @@
 
 namespace ft
 {
-	template <class Key, class T, class Allocator = std::allocator<ft::node<Key, T> > >
+	template <class Key, class T >
 	class rb_tree
 	{
 		typedef T value_type;
 		typedef	Key key_type;
 		typedef node<Key, T> node_type;
+		typedef std::allocator<ft::node<Key, T> > Allocator;
 
 		private:
 			Allocator alloc;
@@ -264,6 +265,10 @@ namespace ft
 			void insert(const node_type& node)
 			{
 				insert_util(node, &nodes);
+			}
+			void insert(const pair<const Key, T>& val)
+			{
+				insert_util(node_type(val._first, val._second), &nodes);
 			}
 			T& find(const Key& value)
 			{

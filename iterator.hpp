@@ -21,10 +21,17 @@ namespace ft
 			// typedef typename vector::value_type*   pointer;
 			// typedef typename vector::reference& reference;
 			typedef T	value_type;
-			typedef ptrdiff_t	difference_type;
 			typedef T*	pointer;
 			typedef T&	reference;
 			typedef typename ft::random_access_iterator_tag  iterator_category;
+			
+			#ifdef __APPLE__
+			typedef ptrdiff_t difference_type; //macos
+			#endif
+			#ifdef __linux__
+			typedef __gnu_cxx::ptrdiff_t difference_type; //linux
+			#endif
+			
 			pointer _ptr;
 		
 			iterator(pointer ptr = 0) : _ptr(ptr)

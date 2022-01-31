@@ -97,7 +97,7 @@ namespace ft
 	{
 		T _first;
 		U _second;
-		pair(const T& first = NULL, const U& second = NULL) : _first(first), _second(second) {};
+		pair(const T& first = 0, const U& second = 0) : _first(first), _second(second) {};
 		pair(const pair<T, U>& other) : _first(other._first), _second(other._second) {};
 
 		pair<T, U>& operator=(const pair<T, U>& other)
@@ -105,6 +105,10 @@ namespace ft
 			_first = other._first;
 			_second = other._second;
 			return *this;
+		}
+		operator pair<const T, U>() const
+		{
+		    return (pair<const T, U>(_first, _second));
 		}
 	};
 
