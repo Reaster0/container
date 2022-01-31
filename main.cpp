@@ -3,6 +3,7 @@
 #include "iterator.hpp"
 #include "stack.hpp"
 #include "rb_tree.hpp"
+#include "map.hpp"
 
 int main()
 {
