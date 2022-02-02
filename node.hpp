@@ -32,6 +32,7 @@ namespace ft
 			_parent = other._parent;
 			return *this;
 		}
+		
 		node_type* uncle()//node_type* node)
 		{
 			if (!_parent || !_parent->_parent)

@@ -152,20 +152,7 @@ namespace ft
 
 			void fix_color(node_type** node)
 			{
-				int debug = 0;
-				if (debug)
-				{
-					std::cout << "-------------------------------------\n";
-					print_nodes();
-					std::cout << "-------------------------------------\n";
-				}
 				collor_node(node); //fait les rotations et la couleur correcte pour la node
-				if (debug)
-				{
-					std::cout << "-------------------------------------\n";
-					print_nodes();
-					std::cout << "-------------------------------------\n";
-				}
 				node_type* P = check_collor(root_node()); //donne un pointeur vers la node mal placée
 				while (P)
 				{
@@ -266,26 +253,9 @@ namespace ft
 			{
 				nodes = 0; //in test
 			}
-			rb_tree(node_type* other)
-			{
-				std::cout << "hello you";
-			}
 			~rb_tree()
 			{
 				free_nodes(root_node());
-			}
-			operator rb_tree<const Key, T>()
-			{
-				return rb_tree<const Key, T>(*this);
-			}
-			rb_tree& test_equal(rb_tree other, node_type* other_nodes = 0)
-			{
-				free_nodes(root_node());
-				if (other_nodes)
-					equal_utils(other_nodes);
-				else
-					equal_utils(other.root_node());
-				return *this;
 			}
 			rb_tree& operator=(rb_tree other)
 			{
