@@ -6,27 +6,25 @@
 
 namespace ft
 {
-	template <class Key, class T>
+	template <class T>
 	struct node
 	{
-		typedef node<Key, T> node_type;
+		typedef node<T> node_type;
 
-		Key _key;
-		T _value;
+		T _data;
 		bool _color;
 		node* _left;
 		node* _right;
 		node* _parent;
-		node(const Key& key, const T& value, const bool& color = RED, node* left = 0, node* right = 0, node* parent = 0) : _key(key), _value(value), _color(color), _left(left), _right(right), _parent(parent)
+		node(const T& data, const bool& color = RED, node* left = 0, node* right = 0, node* parent = 0) : _data(data), _color(color), _left(left), _right(right), _parent(parent)
 		{
 		}
 		~node()
 		{
 		}
-		node& operator=(const node<Key, T>& other)
+		node& operator=(const node<T>& other)
 		{
-			_key = other._key;
-			_value = other._value;
+			_data = other._data;
 			_left = other._left;
 			_right = other._right;
 			_parent = other._parent;
@@ -58,15 +56,25 @@ namespace ft
 		// 	return node<const Key, const T>(_key, _value, _color, _left, _right, _parent);
 		// }
 	};
-	template <class Key, class T, class Key2, class T2>
-	bool operator<(const node<Key, T>& A, const node<Key2, T2>& B)
+	template <class T, class U>
+	bool operator<(const node<T>& A, const node<U>& B)
 	{
-		return A._key < B._key;
+		return A._data < B._data;
 	}
-	template <class Key, class T, class Key2, class T2>
-	bool operator>(const node<Key, T>& A, const node<Key2, T2>& B)
+	template <class T, class U>
+	bool operator>(const node<T>& A, const node<U>& B)
 	{
-		return B._key < A._key;
+		return B._data < A._data;
+	}
+	template <class T, class U>
+	bool operator>=(const node<T>& A, const node<U>& B)
+	{
+		return !(A._data < B._data);
+	}
+		template <class T, class U>
+	bool operator<=(const node<T>& A, const node<U>& B)
+	{
+		return !(A._data > B._data);
 	}
 }
 
