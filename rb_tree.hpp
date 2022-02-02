@@ -249,14 +249,49 @@ namespace ft
 				}
 				print_nodes_utils(nodes->_right, spaces);
 			}
+			void equal_utils(const node_type* other_nodes)
+			{
+				if (!other_nodes)
+					return;
+				insert_util(*other_nodes, &nodes);
+				equal_utils(other_nodes->_left);
+				equal_utils(other_nodes->_right);
+			}
 		public:
 			rb_tree()
 			{
 				nodes = 0;
 			}
+			rb_tree(const rb_tree& other)
+			{
+				nodes = 0; //in test
+			}
+			rb_tree(node_type* other)
+			{
+				std::cout << "hello you";
+			}
 			~rb_tree()
 			{
 				free_nodes(root_node());
+			}
+			operator rb_tree<const Key, T>()
+			{
+				return rb_tree<const Key, T>(*this);
+			}
+			rb_tree& test_equal(rb_tree other, node_type* other_nodes = 0)
+			{
+				free_nodes(root_node());
+				if (other_nodes)
+					equal_utils(other_nodes);
+				else
+					equal_utils(other.root_node());
+				return *this;
+			}
+			rb_tree& operator=(rb_tree other)
+			{
+				free_nodes(root_node());
+				equal_utils(other.root_node());
+				return *this;
 			}
 			void print_nodes()
 			{

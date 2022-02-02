@@ -19,7 +19,8 @@ namespace ft
 		typedef typename allocator_type::const_reference	const_reference;
 		typedef typename allocator_type::pointer pointer;
 		typedef typename allocator_type::const_pointer const_pointer;
-		typedef iterator<node_type> iterator;
+		typedef ft::iterator<node_type> iterator;
+		typedef ft::iterator<const node_type> const_iterator;
 		typedef typename iterator_traits<iterator>::difference_type difference_type;
 		typedef size_t size_type;
 
@@ -31,12 +32,13 @@ namespace ft
               const allocator_type& alloc = allocator_type())
 			{
 			}
-			// map (InputIterator first, InputIterator last,
-			// const key_compare& comp = key_compare(),
-			// const allocator_type& alloc = allocator_type())
-			// {
-
-			// }
+			template<class InputIterator>
+			map(InputIterator first, InputIterator last,
+			const key_compare& comp = key_compare(),
+			const allocator_type& alloc = allocator_type())
+			{
+				insert(first, last);
+			}
 			map (const map& x)
 			{
 				this = x;
@@ -94,6 +96,16 @@ namespace ft
 			iterator begin()
 			{
 				return iterator(_tree.root_node());
+			}
+			const_iterator begin() const
+			{
+				return iterator(_tree.root_node());
+			}
+			void clear()
+			{
+				//_tree.test_equal(rb_tree<Key, T>());
+				rb_tree<Key, T> temp;
+				_tree = temp;
 			}
 
 	};

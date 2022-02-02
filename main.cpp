@@ -56,9 +56,8 @@ int main()
 	// lol.print_nodes();
 
 	ft::map<int, char> testing;
+	ft::rb_tree<const int, char> test;
 	testing.insert(ft::pair<int, char>(2, 'F'));
 	testing.insert(testing.begin(), ft::pair<int, char>(6, 'A'));
-	std::map<int, char> real;
-	std::cout << real[3] << std::endl;
-
+	testing.clear();
 }
