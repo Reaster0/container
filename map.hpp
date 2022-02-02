@@ -10,7 +10,7 @@ namespace ft
 	{
 		typedef T mapped_type;
 		typedef Key key_type;
-		typedef node<const Key, T> node_type;
+		typedef node<const T> node_type;
 		typedef Compare key_compare;
 		typedef rb_tree<const key_type, mapped_type> tree_type;
 		typedef pair<const Key, T> value_type;

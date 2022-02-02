@@ -15,13 +15,13 @@
 
 namespace ft
 {
-	template <class Key, class T >
+	template <class T>
 	class rb_tree
 	{
 		typedef T value_type;
-		typedef	Key key_type;
-		typedef node<Key, T> node_type;
-		typedef std::allocator<ft::node<Key, T> > Allocator;
+		//typedef	Key key_type;
+		typedef node<T> node_type;
+		typedef std::allocator<ft::node<T> > Allocator;
 
 		private:
 			Allocator alloc;
@@ -178,24 +178,24 @@ namespace ft
 				else
 					throw std::string("the keys node's are the same");
 			}
-			T& find_util(const Key& value, node_type* node)
+			T& find_util(const T& value, node_type* node)
 			{
 				if (!node)
 					throw std::string("invalid key");
-				if (node->_key == value)
-					return node->_value;
-				if (node->_key < value)
+				if (node->_data == value)
+					return node->_data;
+				if (node->_data < value)
 					return find_util(value, node->_right);
 				else
 					return find_util(value, node->_left);
 			}
-			node_type* find_node_util(const Key& value, node_type* node)
+			node_type* find_node_util(const T& value, node_type* node)
 			{
 				if (!node)
 					throw std::string("invalid key");
-				if (node->_key == value)
+				if (node->_data == value)
 					return node;
-				if (node->_key < value)
+				if (node->_data < value)
 					return find_node_util(value, node->_right);
 				else
 					return find_node_util(value, node->_left);
@@ -220,17 +220,17 @@ namespace ft
 					std::cout << "	";
 				if (nodes->_color == RED)
 				{
-					std::cout << "\033[31m" << nodes->_key << ":" << nodes->_value << "\033[0m"; //<< std::endl;
+					std::cout << "\033[31m" << nodes->_data << "\033[0m"; //<< std::endl;
 					if (nodes->uncle())
-						std::cout << "\033[31m:" << nodes->uncle()->_key << "\033[0m" << std::endl;
+						std::cout << "\033[31m:" << nodes->uncle()->_data << "\033[0m" << std::endl;
 					else
 						std::cout << std::endl;
 				}
 				else
 				{
-					std::cout << nodes->_key << ":" << nodes->_value; //<< std::endl;
+					std::cout << nodes->_data; //<< std::endl;
 					if (nodes->uncle())
-						std::cout << ":" << nodes->uncle()->_key << std::endl;
+						std::cout << ":" << nodes->uncle()->_data << std::endl;
 					else
 						std::cout << std::endl;
 				}
@@ -251,7 +251,7 @@ namespace ft
 			}
 			rb_tree(const rb_tree& other)
 			{
-				nodes = 0; //in test
+				*this = other;
 			}
 			~rb_tree()
 			{
@@ -271,18 +271,18 @@ namespace ft
 			{
 				insert_util(node, &nodes);
 			}
-			void insert(const pair<const Key, T>& val)
+			void insert(const T& val)
 			{
-				insert_util(node_type(val._first, val._second), &nodes);
+				insert_util(node_type(val), &nodes);
 			}
-			T& find(const Key& value)
-			{
-				return find_util(value, nodes);
-			}
-			node_type* find_node(const Key& value)
-			{
-				return find_node_util(value, nodes);
-			}
+			// T& find(const Key& value)
+			// {
+			// 	return find_util(value, nodes);
+			// }
+			// node_type* find_node(const Key& value)
+			// {
+			// 	return find_node_util(value, nodes);
+			// }
 			node_type* root_node(void)
 			{
 				node_type* node = nodes;

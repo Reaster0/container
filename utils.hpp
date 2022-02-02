@@ -153,6 +153,12 @@ namespace ft
 	{
 		return rhs < lhs;
 	}
+
+	template <class T, class U>
+	std::ostream& operator<<(std::ostream &os, const pair<T, U> &other)
+	{
+		return os << other._first << ":" << other._second;
+	}
 }
 
 #endif
