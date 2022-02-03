@@ -5,13 +5,13 @@
 
 namespace ft
 {
-	template<class T, class Allocator = std::allocator<T>, class Compare = std::less<T> >
+	template<class Key, class T, class Allocator = std::allocator<ft::pair<Key, T> >, class Compare = std::less<Key> >
 	class map
 	{
-		typedef node<const T> node_type;
+		typedef ft::pair<const Key, T> value_type;
+		typedef node<const value_type> node_type;
 		typedef Compare key_compare;
-		typedef rb_tree<const T> tree_type;
-		typedef T value_type;
+		typedef rb_tree<const value_type> tree_type;
 		typedef Allocator allocator_type;
 		typedef typename allocator_type::reference	reference;
 		typedef typename allocator_type::const_reference	const_reference;
@@ -106,6 +106,18 @@ namespace ft
 			void clear()
 			{
 				_tree = tree_type();
+			}
+			size_type count(const Key& k) const
+			{
+				try
+				{
+					_tree.find_key(k);
+					return 1;
+				}
+				catch(const std::string& e)
+				{
+					return 0;
+				}
 			}
 			map& operator=(const map& other)
 			{

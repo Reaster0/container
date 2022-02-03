@@ -178,17 +178,6 @@ namespace ft
 				else
 					throw std::string("the keys node's are the same");
 			}
-			T& find_util(const T& value, node_type* node)
-			{
-				if (!node)
-					throw std::string("invalid key");
-				if (node->_data == value)
-					return node->_data;
-				if (node->_data < value)
-					return find_util(value, node->_right);
-				else
-					return find_util(value, node->_left);
-			}
 			node_type* find_node_util(const T& value, node_type* node)
 			{
 				if (!node)
@@ -199,6 +188,18 @@ namespace ft
 					return find_node_util(value, node->_right);
 				else
 					return find_node_util(value, node->_left);
+			}
+			template <class U>
+			T& find_util(const U& value, node_type* node) const
+			{
+				if (!node)
+					throw std::string("invalid key");
+				if (node->_data._first == value)
+					return node->_data;
+				if (node->_data._first < value)
+					return find_util(value, node->_right);
+				else
+					return find_util(value, node->_left);
 			}
 			void free_nodes(node_type* node)
 			{
@@ -273,6 +274,11 @@ namespace ft
 			node_type* find_node(const T& val)
 			{
 				return find_node_util(val, root_node());
+			}
+			template <class U>
+			T& find_key(const U& key) const
+			{
+				return find_util(key, nodes);
 			}
 			node_type* root_node(void) const
 			{
