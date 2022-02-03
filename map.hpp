@@ -59,7 +59,7 @@ namespace ft
 				}
 				catch(const std::string& e)
 				{
-					//std::cerr << e << '\n'; //maybe unusefull
+					std::cerr << e << '\n'; //maybe unusefull
 					result._first = iterator(_tree.find_node(val));
 					result._second = false;
 				}
@@ -97,11 +97,11 @@ namespace ft
 			}
 			iterator begin()
 			{
-				return iterator(_tree.root_node());
+				return iterator(_tree.nodes);
 			}
 			const_iterator begin() const
 			{
-				return iterator(_tree.root_node());
+				return iterator(_tree.nodes);
 			}
 			void clear()
 			{

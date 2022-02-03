@@ -13,9 +13,4 @@ int main()
 	testing.insert(4);
 	testing.insert(5);
 	testing.print();
-	ft::map<int> test2(testing);
-	testing.clear();
-	test2.print();
-	testing.print();
-	test2.clear();
 }
