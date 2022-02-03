@@ -159,7 +159,7 @@ namespace ft
 					collor_node(&P);
 					P = check_collor(root_node()); 
 				}
-
+				nodes = root_node();
 			}
 
 			void insert_util(const node_type& node, node_type** start_node, node_type* parent = 0)
@@ -221,18 +221,12 @@ namespace ft
 				if (nodes->_color == RED)
 				{
 					std::cout << "\033[31m" << nodes->_data << "\033[0m"; //<< std::endl;
-					if (nodes->uncle())
-						std::cout << "\033[31m:" << nodes->uncle()->_data << "\033[0m" << std::endl;
-					else
-						std::cout << std::endl;
+					std::cout << std::endl;
 				}
 				else
 				{
 					std::cout << nodes->_data; //<< std::endl;
-					if (nodes->uncle())
-						std::cout << ":" << nodes->uncle()->_data << std::endl;
-					else
-						std::cout << std::endl;
+					std::cout << std::endl;
 				}
 				print_nodes_utils(nodes->_right, spaces);
 			}
@@ -240,7 +234,7 @@ namespace ft
 			{
 				if (!other_nodes)
 					return;
-				insert_util(*other_nodes, &nodes);
+				insert_util(node_type(other_nodes->_data), &nodes);
 				equal_utils(other_nodes->_left);
 				equal_utils(other_nodes->_right);
 			}
@@ -257,9 +251,10 @@ namespace ft
 			{
 				free_nodes(root_node());
 			}
-			rb_tree& operator=(rb_tree other)
+			rb_tree& operator=(const rb_tree& other)
 			{
 				free_nodes(root_node());
+				nodes = 0;
 				equal_utils(other.root_node());
 				return *this;
 			}
@@ -275,15 +270,11 @@ namespace ft
 			{
 				insert_util(node_type(val), &nodes);
 			}
-			// T& find(const Key& value)
-			// {
-			// 	return find_util(value, nodes);
-			// }
-			// node_type* find_node(const Key& value)
-			// {
-			// 	return find_node_util(value, nodes);
-			// }
-			node_type* root_node(void)
+			node_type* find_node(const T& val)
+			{
+				return find_node_util(val, root_node());
+			}
+			node_type* root_node(void) const
 			{
 				node_type* node = nodes;
 				while (node && node->_parent)

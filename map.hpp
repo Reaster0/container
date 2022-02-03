@@ -5,15 +5,13 @@
 
 namespace ft
 {
-	template<class Key, class T, class Allocator = std::allocator<ft::pair<const Key, T> >, class Compare = std::less<Key> >
+	template<class T, class Allocator = std::allocator<T>, class Compare = std::less<T> >
 	class map
 	{
-		typedef T mapped_type;
-		typedef Key key_type;
 		typedef node<const T> node_type;
 		typedef Compare key_compare;
-		typedef rb_tree<const key_type, mapped_type> tree_type;
-		typedef pair<const Key, T> value_type;
+		typedef rb_tree<const T> tree_type;
+		typedef T value_type;
 		typedef Allocator allocator_type;
 		typedef typename allocator_type::reference	reference;
 		typedef typename allocator_type::const_reference	const_reference;
@@ -39,12 +37,16 @@ namespace ft
 			{
 				insert(first, last);
 			}
-			map (const map& x)
+			map(const map& x)
 			{
-				this = x;
+				*this = x;
 			}
 			~map()
 			{
+			}
+			void print()
+			{
+				_tree.print_nodes();
 			}
 			ft::pair<iterator, bool> insert(const value_type& val)
 			{
@@ -52,13 +54,13 @@ namespace ft
 				try
 				{
 					_tree.insert(val);
-					result._first = iterator(_tree.find_node(val._first));
-					result._second = true;	
+					result._first = iterator(_tree.find_node(val));
+					result._second = true;
 				}
 				catch(const std::string& e)
 				{
-					std::cerr << e << '\n'; //maybe unusefull
-					result._first = iterator(_tree.find_node(val._first));
+					//std::cerr << e << '\n'; //maybe unusefull
+					result._first = iterator(_tree.find_node(val));
 					result._second = false;
 				}
 				return result;
@@ -70,12 +72,12 @@ namespace ft
 				try
 				{
 					_tree.insert(val);
-					result = iterator(_tree.find_node(val._first));	
+					result = iterator(_tree.find_node(val));	
 				}
 				catch(const std::string& e)
 				{
 					std::cerr << e << '\n'; //maybe unusefull
-					result = iterator(_tree.find_node(val._first));
+					result = iterator(_tree.find_node(val));
 				}
 				return result;
 			}
@@ -103,11 +105,13 @@ namespace ft
 			}
 			void clear()
 			{
-				//_tree.test_equal(rb_tree<Key, T>());
-				rb_tree<Key, T> temp;
-				_tree = temp;
+				_tree = tree_type();
 			}
-
+			map& operator=(const map& other)
+			{
+				_tree = other._tree;
+				return *this;
+			}
 	};
 }
 
