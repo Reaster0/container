@@ -9,23 +9,25 @@ namespace ft
 	class map
 	{
 		typedef ft::pair<const Key, T> value_type;
+		typedef rb_tree<const value_type, Key> tree_type;
 		typedef node<const value_type> node_type;
 		typedef Compare key_compare;
-		typedef rb_tree<const value_type> tree_type;
 		typedef Allocator allocator_type;
 		typedef typename allocator_type::reference	reference;
 		typedef typename allocator_type::const_reference	const_reference;
 		typedef typename allocator_type::pointer pointer;
 		typedef typename allocator_type::const_pointer const_pointer;
-		typedef ft::iterator<node_type> iterator;
-		typedef ft::iterator<const node_type> const_iterator;
-		typedef typename iterator_traits<iterator>::difference_type difference_type;
 		typedef size_t size_type;
 
 		private:
 			tree_type _tree;
 
 		public://maybe need to incorporate key_compare in rb_tree
+
+			typedef ft::iterator<node_type> iterator;
+			typedef ft::iterator<const node_type> const_iterator;
+			typedef typename iterator_traits<iterator>::difference_type difference_type;
+
 			explicit map (const key_compare& comp = key_compare(),
               const allocator_type& alloc = allocator_type())
 			{
@@ -43,6 +45,11 @@ namespace ft
 			}
 			~map()
 			{
+			}
+			map& operator=(const map& other)
+			{
+				_tree = other._tree;
+				return *this;
 			}
 			void print()
 			{
@@ -119,10 +126,52 @@ namespace ft
 					return 0;
 				}
 			}
-			map& operator=(const map& other)
+			ft::pair<const_iterator, const_iterator> equal_range(const Key& key) const
 			{
-				_tree = other._tree;
-				return *this;
+				return ft::pair<const_iterator, const_iterator>
+				(const_iterator(_tree.find_next_key(key)), const_iterator(_tree.find_next_key(key)));
+			}
+			bool empty() const
+			{
+				if (!_tree.root_node())
+					return true;
+				return false;
+			}
+			iterator find(const Key& key)
+			{
+				try
+				{
+					return iterator(_tree.find_node(_tree.find_key(key)));
+				}
+				catch(const std::string& e)
+				{
+					return iterator(0); //sould return end()
+					//return end();
+				}
+			}
+			const_iterator find(const Key& key) const
+			{
+				try
+				{
+					return const_iterator(_tree.find_node(_tree.find_key(key)));
+				}
+				catch(const std::string& e)
+				{
+					return const_iterator(0); //sould return end()
+					//return end();
+				}
+			}
+			allocator_type get_allocator() const
+			{
+				return Allocator();
+			}
+			size_t max_size() const
+			{
+				return Allocator().max_size();
+			}
+			size_t size() const
+			{
+				return _tree.size();
 			}
 	};
 }

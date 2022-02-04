@@ -42,6 +42,10 @@
 		"utility": "cpp",
 		"stop_token": "cpp",
 		"__functional_base": "cpp",
-		"__locale": "cpp"
+		"__locale": "cpp",
+		"ratio": "cpp",
+		"bit": "cpp",
+		"bitset": "cpp",
+		"limits": "cpp"
 	}
 }

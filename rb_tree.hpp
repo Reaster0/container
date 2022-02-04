@@ -15,7 +15,7 @@
 
 namespace ft
 {
-	template <class T>
+	template <class T, class Key>
 	class rb_tree
 	{
 		typedef T value_type;
@@ -26,6 +26,7 @@ namespace ft
 		private:
 			Allocator alloc;
 			node_type* nodes;
+			node_type** nil; // need to add support for nil
 
 			void RightLineRotation(node_type* P)
 			{
@@ -178,7 +179,7 @@ namespace ft
 				else
 					throw std::string("the keys node's are the same");
 			}
-			node_type* find_node_util(const T& value, node_type* node)
+			node_type* find_node_util(const T& value, node_type* node) const //maybe not const
 			{
 				if (!node)
 					throw std::string("invalid key");
@@ -189,17 +190,31 @@ namespace ft
 				else
 					return find_node_util(value, node->_left);
 			}
-			template <class U>
-			T& find_util(const U& value, node_type* node) const
+			void find_next_util(const Key& key, node_type* node, node_type** result) const
+			{
+				if (!node)
+					return;
+				if (node->_data._first > key && (!(*result) || node->_data._first < (*result)->_data._first))
+					(*result) = node;
+				find_next_util(key, node->_left, result);
+				find_next_util(key, node->_right, result);
+			}
+			size_t size_util(node_type* node) const
+			{
+				if (!node)
+					return 1;
+				return find_next_util(node->_left) + find_next_util(node->_right);
+			}
+			T& find_util(const Key& key, node_type* node) const
 			{
 				if (!node)
 					throw std::string("invalid key");
-				if (node->_data._first == value)
+				if (node->_data._first == key)
 					return node->_data;
-				if (node->_data._first < value)
-					return find_util(value, node->_right);
+				if (node->_data._first < key)
+					return find_util(key, node->_right);
 				else
-					return find_util(value, node->_left);
+					return find_util(key, node->_left);
 			}
 			void free_nodes(node_type* node)
 			{
@@ -240,9 +255,13 @@ namespace ft
 				equal_utils(other_nodes->_right);
 			}
 		public:
+			
+			typedef ft::bidirectional_iterator_tag	iterator_category;
+			
 			rb_tree()
 			{
 				nodes = 0;
+				nil = &nodes;
 			}
 			rb_tree(const rb_tree& other)
 			{
@@ -271,14 +290,23 @@ namespace ft
 			{
 				insert_util(node_type(val), &nodes);
 			}
-			node_type* find_node(const T& val)
+			node_type* find_node(const T& val) const //maybe not const
 			{
-				return find_node_util(val, root_node());
+				return find_node_util(val, nodes);
 			}
-			template <class U>
-			T& find_key(const U& key) const
+			T& find_key(const Key& key) const
 			{
 				return find_util(key, nodes);
+			}
+			node_type* find_next_key(const Key& key) const
+			{
+				node_type* result = 0;
+				find_next_util(key, nodes, &result);
+				return result;
+			}
+			size_t size() const
+			{
+				return size_util(nodes);
 			}
 			node_type* root_node(void) const
 			{
@@ -286,18 +314,6 @@ namespace ft
 				while (node && node->_parent)
 					node = node->_parent;
 				return node;
-			}
-			node_type* right(node_type* node)
-			{
-				if (!node || !node->_right)
-					return 0;
-				return node->_right;
-			}
-			node_type* left(node_type* node)
-			{
-				if (!node || !node->_left)
-					return 0;
-				return node->_left;
 			}
 	};
 }
