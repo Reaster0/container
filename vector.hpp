@@ -301,8 +301,7 @@ namespace ft
 				_nbr_elem += n;
 			}
 			template <class InputIterator>
-			typename ft::enable_if<!ft::is_integral<InputIterator>::value, void>::type
-			insert(iterator position, InputIterator first, InputIterator last)
+			typename ft::enable_if<!ft::is_integral<InputIterator>::value, void>::type insert(iterator position, InputIterator first, InputIterator last)
 			{
 				Allocator alloc;
 				size_t len = ft::distance(first, last);

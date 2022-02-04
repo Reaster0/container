@@ -110,6 +110,18 @@ namespace ft
 			{
 				return iterator(_tree.nodes);
 			}
+			iterator end()
+			{
+				if (empty())
+					return begin();
+				return iterator(_tree.nil);
+			}
+			const_iterator end() const
+			{
+				if (empty())
+					return begin();
+				return const_iterator(_tree.nil);
+			}
 			void clear()
 			{
 				_tree = tree_type();
@@ -133,7 +145,7 @@ namespace ft
 			}
 			bool empty() const
 			{
-				if (!_tree.root_node())
+				if (!_tree.nodes)
 					return true;
 				return false;
 			}
@@ -172,6 +184,14 @@ namespace ft
 			size_t size() const
 			{
 				return _tree.size();
+			}
+			key_compare key_comp() const
+			{
+				return Compare();
+			}
+			T& operator[] (const Key& key) const //working here
+			{
+				return (*(insert(make_pair(key, T()))._first))._data._second;
 			}
 	};
 }
