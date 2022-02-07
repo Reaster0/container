@@ -9,8 +9,8 @@ namespace ft
 	class map
 	{
 		typedef ft::pair<const Key, T> value_type;
-		typedef rb_tree<const value_type, Key> tree_type;
-		typedef node<const value_type> node_type;
+		typedef rb_tree<value_type, Key> tree_type;
+		typedef node<value_type> node_type;
 		typedef Compare key_compare;
 		typedef Allocator allocator_type;
 		typedef typename allocator_type::reference	reference;
@@ -189,15 +189,9 @@ namespace ft
 			{
 				return Compare();
 			}
-			bool operator[] (const Key& key)//working here
+			T& operator[] (const Key& key)//working here
 			{
-				return true;
-				//ft::pair<iterator, bool> temp = insert(pair<Key, T>(key, T()));
-				//iterator it = temp._first;
-				//iterator _tree.find_key(key);
-				//return _tree.find_key(key);
-				//return temp._first->_data._second;
-				//return (*insert(make_pair(key, T()))._first)._data._second;
+				return (*insert(make_pair(key, T()))._first)._data._second;
 			}
 	};
 }
