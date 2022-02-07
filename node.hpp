@@ -56,6 +56,17 @@ namespace ft
 		// 	return node<const Key, const T>(_key, _value, _color, _left, _right, _parent);
 		// }
 	};
+
+	template <class T, class U>
+	bool operator==(const node<T>& A, const node<U>& B)
+	{
+		return A._data == B._data;
+	}
+	template <class T, class U>
+	bool operator!=(const node<T>& A, const node<U>& B)
+	{
+		return A._data != B._data;
+	}
 	template <class T, class U>
 	bool operator<(const node<T>& A, const node<U>& B)
 	{

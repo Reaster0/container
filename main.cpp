@@ -11,12 +11,19 @@ typedef ft::pair<int, int> pair;
 
 int main()
 {
+	ft::rb_tree<const ft::pair<const int, int> , int> tree;
+	ft::pair<const int, int> temp (1, 10);
+	tree.insert(temp);
+	std::cout << tree.find_key(1) << std::endl;
+
 	ft::map<int, int> testing;
 	testing.insert(pair(1,10));
 	testing.insert(pair(4, 40));
 	testing.insert(pair(5, 50));
 	testing.insert(pair(6, 60));
 	std::cout << testing[1] << std::endl;
+
+	
 	//ft::map<int, int>::const_iterator it = testing.find2(6);
 	//testing.print();
 	//std::pair<std::map<int, int>::iterator, std::map<int, int>::iterator > it = testing.equal_range(3);

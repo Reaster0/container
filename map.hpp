@@ -66,7 +66,7 @@ namespace ft
 				}
 				catch(const std::string& e)
 				{
-					std::cerr << e << '\n'; //maybe unusefull
+					//std::cerr << e << '\n'; //maybe unusefull
 					result._first = iterator(_tree.find_node(val));
 					result._second = false;
 				}
@@ -189,9 +189,15 @@ namespace ft
 			{
 				return Compare();
 			}
-			T& operator[] (const Key& key) const //working here
+			bool operator[] (const Key& key)//working here
 			{
-				return (*(insert(make_pair(key, T()))._first))._data._second;
+				return true;
+				//ft::pair<iterator, bool> temp = insert(pair<Key, T>(key, T()));
+				//iterator it = temp._first;
+				//iterator _tree.find_key(key);
+				//return _tree.find_key(key);
+				//return temp._first->_data._second;
+				//return (*insert(make_pair(key, T()))._first)._data._second;
 			}
 	};
 }

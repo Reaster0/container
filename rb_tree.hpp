@@ -163,7 +163,7 @@ namespace ft
 				nodes = root_node();
 			}
 
-			void insert_util(const node_type& node, node_type** start_node, node_type* parent = 0)
+			ft::pair<ft::iterator<node_type>, bool> insert_util(node_type node, node_type** start_node, node_type* parent = 0)
 			{
 				if (!*start_node)
 				{
@@ -171,19 +171,21 @@ namespace ft
 					alloc.construct(*start_node, node);
 					(*start_node)->_parent = parent;
 					fix_color(start_node);
+					return ft::pair<ft::iterator<node_type>, bool>(*start_node, true);
 				}
-				else if (node > **start_node)
-					insert_util(node, &((*start_node)->_right), *start_node);
-				else if (node < **start_node)
-					insert_util(node, &((*start_node)->_left), *start_node);
+				else if (node > **start_node && node != **start_node)
+					return insert_util(node, &((*start_node)->_right), *start_node);
+				else if (node < **start_node && node != **start_node)
+					return insert_util(node, &((*start_node)->_left), *start_node);
 				else
-					throw std::string("the keys node's are the same");
+					return ft::pair<ft::iterator<node_type>, bool>(*start_node, false);
+					//throw std::string("the keys node's are the same");
 			}
 			node_type* find_node_util(const T& value, node_type* node) const //maybe not const
 			{
 				if (!node)
 					throw std::string("invalid key");
-				if (node->_data == value)
+				if (node->_data == value || (node->_data._first && node->_data._first == value._first))
 					return node;
 				if (node->_data < value)
 					return find_node_util(value, node->_right);
@@ -286,11 +288,11 @@ namespace ft
 			{
 				insert_util(node, &nodes);
 			}
-			void insert(const T& val)
+			ft::pair<ft::iterator<node_type>, bool> insert(T& val)
 			{
-				insert_util(node_type(val), &nodes);
+				return insert_util(node_type(val), &nodes);
 			}
-			node_type* find_node(const T& val) const //maybe not const
+			node_type* find_node(const T& val) //maybe not const
 			{
 				return find_node_util(val, nodes);
 			}

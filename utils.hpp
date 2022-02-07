@@ -133,7 +133,7 @@ namespace ft
 	template <class T, class U>
 	bool operator<(const pair<T, U> &lhs, const pair<T, U> &rhs)
 	{
-		return lhs._first < rhs._first || !(rhs._first < lhs._first && lhs._second < rhs._second);
+		return lhs._first < rhs._first; //|| !(rhs._first < lhs._first && lhs._second < rhs._second); //with it insert_util is broken with same key
 	}
 
 	template <class T, class U>
