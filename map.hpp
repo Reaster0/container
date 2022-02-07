@@ -28,6 +28,23 @@ namespace ft
 			typedef ft::iterator<const node_type> const_iterator;
 			typedef typename iterator_traits<iterator>::difference_type difference_type;
 
+			class value_compare: public std::binary_function<value_type, value_type, bool>
+			{
+				protected:
+  				Compare comp;
+  				value_compare (Compare c) : comp(c) {}
+				
+				public:
+				typedef bool result_type;
+				typedef value_type first_argument_type;
+				typedef value_type second_argument_type;
+				bool operator() (const value_type& x, const value_type& y) const
+				{
+					return comp(x.first, y.first);
+				}
+			};
+			
+			
 			explicit map (const key_compare& comp = key_compare(),
               const allocator_type& alloc = allocator_type())
 			{
@@ -185,10 +202,6 @@ namespace ft
 			{
 				return _tree.size();
 			}
-			key_compare key_comp() const
-			{
-				return Compare();
-			}
 			T& operator[] (const Key& key)
 			{
 				return (*insert(make_pair(key, T()))._first)._data._second;
@@ -201,6 +214,22 @@ namespace ft
 			const_iterator lower_bound (const Key& key) const
 			{
 				return iterator(_tree.find_prev_key(key));
+			}
+			iterator upper_bound (const Key& k)
+			{
+				return iterator(_tree.find_next_key(k));
+			}
+			const_iterator upper_bound (const Key& k) const
+			{
+				return iterator(_tree.find_next_key(k));
+			}
+			key_compare	key_comp() const
+			{
+				return (key_compare());
+			}
+			value_compare	value_comp() const
+			{
+				return (value_compare());
 			}
 			void swap (map& x)
 			{
