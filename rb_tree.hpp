@@ -26,7 +26,7 @@ namespace ft
 		private:
 			Allocator alloc;
 			node_type* nodes;
-			node_type** nil; // need to add support for nil
+			node_type* nil; // need to add support for nil
 
 			void RightLineRotation(node_type* P)
 			{
@@ -161,6 +161,7 @@ namespace ft
 					P = check_collor(root_node()); 
 				}
 				nodes = root_node();
+				nil->_parent = nodes;
 			}
 
 			ft::pair<ft::iterator<node_type>, bool> insert_util(node_type node, node_type** start_node, node_type* parent = 0)
@@ -274,7 +275,8 @@ namespace ft
 			rb_tree()
 			{
 				nodes = 0;
-				nil = &nodes;
+				nil = alloc.allocate(1);
+				alloc.construct(nil, node_type(1, 0, 0, 0 , nodes));
 			}
 			rb_tree(const rb_tree& other)
 			{
@@ -282,7 +284,9 @@ namespace ft
 			}
 			~rb_tree()
 			{
-				free_nodes(root_node());
+				free_nodes(nodes);
+				alloc.destroy(nil);
+				alloc.deallocate(nil, 1);
 			}
 			rb_tree& operator=(const rb_tree& other)
 			{

@@ -26,6 +26,8 @@ namespace ft
 
 			typedef ft::iterator<node_type> iterator;
 			typedef ft::iterator<const node_type> const_iterator;
+			typedef ft::reverse_iterator<iterator> reverse_iterator;
+			typedef ft::reverse_iterator<const iterator> const_reverse_iterator;
 			typedef typename iterator_traits<iterator>::difference_type difference_type;
 
 			class value_compare: public std::binary_function<value_type, value_type, bool>
@@ -138,6 +140,22 @@ namespace ft
 				if (empty())
 					return begin();
 				return const_iterator(_tree.nil);
+			}
+			reverse_iterator rbegin()
+			{
+				return reverse_iterator(_tree.nil);
+			}
+			const_reverse_iterator rbegin() const
+			{
+				return reverse_iterator(_tree.nil);
+			}
+			reverse_iterator rend()
+			{
+				return reverse_iterator(_tree.nodes);
+			}
+			const_reverse_iterator rend() const
+			{
+				return reverse_iterator(_tree.nodes);
 			}
 			void clear()
 			{
