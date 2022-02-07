@@ -11,21 +11,24 @@ typedef ft::pair<int, int> pair;
 
 int main()
 {
-	ft::rb_tree<const ft::pair<const int, int> , int> tree;
-	ft::pair<const int, int> temp (1, 10);
-	tree.insert(temp);
-	std::cout << tree.find_key(1) << std::endl;
-
 	ft::map<int, int> testing;
 	testing.insert(pair(1,10));
 	testing.insert(pair(4, 40));
 	testing.insert(pair(5, 50));
 	testing.insert(pair(6, 60));
-	std::cout << testing[1] << std::endl;
+	testing.print();
+std::cout << "-----------------------------------" << std::endl;
+	ft::map<int, int> testing2;
+	testing2.insert(pair(100,10));
+	testing2.insert(pair(10, 40));
+	testing2.insert(pair(70, 50));
+	testing2.insert(pair(69, 60));
+	testing2.print();
 
-	
-	//ft::map<int, int>::const_iterator it = testing.find2(6);
-	//testing.print();
-	//std::pair<std::map<int, int>::iterator, std::map<int, int>::iterator > it = testing.equal_range(3);
-	//std::cout << *it << std::endl;
+std::cout << "-----------------------------------" << std::endl;
+	ft::swap<int, int, std::allocator<ft::pair<int, int> >, std::less<int> >(testing, testing2);
+	testing.print();
+std::cout << "-----------------------------------" << std::endl;
+	testing2.print();
+	std::cout << testing.lower_bound(70)->_data << std::endl;
 }

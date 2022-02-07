@@ -189,11 +189,32 @@ namespace ft
 			{
 				return Compare();
 			}
-			T& operator[] (const Key& key)//working here
+			T& operator[] (const Key& key)
 			{
 				return (*insert(make_pair(key, T()))._first)._data._second;
 			}
+
+			iterator lower_bound (const Key& key)
+			{
+				return iterator(_tree.find_prev_key(key));
+			}
+			const_iterator lower_bound (const Key& key) const
+			{
+				return iterator(_tree.find_prev_key(key));
+			}
+			void swap (map& x)
+			{
+				ft::map<Key, T, Allocator, Compare> temp(*this);
+				*this = x;
+				x = temp;
+			}
 	};
+
+	template <class Key, class T, class Compare, class Alloc>
+  	void swap(ft::map<Key,T,Compare,Alloc>& x, ft::map<Key,T,Compare,Alloc>& y)
+	  {
+		  x.swap(y);
+	  }
 }
 
 #endif

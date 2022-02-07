@@ -201,6 +201,15 @@ namespace ft
 				find_next_util(key, node->_left, result);
 				find_next_util(key, node->_right, result);
 			}
+			void find_prev_util(const Key& key, node_type* node, node_type** result) const
+			{
+				if (!node)
+					return;
+				if (node->_data._first < key && (!(*result) || node->_data._first > (*result)->_data._first))
+					(*result) = node;
+				find_prev_util(key, node->_left, result);
+				find_prev_util(key, node->_right, result);
+			}
 			size_t size_util(node_type* node) const
 			{
 				if (!node)
@@ -248,13 +257,15 @@ namespace ft
 				}
 				print_nodes_utils(nodes->_right, spaces);
 			}
-			void equal_utils(const node_type* other_nodes)
+			void equal_utils(const node_type* other_nodes, node_type** start_node, node_type *parent = 0)
 			{
 				if (!other_nodes)
 					return;
-				insert_util(node_type(other_nodes->_data), &nodes);
-				equal_utils(other_nodes->_left);
-				equal_utils(other_nodes->_right);
+				*start_node = alloc.allocate(1);
+				alloc.construct(*start_node, node_type(other_nodes->_data, other_nodes->_color, 0, 0, parent));
+				//insert_util(node_type(other_nodes->_data), &nodes);
+				equal_utils(other_nodes->_right, &(*start_node)->_right, *start_node);
+				equal_utils(other_nodes->_left, &(*start_node)->_left, *start_node);
 			}
 		public:
 			
@@ -275,9 +286,9 @@ namespace ft
 			}
 			rb_tree& operator=(const rb_tree& other)
 			{
-				free_nodes(root_node());
+				free_nodes(nodes);
 				nodes = 0;
-				equal_utils(other.root_node());
+				equal_utils(other.nodes, &nodes);
 				return *this;
 			}
 			void print_nodes()
@@ -304,6 +315,12 @@ namespace ft
 			{
 				node_type* result = 0;
 				find_next_util(key, nodes, &result);
+				return result;
+			}
+			node_type* find_prev_key(const Key& key) const
+			{
+				node_type* result = 0;
+				find_prev_util(key, nodes, &result);
 				return result;
 			}
 			size_t size() const
