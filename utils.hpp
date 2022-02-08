@@ -1,5 +1,6 @@
 #ifndef _utils_
 #define _utils_
+#include <iostream>
 
 namespace ft
 {

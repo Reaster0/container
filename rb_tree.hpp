@@ -276,7 +276,8 @@ namespace ft
 			{
 				nodes = 0;
 				nil = alloc.allocate(1);
-				alloc.construct(nil, node_type(1, 0, 0, 0 , nodes));
+				alloc.construct(nil, node_type(0));
+				nil->_nil = true;
 			}
 			rb_tree(const rb_tree& other)
 			{
@@ -337,6 +338,28 @@ namespace ft
 				while (node && node->_parent)
 					node = node->_parent;
 				return node;
+			}
+			node_type* end_node(void)
+			{
+				return nil;
+			}
+			void min_node(node_type* node_start, node_type **result) const
+			{
+				if (!node_start)
+					return;
+				if (!(*result) || node_start->_data < (*result)->_data)
+					(*result) = node_start;
+				min_node(node_start->_left, result);
+				min_node(node_start->_right, result);
+			}
+			void max_node(const node_type* node_start, node_type **result) const
+			{
+				if (!node_start)
+					return;
+				if (!(*result) || node_start->_data > (*result)->_data)
+					(*result) = node_start;
+				max_node(node_start->_left, result);
+				max_node(node_start->_right, result);
 			}
 	};
 }

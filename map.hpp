@@ -2,6 +2,7 @@
 #define _map_
 
 #include "rb_tree.hpp"
+#include "map_iterator.hpp"
 
 namespace ft
 {
@@ -24,10 +25,10 @@ namespace ft
 
 		public://maybe need to incorporate key_compare in rb_tree
 
-			typedef ft::iterator<node_type> iterator;
-			typedef ft::iterator<const node_type> const_iterator;
-			typedef ft::reverse_iterator<iterator> reverse_iterator;
-			typedef ft::reverse_iterator<const iterator> const_reverse_iterator;
+			typedef ft::map_iterator<value_type, Key> iterator;
+			typedef ft::map_iterator<const value_type, Key> const_iterator;
+			//typedef ft::reverse_iterator<iterator> reverse_iterator;
+			//typedef ft::reverse_iterator<const iterator> const_reverse_iterator;
 			typedef typename iterator_traits<iterator>::difference_type difference_type;
 
 			class value_compare: public std::binary_function<value_type, value_type, bool>
@@ -123,40 +124,44 @@ namespace ft
 			}
 			iterator begin()
 			{
-				return iterator(_tree.nodes);
+				node_type* result = 0;
+				_tree.min_node(_tree.root_node(), &result);
+				if (!result)
+					return iterator(_tree.end_node(), _tree.end_node());
+				return iterator(result);
 			}
 			const_iterator begin() const
 			{
-				return iterator(_tree.nodes);
+				node_type* result = 0;
+				_tree.min_node(_tree.root_node(), &result);
+				if (!result)
+					return const_iterator(_tree.end_node(), _tree.end_node());
+				return const_iterator(result, _tree.end_node());
 			}
 			iterator end()
 			{
-				if (empty())
-					return begin();
-				return iterator(_tree.nil);
+				return iterator(_tree.end_node(), _tree.end_node());
 			}
 			const_iterator end() const
 			{
-				if (empty())
-					return begin();
-				return const_iterator(_tree.nil);
+				return const_iterator(_tree.end_node(), _tree.end_node());
 			}
-			reverse_iterator rbegin()
-			{
-				return reverse_iterator(_tree.nil);
-			}
-			const_reverse_iterator rbegin() const
-			{
-				return reverse_iterator(_tree.nil);
-			}
-			reverse_iterator rend()
-			{
-				return reverse_iterator(_tree.nodes);
-			}
-			const_reverse_iterator rend() const
-			{
-				return reverse_iterator(_tree.nodes);
-			}
+			// reverse_iterator rbegin()
+			// {
+			// 	return reverse_iterator(_tree.end_node());
+			// }
+			// const_reverse_iterator rbegin() const
+			// {
+			// 	return reverse_iterator(_tree.end_node()); 
+			// }
+			// reverse_iterator rend()
+			// {
+			// 	return reverse_iterator(_tree.root_node());
+			// }
+			// const_reverse_iterator rend() const
+			// {
+			// 	return reverse_iterator(_tree.root_node());
+			// }
 			void clear()
 			{
 				_tree = tree_type();

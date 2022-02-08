@@ -13,10 +13,11 @@ namespace ft
 
 		T _data;
 		bool _color;
+		bool _nil;
 		node* _left;
 		node* _right;
 		node* _parent;
-		node(const T& data, const bool& color = RED, node* left = 0, node* right = 0, node* parent = 0) : _data(data), _color(color), _left(left), _right(right), _parent(parent)
+		node(const T& data, const bool& color = RED, node* left = 0, node* right = 0, node* parent = 0) : _data(data), _color(color), _left(left), _right(right), _parent(parent), _nil(false)
 		{
 		}
 		~node()
