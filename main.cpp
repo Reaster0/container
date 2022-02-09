@@ -8,28 +8,25 @@
 #include <fstream>
 #include <vector>
 
-//typedef std::pair<int, char> pair;
+//typedef std::pair<int, int> pair
 typedef ft::pair<int, int> pair;
 
 int main()
 {
-	// ft::map<int, int> testing;
-	// testing.insert(pair(1,10));
-	// testing.insert(pair(4, 40));
-	// testing.insert(pair(5, 50));
-	// testing.insert(pair(6, 60));
-	// testing.insert(pair(0, 70));
+	ft::map<int, int> testing;
+	testing.insert(pair(1,10));
+	testing.insert(pair(4, 40));
+	testing.insert(pair(5, 50));
+	testing.insert(pair(6, 60));
 
 	// std::map<int, int> testing2;
 	// testing2.insert(pair(100,10));
 	// testing2.insert(pair(10, 40));
 	// testing2.insert(pair(70, 50));
 	// testing2.insert(pair(69, 60));
-	ft::map<int, int> test;
-	test.insert(pair(2, 30));
-	ft::map<int, int>::iterator it = test.end();
+
+	ft::map<int, int>::reverse_iterator it = --testing.rend();
 	//std::cout << *test.end() << std::endl;
-	it++;
 	return 1;
 }
 

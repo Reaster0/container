@@ -27,8 +27,8 @@ namespace ft
 
 			typedef ft::map_iterator<value_type, Key> iterator;
 			typedef ft::map_iterator<const value_type, Key> const_iterator;
-			//typedef ft::reverse_iterator<iterator> reverse_iterator;
-			//typedef ft::reverse_iterator<const iterator> const_reverse_iterator;
+			typedef ft::rev_map_iterator<iterator> reverse_iterator;
+			typedef ft::rev_map_iterator<const iterator> const_reverse_iterator;
 			typedef typename iterator_traits<iterator>::difference_type difference_type;
 
 			class value_compare: public std::binary_function<value_type, value_type, bool>
@@ -146,22 +146,30 @@ namespace ft
 			{
 				return const_iterator(_tree.end_node(), _tree.end_node());
 			}
-			// reverse_iterator rbegin()
-			// {
-			// 	return reverse_iterator(_tree.end_node());
-			// }
-			// const_reverse_iterator rbegin() const
-			// {
-			// 	return reverse_iterator(_tree.end_node()); 
-			// }
-			// reverse_iterator rend()
-			// {
-			// 	return reverse_iterator(_tree.root_node());
-			// }
-			// const_reverse_iterator rend() const
-			// {
-			// 	return reverse_iterator(_tree.root_node());
-			// }
+			reverse_iterator rbegin()
+			{
+				return reverse_iterator(_tree.end_node(), _tree.end_node());
+			}
+			const_reverse_iterator rbegin() const
+			{
+				return reverse_iterator(_tree.end_node(), _tree.end_node()); 
+			}
+			reverse_iterator rend()
+			{
+				node_type* result = 0;
+				_tree.min_node(_tree.root_node(), &result);
+				if (!result)
+					return reverse_iterator(_tree.end_node(), _tree.end_node());
+				return reverse_iterator(result, _tree.end_node());
+			}
+			const_reverse_iterator rend() const
+			{
+				node_type* result = 0;
+				_tree.min_node(_tree.root_node(), &result);
+				if (!result)
+					return const_reverse_iterator(_tree.end_node(), _tree.end_node());
+				return const_reverse_iterator(result, _tree.end_node());
+			}
 			void clear()
 			{
 				_tree = tree_type();
