@@ -15,7 +15,7 @@
 
 namespace ft
 {
-	template <class T, class Key>
+	template <class T, class Key, class Compare>
 	class rb_tree
 	{
 		typedef T value_type;
@@ -164,7 +164,7 @@ namespace ft
 				nil->_parent = nodes;
 			}
 
-			ft::pair<ft::iterator<node_type>, bool> insert_util(node_type node, node_type** start_node, node_type* parent = 0)
+			void insert_util(node_type node, node_type** start_node, node_type* parent = 0)
 			{
 				if (!*start_node)
 				{
@@ -172,15 +172,15 @@ namespace ft
 					alloc.construct(*start_node, node);
 					(*start_node)->_parent = parent;
 					fix_color(start_node);
-					return ft::pair<ft::iterator<node_type>, bool>(*start_node, true);
+					//return ft::pair<ft::iterator<node_type>, bool>(*start_node, true);
 				}
 				else if (node > **start_node && node != **start_node)
 					return insert_util(node, &((*start_node)->_right), *start_node);
 				else if (node < **start_node && node != **start_node)
 					return insert_util(node, &((*start_node)->_left), *start_node);
 				else
-					return ft::pair<ft::iterator<node_type>, bool>(*start_node, false);
-					//throw std::string("the keys node's are the same");
+					throw std::string("the keys node's are the same");
+					//return ft::pair<ft::iterator<node_type>, bool>(*start_node, false);
 			}
 			node_type* find_node_util(const T& value, node_type* node) const //maybe not const
 			{
@@ -188,7 +188,7 @@ namespace ft
 					throw std::string("invalid key");
 				if (node->_data == value || (node->_data._first && node->_data._first == value._first))
 					return node;
-				if (node->_data < value)
+				if (Compare()(node->_data, value))
 					return find_node_util(value, node->_right);
 				else
 					return find_node_util(value, node->_left);
@@ -197,7 +197,8 @@ namespace ft
 			{
 				if (!node)
 					return;
-				if (node->_data._first > key && (!(*result) || node->_data._first < (*result)->_data._first))
+				//maybe an issue here with >
+				if (node->_data._first > key && (!(*result) || Compare()(node->_data, (*result)->_data))) //node->_data._first < (*result)->_data._first))
 					(*result) = node;
 				find_next_util(key, node->_left, result);
 				find_next_util(key, node->_right, result);
@@ -206,7 +207,7 @@ namespace ft
 			{
 				if (!node)
 					return;
-				if (node->_data._first < key && (!(*result) || node->_data._first > (*result)->_data._first))
+				if (Compare()(node->_data, node_type(make_pair(key, 0)) /*node->_data._first < key && (!(*result)*/ || node->_data._first > (*result)->_data._first))
 					(*result) = node;
 				find_prev_util(key, node->_left, result);
 				find_prev_util(key, node->_right, result);
@@ -223,7 +224,7 @@ namespace ft
 					throw std::string("invalid key");
 				if (node->_data._first == key)
 					return node->_data;
-				if (node->_data._first < key)
+				if (Compare()(node->_data, node_type(make_pair(key, 0))) /*node->_data._first < key*/)
 					return find_util(key, node->_right);
 				else
 					return find_util(key, node->_left);
@@ -304,7 +305,7 @@ namespace ft
 			{
 				insert_util(node, &nodes);
 			}
-			ft::pair<ft::iterator<node_type>, bool> insert(T& val)
+			void insert(T& val)
 			{
 				return insert_util(node_type(val), &nodes);
 			}
@@ -347,7 +348,7 @@ namespace ft
 			{
 				if (!node_start)
 					return;
-				if (!(*result) || node_start->_data < (*result)->_data)
+				if (!(*result) || Compare()(node_start->_data, (*result)->_data) /*node_start->_data < (*result)->_data*/)
 					(*result) = node_start;
 				min_node(node_start->_left, result);
 				min_node(node_start->_right, result);
@@ -356,7 +357,7 @@ namespace ft
 			{
 				if (!node_start)
 					return;
-				if (!(*result) || node_start->_data > (*result)->_data)
+				if (!(*result) || Compare()((*result)->_data, node_start->_data) /*node_start->_data > (*result)->_data*/)
 					(*result) = node_start;
 				max_node(node_start->_left, result);
 				max_node(node_start->_right, result);

@@ -24,8 +24,7 @@ int main()
 	// testing2.insert(pair(10, 40));
 	// testing2.insert(pair(70, 50));
 	// testing2.insert(pair(69, 60));
-
-	ft::map<int, int>::reverse_iterator it = --testing.rend();
+	std::cout << *testing.upper_bound(5) << std::endl;
 	//std::cout << *test.end() << std::endl;
 	return 1;
 }

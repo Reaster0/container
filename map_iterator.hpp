@@ -11,7 +11,7 @@ namespace ft
 	// template <class T, class Key>
 	// class rb_tree;
 
-	template <class T, class Key>
+	template <class T, class Key, class Compare = std::less<Key> >
 	class map_iterator
 	{
 		private:
@@ -22,7 +22,7 @@ namespace ft
 			{
 				if (!node)
 					return;
-				if (node->_data._first > key && (!(*result) || node->_data._first < (*result)->_data._first))
+				if (Compare(node_type(make_pair(key, 0)), node->_data) /*node->_data._first > key*/ && (!(*result) || Compare(node->_data, (*result)->_data) /*node->_data._first < (*result)->_data._first*/))
 					(*result) = node;
 				find_next_util(key, node->_left, result);
 				find_next_util(key, node->_right, result);
@@ -31,7 +31,7 @@ namespace ft
 			{
 				if (!node)
 					return;
-				if (node->_data._first < key && (!(*result) || node->_data._first > (*result)->_data._first))
+				if (Compare(node->_data, node_type(make_pair(key, 0))) /*node->_data._first < key*/ && (!(*result) || Compare()(*(result)->_data, node->_data) /*node->_data._first > (*result)->_data._first*/))
 					(*result) = node;
 				find_prev_util(key, node->_left, result);
 				find_prev_util(key, node->_right, result);
@@ -136,9 +136,9 @@ namespace ft
 				_ptr = other._ptr;
 				return *this;
 			}
-			operator map_iterator<const T, Key>() const
+			operator map_iterator<const T, Key, Compare>() const
 			{
-			    return (map_iterator<const T, Key>(_ptr));
+			    return (map_iterator<const T, Key, Compare>(_ptr));
 			}
 
 	};
@@ -184,6 +184,7 @@ namespace ft
 		typedef typename ft::iterator_traits<Iterator>::reference	reference;
 		typedef typename ft::iterator_traits<Iterator>::iterator_category  iterator_category;
 		typedef typename Iterator::key_value Key;
+		typedef typename iterator_category::Compare Compare;
 
 		private:
 
@@ -193,7 +194,7 @@ namespace ft
 			{
 				if (!node)
 					return;
-				if (node->_data._first > key && (!(*result) || node->_data._first < (*result)->_data._first))
+				if (Compare(node_type(make_pair(key, 0)), node->_data) /*node->_data._first > key*/ && (!(*result) || Compare(node->_data, (*result)->_data) /*node->_data._first < (*result)->_data._first*/))
 					(*result) = node;
 				find_next_util(key, node->_left, result);
 				find_next_util(key, node->_right, result);
@@ -202,7 +203,7 @@ namespace ft
 			{
 				if (!node)
 					return;
-				if (node->_data._first < key && (!(*result) || node->_data._first > (*result)->_data._first))
+				if (Compare(node->_data, node_type(make_pair(key, 0))) /*node->_data._first < key*/ && (!(*result) || Compare()(*(result)->_data, node->_data) /*node->_data._first > (*result)->_data._first*/))
 					(*result) = node;
 				find_prev_util(key, node->_left, result);
 				find_prev_util(key, node->_right, result);
@@ -218,7 +219,7 @@ namespace ft
 			{
 				if (!node_start)
 					return;
-				if (!(*result) || node_start->_data < (*result)->_data)
+				if (!(*result) || Compare()(node_start->_data, *(result)->_data) /*node_start->_data < (*result)->_data*/)
 					(*result) = node_start;
 				min_node(node_start->_left, result);
 				min_node(node_start->_right, result);
