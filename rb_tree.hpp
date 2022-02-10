@@ -228,16 +228,34 @@ namespace ft
 			}
 			void remove_util2(node_type* node, node_type* replacement, node_type* x)
 			{
-
 				if (node->_color == RED && (!replacement || replacement->_color == RED))
 				{
-					*parent_emplacement(replacement) = x;
+					if (parent_emplacement(replacement))
+						*parent_emplacement(replacement) = x;
 					if (x)
 						x->_parent = replacement->_parent;
 					*parent_emplacement(node) = replacement;
+					if (replacement)
+					{
+						replacement->_parent = node->_parent;
+						replacement->_left = node->_left;
+						if (replacement->_left)
+							replacement->_left->_parent = replacement;
+						replacement->_right = node->_right;
+						if (replacement->_right)
+							replacement->_right->_parent = replacement;
+					}
+					delete_node_util(node);
+				}
+				else if (node->_color == BLACK && replacement->_color == RED)
+				{
+					if (parent_emplacement(node))
+						*parent_emplacement(node) = replacement;
 					replacement->_parent = node->_parent;
+					replacement->_color = BLACK;
 					replacement->_left = node->_left;
-					replacement->_right = node->_right;
+					if (replacement->_left)
+						replacement->_left->_parent = replacement;
 					delete_node_util(node);
 				}
 			}
@@ -252,9 +270,9 @@ namespace ft
 				else if ((!node->_left && node->_right) || (node->_left && !node->_right))
 				{
 					if (node->_right)
-						remove_util2(node, replacement, replacement->_right);
+						remove_util2(node, replacement, replacement);
 					else //WIP will broke ❌
-						remove_util2(node, replacement, replacement->_left);
+						remove_util2(node, replacement, replacement);
 				}
 				else
 					remove_util2(node, replacement, replacement->_right);
