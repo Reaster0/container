@@ -22,7 +22,7 @@ namespace ft
 			{
 				if (!node)
 					return;
-				if (Compare(node_type(make_pair(key, 0)), node->_data) /*node->_data._first > key*/ && (!(*result) || Compare(node->_data, (*result)->_data) /*node->_data._first < (*result)->_data._first*/))
+				if (Compare()(make_pair(key, 0), node->_data) /*node->_data._first > key*/ && (!(*result) || Compare()(node->_data, (*result)->_data) /*node->_data._first < (*result)->_data._first*/))
 					(*result) = node;
 				find_next_util(key, node->_left, result);
 				find_next_util(key, node->_right, result);
@@ -31,7 +31,7 @@ namespace ft
 			{
 				if (!node)
 					return;
-				if (Compare(node->_data, node_type(make_pair(key, 0))) /*node->_data._first < key*/ && (!(*result) || Compare()(*(result)->_data, node->_data) /*node->_data._first > (*result)->_data._first*/))
+				if (Compare()(node->_data, make_pair(key, 0)) /*node->_data._first < key*/ && (!(*result) || Compare()((*result)->_data, node->_data) /*node->_data._first > (*result)->_data._first*/))
 					(*result) = node;
 				find_prev_util(key, node->_left, result);
 				find_prev_util(key, node->_right, result);
@@ -295,7 +295,6 @@ namespace ft
 			{
 			    return (rev_map_iterator<const Iterator>(_ptr));
 			}
-
 	};
 
 	//iterator operator

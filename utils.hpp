@@ -97,7 +97,7 @@ namespace ft
 	struct pair
 	{
 		T _first;
-		U _second;
+		U _second; //maybe a twist on the constructor of pair
 		pair(const T& first = 0, const U& second = 0) : _first(first), _second(second) {};
 		pair(const pair<T, U>& other) : _first(other._first), _second(other._second) {};
 

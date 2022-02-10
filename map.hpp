@@ -259,6 +259,13 @@ namespace ft
 			{
 				return (value_compare<Compare>());
 			}
+			void erase (iterator position)
+			{
+				_tree.remove(position._ptr);
+			}
+			//size_type erase (const key_type& k);
+    		//void erase (iterator first, iterator last);
+
 			void swap (map& x)
 			{
 				ft::map<Key, T, Allocator, Compare> temp(*this);

@@ -197,8 +197,8 @@ namespace ft
 			{
 				if (!node)
 					return;
-				//maybe an issue here with >
-				if (node->_data._first > key && (!(*result) || Compare()(node->_data, (*result)->_data))) //node->_data._first < (*result)->_data._first))
+				//need to not use make_pair
+				if (Compare()(make_pair(key, 0), node->_data) /*node->_data._first > key*/ && (!(*result) || Compare()(node->_data, (*result)->_data) /*node->_data._first < (*result)->_data._first)*/))
 					(*result) = node;
 				find_next_util(key, node->_left, result);
 				find_next_util(key, node->_right, result);
@@ -207,10 +207,57 @@ namespace ft
 			{
 				if (!node)
 					return;
-				if (Compare()(node->_data, node_type(make_pair(key, 0)) /*node->_data._first < key && (!(*result)*/ || node->_data._first > (*result)->_data._first))
+				if (Compare()(node->_data, make_pair(key, 0)) /*node->_data._first < key*/ && (!(*result) || Compare()((*result)->_data, node->_data) /*node->_data._first > (*result)->_data._first*/))
 					(*result) = node;
 				find_prev_util(key, node->_left, result);
 				find_prev_util(key, node->_right, result);
+			}
+			node_type** parent_emplacement(node_type* node)
+			{
+				if (!node || !node->_parent)
+					return 0;
+				if (node->_parent->_left == node)
+					return &node->_parent->_left;
+				else
+					return &node->_parent->_right;
+			}
+			void delete_node_util(node_type* node)
+			{
+				alloc.destroy(node);
+				alloc.deallocate(node, 1);
+			}
+			void remove_util2(node_type* node, node_type* replacement, node_type* x)
+			{
+
+				if (node->_color == RED && (!replacement || replacement->_color == RED))
+				{
+					*parent_emplacement(replacement) = x;
+					if (x)
+						x->_parent = replacement->_parent;
+					*parent_emplacement(node) = replacement;
+					replacement->_parent = node->_parent;
+					replacement->_left = node->_left;
+					replacement->_right = node->_right;
+					delete_node_util(node);
+				}
+			}
+			void remove_util(node_type* node)
+			{
+				node_type* replacement = 0;
+				find_next_util(node->_data._first, nodes, &replacement);
+				if (!node->_left && !node->_right)
+				{
+					remove_util2(node, replacement, 0);
+				}
+				else if ((!node->_left && node->_right) || (node->_left && !node->_right))
+				{
+					if (node->_right)
+						remove_util2(node, replacement, replacement->_right);
+					else //WIP will broke ❌
+						remove_util2(node, replacement, replacement->_left);
+				}
+				else
+					remove_util2(node, replacement, replacement->_right);
 			}
 			size_t size_util(node_type* node) const
 			{
@@ -224,7 +271,7 @@ namespace ft
 					throw std::string("invalid key");
 				if (node->_data._first == key)
 					return node->_data;
-				if (Compare()(node->_data, node_type(make_pair(key, 0))) /*node->_data._first < key*/)
+				if (Compare()(node->_data, T(key)) /*node->_data._first < key*/)
 					return find_util(key, node->_right);
 				else
 					return find_util(key, node->_left);
@@ -308,6 +355,10 @@ namespace ft
 			void insert(T& val)
 			{
 				return insert_util(node_type(val), &nodes);
+			}
+			void remove(node_type* node)
+			{
+				return remove_util(node);
 			}
 			node_type* find_node(const T& val) //maybe not const
 			{
