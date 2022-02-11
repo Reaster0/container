@@ -88,7 +88,34 @@ namespace ft
 				P->_parent->_parent = P;
 				P->_parent = tempParentParent;
 			}
-
+			void leftRotation(node_type* P)
+			{
+				P->_parent->_right = P->_left;
+				if (P->_left)
+					P->_left->_parent = P->_parent;
+				P->_left = P->_parent;
+				node_type* tempParentParent = P->_parent->_parent;
+				if (tempParentParent && tempParentParent->_left == P->_parent)
+					tempParentParent->_left = P;
+				else if (tempParentParent && tempParentParent->_right == P->_parent)
+					tempParentParent->_right = P;
+				P->_parent->_parent = P;
+				P->_parent = tempParentParent;
+			}
+			void rightRotation(node_type* P)
+			{
+				P->_parent->_left = P->_right;
+				if (P->_right)
+					P->_right->_parent = P->_parent;
+				P->_right = P->_parent;
+				node_type* tempParentParent = P->_parent->_parent;
+				if (tempParentParent && tempParentParent->_left == P->_parent)
+					tempParentParent->_left = P;
+				else if (tempParentParent && tempParentParent->_right == P->_parent)
+					tempParentParent->_right = P;
+				P->_parent->_parent = P;
+				P->_parent = tempParentParent;
+			}
 			void collor_node(node_type** node)
 			{
 					//*node = check_pointer;
@@ -239,43 +266,68 @@ namespace ft
 				else
 					return node->_parent->_left;
 			}
-			void remove_util3(node_type* node, node_type* replacement, node_type* x)
+			void remove_util3(node_type* node, node_type* replacement, node_type* x, int nb_case)
 			{
 				node_type* sibling = get_siblings(x);
-				if (x && x->_color == RED)
+				if (nb_case == 0 &&  x && x->_color == RED) //case 0
 				{
 					x->_color = BLACK;
 				}
-				else if (sibling && sibling->_color == RED)
+				else if (nb_case >= 1 && sibling && sibling->_color == RED) //case 1
 				{
 					sibling->_color = BLACK;
 					x->_color = RED;
 					LeftLineRotation(x);
 					//case 1 WIP
 				}
-				sibling = get_siblings(x);
-				if (x && x->_color == BLACK && sibling && sibling->_color == BLACK
+				else if (nb_case >= 2 && x && x->_color == BLACK && sibling && sibling->_color == BLACK //case 2
 				&& sibling->_left && sibling->_right && sibling->_left->_color == BLACK && sibling->_right->_color == BLACK)
 				{
 					sibling->_color = RED;
-					//case 2 WIP
+					x = x->_parent;
+					if (x->_color == RED)
+						x->_color = BLACK;
+					else
+						remove_util3(node, replacement, x, 1);
 				}
-				else if (x && x->_color == BLACK && sibling && sibling->_color == BLACK
+				else if (nb_case >= 3 && x && x->_color == BLACK && sibling && sibling->_color == BLACK //case 3
 				&& ((x->_parent->_left == x && sibling->_left && sibling->_left->_color == RED && sibling->_right && sibling->_right->_color == BLACK)
 				|| (x->_parent->_right == x && sibling->_left && sibling->_left->_color == BLACK && sibling->_right && sibling->_right->_color == RED)))
 				{
 					if (x->_parent->_left == x)
+					{
 						sibling->_left->_color = BLACK;
+						sibling->_color = RED;
+						rightRotation(sibling);
+						x->_parent->_right = sibling; //not sure of theses, check their values
+						sibling->_parent = x->_parent; //
+					}
 					else
+					{
 						sibling->_right->_color = BLACK;
-					//case 3 WIP
+						sibling->_color = RED;
+						leftRotation(sibling);
+						x->_parent->_left = sibling; // not sure of theses, check their values
+						sibling->_parent = x->_parent; //
+					}
+					remove_util3(node, replacement, x, 4);
 				}
-				else if (x && x->_color == BLACK && sibling && sibling->_color == BLACK
+				else if (nb_case >= 4 && x && x->_color == BLACK && sibling && sibling->_color == BLACK //case 4
 				&& ((x->_parent->_left == x && sibling->_right && sibling->_right->_color == RED)
 				|| (x->_parent->_right == x && sibling->_left && sibling->_left->_color == RED)))
 				{
-					sibling->_color = x->_color;
-					//case 4 WIP
+					sibling->_color = x->_parent->_color;
+					x->_parent->_color = BLACK;
+					if (x->_parent->_left == x)
+					{
+						sibling->_right = BLACK;
+						leftRotation(x->_parent);
+					}
+					else
+					{
+						sibling->_left = BLACK;
+						rightRotation(x->_parent);
+					}
 				}
 			}
 			void remove_util2(node_type* node, node_type* replacement, node_type* x)
@@ -313,24 +365,17 @@ namespace ft
 				else if (node->_color == RED && replacement->_color == BLACK)
 				{
 					replacement->_color = RED;
-					remove_util3(node, replacement, x);
+					remove_util3(node, replacement, x, 0);
 				}
 			}
 			void remove_util(node_type* node)
 			{
 				node_type* replacement = 0;
-				find_next_util(node->_data._first, nodes, &replacement);
+				find_next_util(node->_data._first, node, &replacement);
 				if (!node->_left && !node->_right)
-				{
 					remove_util2(node, replacement, 0);
-				}
 				else if ((!node->_left && node->_right) || (node->_left && !node->_right))
-				{
-					if (node->_right)
-						remove_util2(node, replacement, replacement);
-					else //WIP will broke ❌
-						remove_util2(node, replacement, replacement);
-				}
+					remove_util2(node, replacement, replacement);
 				else
 					remove_util2(node, replacement, replacement->_right);
 			}

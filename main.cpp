@@ -22,25 +22,35 @@ int main()
 	// testing.insert(pair(26, 26));
 	// testing.insert(pair(8, 8));
 	// testing.insert(pair(11, 11));
-	testing.insert(pair(10,10));
+
+	// testing.insert(pair(10,10));
+	// testing.insert(pair(40, 40));
+	// testing.insert(pair(50, 50));
+	// testing.insert(pair(60, 60));
+	// testing.insert(pair(45, 45));
+	// testing.insert(pair(20, 20));
+	// testing.insert(pair(5, 5));
+	// testing.insert(pair(3, 3));
+	// testing.insert(pair(8, 8));
+	// testing.insert(pair(18, 18));
+	// testing.insert(pair(22, 22));
+	// testing.insert(pair(41, 41));
+	// testing.insert(pair(47,47));
+	// testing.insert(pair(64, 64));
+	testing.insert(pair(5,5));
+	testing.insert(pair(2,2));
+	testing.insert(pair(8,8));
+	testing.insert(pair(7, 7));
+	testing.insert(pair(9, 9));
+	testing.insert(pair(1, 1));
+	testing.insert(pair(4, 4));
+	testing.insert(pair(90, 90));
 	testing.insert(pair(40, 40));
-	testing.insert(pair(50, 50));
-	testing.insert(pair(60, 60));
-	testing.insert(pair(45, 45));
-	testing.insert(pair(20, 20));
-	testing.insert(pair(5, 5));
-	testing.insert(pair(3, 3));
-	testing.insert(pair(8, 8));
-	testing.insert(pair(18, 18));
-	testing.insert(pair(22, 22));
-	testing.insert(pair(41, 41));
-	testing.insert(pair(47,47));
-	testing.insert(pair(64, 64));
 	testing.print();
 
 std::cout << "-------------------------------\n";
 
-	testing.erase(testing.find(60));
+	testing.erase(testing.find(40));
 	testing.print();
 
 	// std::map<int, int> testing2;
