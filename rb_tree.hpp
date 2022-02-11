@@ -66,8 +66,10 @@ namespace ft
 			}
 			void LeftTriangleRotation(node_type* P)
 			{
+				P->_parent->_left = P->_right;
+				if (P->_right)
+					P->_right->_parent = P->_parent;
 				P->_right = P->_parent;
-				P->_parent->_left = 0;
 				node_type* tempParentParent = P->_parent->_parent;
 				if (tempParentParent)
 					tempParentParent->_right = P;
@@ -76,8 +78,10 @@ namespace ft
 			}
 			void RightTriangleRotation(node_type* P)
 			{
+				P->_parent->_right = P->_left;
+				if (P->_left)
+					P->_left->_parent = P->_parent;
 				P->_left = P->_parent;
-				P->_parent->_right = 0;
 				node_type* tempParentParent = P->_parent->_parent;
 				if (tempParentParent)
 					tempParentParent->_left = P;
@@ -226,6 +230,54 @@ namespace ft
 				alloc.destroy(node);
 				alloc.deallocate(node, 1);
 			}
+			node_type* get_siblings(const node_type *node)
+			{
+				if (!node || !node->_parent)
+					return 0;
+				if (node->_parent->_left == node)
+					return node->_parent->_right;
+				else
+					return node->_parent->_left;
+			}
+			void remove_util3(node_type* node, node_type* replacement, node_type* x)
+			{
+				node_type* sibling = get_siblings(x);
+				if (x && x->_color == RED)
+				{
+					x->_color = BLACK;
+				}
+				else if (sibling && sibling->_color == RED)
+				{
+					sibling->_color = BLACK;
+					x->_color = RED;
+					LeftLineRotation(x);
+					//case 1 WIP
+				}
+				sibling = get_siblings(x);
+				if (x && x->_color == BLACK && sibling && sibling->_color == BLACK
+				&& sibling->_left && sibling->_right && sibling->_left->_color == BLACK && sibling->_right->_color == BLACK)
+				{
+					sibling->_color = RED;
+					//case 2 WIP
+				}
+				else if (x && x->_color == BLACK && sibling && sibling->_color == BLACK
+				&& ((x->_parent->_left == x && sibling->_left && sibling->_left->_color == RED && sibling->_right && sibling->_right->_color == BLACK)
+				|| (x->_parent->_right == x && sibling->_left && sibling->_left->_color == BLACK && sibling->_right && sibling->_right->_color == RED)))
+				{
+					if (x->_parent->_left == x)
+						sibling->_left->_color = BLACK;
+					else
+						sibling->_right->_color = BLACK;
+					//case 3 WIP
+				}
+				else if (x && x->_color == BLACK && sibling && sibling->_color == BLACK
+				&& ((x->_parent->_left == x && sibling->_right && sibling->_right->_color == RED)
+				|| (x->_parent->_right == x && sibling->_left && sibling->_left->_color == RED)))
+				{
+					sibling->_color = x->_color;
+					//case 4 WIP
+				}
+			}
 			void remove_util2(node_type* node, node_type* replacement, node_type* x)
 			{
 				if (node->_color == RED && (!replacement || replacement->_color == RED))
@@ -257,6 +309,11 @@ namespace ft
 					if (replacement->_left)
 						replacement->_left->_parent = replacement;
 					delete_node_util(node);
+				}
+				else if (node->_color == RED && replacement->_color == BLACK)
+				{
+					replacement->_color = RED;
+					remove_util3(node, replacement, x);
 				}
 			}
 			void remove_util(node_type* node)
