@@ -244,7 +244,7 @@ namespace ft
 				find_prev_util(key, node->_right, result);
 			}
 			node_type** parent_emplacement(node_type* node)
-			{
+			{ //get the adress of the emplacement of the node relative to his parent
 				if (!node || !node->_parent)
 					return 0;
 				if (node->_parent->_left == node)
@@ -269,18 +269,29 @@ namespace ft
 			void remove_util3(node_type* node, node_type* replacement, node_type* x, int nb_case)
 			{
 				node_type* sibling = get_siblings(x);
-				if (nb_case == 0 &&  x && x->_color == RED) //case 0
+				if (x && x->_color == RED) //case 0
 				{
 					x->_color = BLACK;
+					return;
 				}
-				else if (nb_case >= 1 && sibling && sibling->_color == RED) //case 1
+				else if (sibling && sibling->_color == RED) //case 1
 				{
 					sibling->_color = BLACK;
-					x->_color = RED;
-					LeftLineRotation(x);
+					x->_parent->_color = RED;
+					if(x->_parent->_left == x)
+					{
+						leftRotation(x); //my rotations are broken
+						//sibling == x->_parent->_right;
+					}
+					else
+					{
+						rightRotation(x); //my rotation are broken
+						//sibling == x->_parent->_left;
+					}
+					return remove_util3(node, replacement, x, 2);
 					//case 1 WIP
 				}
-				else if (nb_case >= 2 && x && x->_color == BLACK && sibling && sibling->_color == BLACK //case 2
+				else if (x && x->_color == BLACK && sibling && sibling->_color == BLACK //case 2
 				&& sibling->_left && sibling->_right && sibling->_left->_color == BLACK && sibling->_right->_color == BLACK)
 				{
 					sibling->_color = RED;
@@ -288,9 +299,9 @@ namespace ft
 					if (x->_color == RED)
 						x->_color = BLACK;
 					else
-						remove_util3(node, replacement, x, 1);
+						remove_util3(node, replacement, x, 3);
 				}
-				else if (nb_case >= 3 && x && x->_color == BLACK && sibling && sibling->_color == BLACK //case 3
+				else if (x && x->_color == BLACK && sibling && sibling->_color == BLACK //case 3
 				&& ((x->_parent->_left == x && sibling->_left && sibling->_left->_color == RED && sibling->_right && sibling->_right->_color == BLACK)
 				|| (x->_parent->_right == x && sibling->_left && sibling->_left->_color == BLACK && sibling->_right && sibling->_right->_color == RED)))
 				{
@@ -310,9 +321,9 @@ namespace ft
 						x->_parent->_left = sibling; // not sure of theses, check their values
 						sibling->_parent = x->_parent; //
 					}
-					remove_util3(node, replacement, x, 4);
+					//return remove_util3(node, replacement, x, 0);
 				}
-				else if (nb_case >= 4 && x && x->_color == BLACK && sibling && sibling->_color == BLACK //case 4
+				if (x && x->_color == BLACK && sibling && sibling->_color == BLACK //case 4
 				&& ((x->_parent->_left == x && sibling->_right && sibling->_right->_color == RED)
 				|| (x->_parent->_right == x && sibling->_left && sibling->_left->_color == RED)))
 				{
@@ -328,6 +339,7 @@ namespace ft
 						sibling->_left = BLACK;
 						rightRotation(x->_parent);
 					}
+					//maybe delete x after?
 				}
 			}
 			void remove_util2(node_type* node, node_type* replacement, node_type* x)
@@ -351,7 +363,7 @@ namespace ft
 					}
 					delete_node_util(node);
 				}
-				else if (node->_color == BLACK && replacement->_color == RED)
+				else if (node->_color == BLACK && replacement && replacement->_color == RED)
 				{
 					if (parent_emplacement(node))
 						*parent_emplacement(node) = replacement;
@@ -362,16 +374,19 @@ namespace ft
 						replacement->_left->_parent = replacement;
 					delete_node_util(node);
 				}
-				else if (node->_color == RED && replacement->_color == BLACK)
+				else if (node->_color == RED && replacement && replacement->_color == BLACK)
 				{
 					replacement->_color = RED;
-					remove_util3(node, replacement, x, 0);
+					remove_util3(node, replacement, x, 4);
 				}
+				else
+					remove_util3(node, replacement, node, 4);
 			}
 			void remove_util(node_type* node)
 			{
 				node_type* replacement = 0;
 				find_next_util(node->_data._first, node, &replacement);
+				//find_next_util(node->_data._first, nodes, &replacement);
 				if (!node->_left && !node->_right)
 					remove_util2(node, replacement, 0);
 				else if ((!node->_left && node->_right) || (node->_left && !node->_right))

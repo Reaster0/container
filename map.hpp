@@ -19,6 +19,7 @@ namespace ft
 			typedef typename allocator_type::pointer pointer;
 			typedef typename allocator_type::const_pointer const_pointer;
 			typedef size_t size_type;
+			typedef Key key_type;
 			template <class less>
 			class value_compare: public std::binary_function<value_type, value_type, bool>
 			{
@@ -78,13 +79,13 @@ namespace ft
 				try
 				{
 					_tree.insert(val);
-					result._first = iterator(_tree.find_node(val));
+					result._first = iterator(_tree.find_node(val), _tree.end_node());
 					result._second = true;
 				}
 				catch(const std::string& e)
 				{
 					//std::cerr << e << '\n'; //maybe unusefull
-					result._first = iterator(_tree.find_node(val));
+					result._first = iterator(_tree.find_node(val), _tree.end_node());
 					result._second = false;
 				}
 				return result;
@@ -96,12 +97,12 @@ namespace ft
 				try
 				{
 					_tree.insert(val);
-					result = iterator(_tree.find_node(val));	
+					result = iterator(_tree.find_node(val), _tree.end_node());	
 				}
 				catch(const std::string& e)
 				{
 					std::cerr << e << '\n'; //maybe unusefull
-					result = iterator(_tree.find_node(val));
+					result = iterator(_tree.find_node(val), _tree.end_node());
 				}
 				return result;
 			}
@@ -125,7 +126,7 @@ namespace ft
 				_tree.min_node(_tree.root_node(), &result);
 				if (!result)
 					return iterator(_tree.end_node(), _tree.end_node());
-				return iterator(result);
+				return iterator(result, _tree.end_node());
 			}
 			const_iterator begin() const
 			{
@@ -186,7 +187,7 @@ namespace ft
 			ft::pair<const_iterator, const_iterator> equal_range(const Key& key) const
 			{
 				return ft::pair<const_iterator, const_iterator>
-				(const_iterator(_tree.find_next_key(key)), const_iterator(_tree.find_next_key(key)));
+				(const_iterator(_tree.find_next_key(key), _tree.end_node()), const_iterator(_tree.find_next_key(key)), _tree.end_node());
 			}
 			bool empty() const
 			{
@@ -198,24 +199,24 @@ namespace ft
 			{
 				try
 				{
-					return iterator(_tree.find_node(_tree.find_key(key)));
+					return iterator(_tree.find_node(_tree.find_key(key)), _tree.end_node());
 				}
 				catch(const std::string& e)
 				{
-					return iterator(0); //sould return end()
-					//return end();
+					//return iterator(0); //sould return end()
+					return end();
 				}
 			}
 			const_iterator find(const Key& key) const
 			{
 				try
 				{
-					return const_iterator(_tree.find_node(_tree.find_key(key)));
+					return const_iterator(_tree.find_node(_tree.find_key(key)), _tree.end_node());
 				}
 				catch(const std::string& e)
 				{
-					return const_iterator(0); //sould return end()
-					//return end();
+					//return const_iterator(0); //sould return end()
+					return end();
 				}
 			}
 			allocator_type get_allocator() const
@@ -237,19 +238,19 @@ namespace ft
 
 			iterator lower_bound (const Key& key)
 			{
-				return iterator(_tree.find_prev_key(key));
+				return iterator(_tree.find_prev_key(key), _tree.end_node());
 			}
 			const_iterator lower_bound (const Key& key) const
 			{
-				return iterator(_tree.find_prev_key(key));
+				return iterator(_tree.find_prev_key(key), _tree.end_node());
 			}
 			iterator upper_bound (const Key& k)
 			{
-				return iterator(_tree.find_next_key(k));
+				return iterator(_tree.find_next_key(k), _tree.end_node());
 			}
 			const_iterator upper_bound (const Key& k) const
 			{
-				return iterator(_tree.find_next_key(k));
+				return iterator(_tree.find_next_key(k), _tree.end_node());
 			}
 			key_compare	key_comp() const
 			{
@@ -259,14 +260,36 @@ namespace ft
 			{
 				return (value_compare<Compare>());
 			}
-			void erase (iterator position)
+			void erase(iterator position)
 			{
 				_tree.remove(position._ptr);
 			}
-			//size_type erase (const key_type& k);
-    		//void erase (iterator first, iterator last);
+			size_type erase(const key_type& k)
+			{
+				try
+				{
+					_tree.remove(_tree.find_node(_tree.find_key(k)));
+					return 1;
+				}
+				catch (const std::string& e)
+				{
+					return 0;
+				}
+			}
+    		void erase(iterator first, iterator last)
+			{
+				iterator it = first;
+				while (it != last)
+				{
+					std::cout << "deleting " << it._ptr->_data._first << "---------------------------------" << std::endl;
+					it++;
+					erase(first);
+					first = it;
+					print();
+				}
+			}
 
-			void swap (map& x)
+			void swap(map& x)
 			{
 				ft::map<Key, T, Allocator, Compare> temp(*this);
 				*this = x;

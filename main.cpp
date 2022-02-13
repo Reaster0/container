@@ -50,7 +50,7 @@ int main()
 
 std::cout << "-------------------------------\n";
 
-	testing.erase(testing.find(40));
+	testing.erase(testing.begin(), testing.end());
 	testing.print();
 
 	// std::map<int, int> testing2;

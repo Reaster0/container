@@ -134,6 +134,7 @@ namespace ft
 			map_iterator& operator=(const map_iterator& other)
 			{
 				_ptr = other._ptr;
+				_nil = other._nil;
 				return *this;
 			}
 			operator map_iterator<const T, Key, Compare>() const
@@ -145,14 +146,14 @@ namespace ft
 
 	//iterator operator
 
-	template <class T, class U, class K, class V>
-	bool operator==(const ft::map_iterator<T, K>& A, const ft::map_iterator<U, V>& B)
+	template <class T, class U, class K, class V, class comp, class comp2>
+	bool operator==(const ft::map_iterator<T, K, comp>& A, const ft::map_iterator<U, V, comp2>& B)
 	{
 		return (A._ptr == B._ptr);
 	}
 
-	template <class T, class U, class K, class V>
-	bool operator!=(const ft::map_iterator<T, K>& A, const ft::map_iterator<U, V>& B)
+	template <class T, class U, class K, class V, class comp, class comp2>
+	bool operator!=(const ft::map_iterator<T, K, comp>& A, const ft::map_iterator<U, V, comp2>& B)
 	{
 		return !(A._ptr == B._ptr);
 	}
@@ -173,7 +174,7 @@ namespace ft
 
 
 	template <class Iterator>
-	class rev_map_iterator
+	class rev_map_iterator //maybe unescessary because ghe classic rev_iterator is templated on iterator too
 	{
 		public:
 
