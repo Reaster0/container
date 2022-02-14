@@ -203,7 +203,6 @@ namespace ft
 				}
 				catch(const std::string& e)
 				{
-					//return iterator(0); //sould return end()
 					return end();
 				}
 			}
@@ -215,7 +214,6 @@ namespace ft
 				}
 				catch(const std::string& e)
 				{
-					//return const_iterator(0); //sould return end()
 					return end();
 				}
 			}
