@@ -279,23 +279,19 @@ namespace ft
 					sibling->_color = BLACK;
 					x->_parent->_color = RED;
 					if(x->_parent->_left == x)
-					{
-						leftRotation(x); //my rotations are broken
-						//sibling == x->_parent->_right;
-					}
+						leftRotation(sibling);
 					else
-					{
-						rightRotation(x); //my rotation are broken
-						//sibling == x->_parent->_left;
-					}
+						rightRotation(sibling);
 					return remove_util3(node, replacement, x, 2);
-					//case 1 WIP
 				}
 				else if (x && x->_color == BLACK && sibling && sibling->_color == BLACK //case 2
-				&& sibling->_left && sibling->_right && sibling->_left->_color == BLACK && sibling->_right->_color == BLACK)
+				&& ((sibling->_left && sibling->_right && sibling->_left->_color == BLACK && sibling->_right->_color == BLACK) || (!sibling->_left && !sibling->_right)))
 				{
 					sibling->_color = RED;
-					x = x->_parent;
+					node_type* tempParent = x->_parent;
+					*parent_emplacement(x) = 0;
+					delete_node_util(x);
+					x = tempParent;
 					if (x->_color == RED)
 						x->_color = BLACK;
 					else
@@ -331,15 +327,16 @@ namespace ft
 					x->_parent->_color = BLACK;
 					if (x->_parent->_left == x)
 					{
-						sibling->_right = BLACK;
-						leftRotation(x->_parent);
+						sibling->_right->_color = BLACK;
+						leftRotation(sibling);
 					}
 					else
 					{
-						sibling->_left = BLACK;
-						rightRotation(x->_parent);
+						sibling->_left->_color = BLACK;
+						rightRotation(sibling);
 					}
-					//maybe delete x after?
+					*parent_emplacement(x) = 0;
+					delete_node_util(x);
 				}
 			}
 			void remove_util2(node_type* node, node_type* replacement, node_type* x)
@@ -373,11 +370,18 @@ namespace ft
 					if (replacement->_left)
 						replacement->_left->_parent = replacement;
 					delete_node_util(node);
+					nodes = replacement;
+					nodes = root_node();
 				}
 				else if (node->_color == RED && replacement && replacement->_color == BLACK)
 				{
 					replacement->_color = RED;
 					remove_util3(node, replacement, x, 4);
+				}
+				else if (!node->_parent) //case root
+				{
+					delete_node_util(node);
+					nodes = 0;
 				}
 				else
 					remove_util3(node, replacement, node, 4);
