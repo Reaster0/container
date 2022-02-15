@@ -77,9 +77,9 @@ namespace ft
 			node_type* _nil;
 		
 			map_iterator() : _ptr(0), _nil(0)
-			{				
+			{
 			}
-			map_iterator(const_node_type* ptr, const_node_type* nil) : _ptr(ptr), _nil(nil)
+			map_iterator(node_type* ptr, node_type* nil) : _ptr(ptr), _nil(nil)
 			{
 			}
 			map_iterator(const map_iterator& other) : _ptr(other._ptr), _nil(other._nil)
