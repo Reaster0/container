@@ -119,60 +119,62 @@ namespace ft
 			}
 			void collor_node(node_type** node)
 			{
-					//*node = check_pointer;
-					if (!(*node)->_parent) //case root
-						(*node)->_color = BLACK;
-					 	//other cases
-						if ((*node)->uncle_color() == RED)
-						{
-							(*node)->_color = RED;
-							(*node)->_parent->_color = BLACK;
-							(*node)->_parent->_parent->_color = RED;
-							(*node)->uncle()->_color = BLACK;
-						}
-						else if ((*node)->uncle_color() == BLACK)
-						{
-							//triangle case
-							if ((*node) == (*node)->_parent->_left && (*node)->_parent == (*node)->_parent->_parent->_right && (*node)->_parent->_color == RED) // case triangle right
-							{
-								node_type* P = *node;
-								LeftTriangleRotation(P);
-								LeftLineRotation(P);
-								//maybe an issue here with many node
-							}
-							//triangle case rev
-							else if ((*node) == (*node)->_parent->_right && (*node)->_parent == (*node)->_parent->_parent->_left && (*node)->_parent->_color == RED) // case triangle left
-							{
-								node_type* P = *node;
-								RightTriangleRotation(P);
-								RightLineRotation(P);
-								//maybe an issue here with many node
-							}
-							//line rotation left
-							else if ((*node) == (*node)->_parent->_left && (*node)->_parent == (*node)->_parent->_parent->_left && (*node)->_parent->_color == RED)
-							{
-								node_type* P = *node;
-								while (P->_parent->_color == RED)
-									P = P->_parent;
-								RightLineRotation(P);
-								//maybe an issue here with many node
-							}
-							//line rotation right
-							else if ((*node) == (*node)->_parent->_right && (*node)->_parent == (*node)->_parent->_parent->_right && (*node)->_parent->_color == RED)
-							{
-								node_type* P = *node;
-								while (P->_parent->_color == RED)
-									P = P->_parent;
-								LeftLineRotation(P);
-								//maybe an issue here with many node
-							}
-					}
-					else
+				//*node = check_pointer;
+				if (!(*node)->_parent) //case root
+				{
+					(*node)->_color = BLACK;
+					//other cases
+					if ((*node)->uncle_color() == RED)
+					{
 						(*node)->_color = RED;
-					if (root_node()->_color == RED)
-						root_node()->_color = BLACK;
+						(*node)->_parent->_color = BLACK;
+						(*node)->_parent->_parent->_color = RED;
+						(*node)->uncle()->_color = BLACK;
+					}
+					else if ((*node)->uncle_color() == BLACK)
+					{
+						//triangle case
+						if ((*node) == (*node)->_parent->_left && (*node)->_parent == (*node)->_parent->_parent->_right && (*node)->_parent->_color == RED) // case triangle right
+						{
+							node_type* P = *node;
+							LeftTriangleRotation(P);
+							LeftLineRotation(P);
+							//maybe an issue here with many node
+						}
+						//triangle case rev
+						else if ((*node) == (*node)->_parent->_right && (*node)->_parent == (*node)->_parent->_parent->_left && (*node)->_parent->_color == RED) // case triangle left
+						{
+							node_type* P = *node;
+							RightTriangleRotation(P);
+							RightLineRotation(P);
+							//maybe an issue here with many node
+						}
+						//line rotation left
+						else if ((*node) == (*node)->_parent->_left && (*node)->_parent == (*node)->_parent->_parent->_left && (*node)->_parent->_color == RED)
+						{
+							node_type* P = *node;
+							while (P->_parent->_color == RED)
+								P = P->_parent;
+							RightLineRotation(P);
+							//maybe an issue here with many node
+						}
+						//line rotation right
+						else if ((*node) == (*node)->_parent->_right && (*node)->_parent == (*node)->_parent->_parent->_right && (*node)->_parent->_color == RED)
+						{
+							node_type* P = *node;
+							while (P->_parent->_color == RED)
+								P = P->_parent;
+							LeftLineRotation(P);
+							//maybe an issue here with many node
+						}
+					}
+				}
+				else
+					(*node)->_color = RED;
+				if (root_node()->_color == RED)
+					root_node()->_color = BLACK;
 			}
-			
+
 			node_type* check_collor(node_type* node)
 			{
 				if (!node)
@@ -455,7 +457,7 @@ namespace ft
 				equal_utils(other_nodes->_right, &(*start_node)->_right, *start_node);
 				equal_utils(other_nodes->_left, &(*start_node)->_left, *start_node);
 			}
-		public:			
+		public:
 			rb_tree()
 			{
 				nodes = 0;
@@ -496,7 +498,7 @@ namespace ft
 			{
 				return remove_util(node);
 			}
-			node_type* find_node(const T& val) //maybe not const
+			node_type* find_node(const T& val) const //maybe not const
 			{
 				return find_node_util(val, nodes);
 			}
@@ -527,7 +529,7 @@ namespace ft
 					node = node->_parent;
 				return node;
 			}
-			const_node_type* end_node(void) //i'm sure the const is a mistake
+			node_type* end_node(void) const //i'm sure the const is a mistake
 			{
 				return nil;
 			}
