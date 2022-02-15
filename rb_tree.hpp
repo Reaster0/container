@@ -21,6 +21,7 @@ namespace ft
 		typedef T value_type;
 		//typedef	Key key_type;
 		typedef node<T> node_type;
+		typedef node<const T> const_node_type;
 		typedef std::allocator<ft::node<T> > Allocator;
 
 		private:
@@ -217,7 +218,7 @@ namespace ft
 			{
 				if (!node)
 					throw std::string("invalid key");
-				if (node->_data == value || (node->_data._first && node->_data._first == value._first))
+				if (node->_data == value || (node->_data.first && node->_data.first == value.first))
 					return node;
 				if (Compare()(node->_data, value))
 					return find_node_util(value, node->_right);
@@ -229,7 +230,7 @@ namespace ft
 				if (!node)
 					return;
 				//need to not use make_pair
-				if (Compare()(make_pair(key, 0), node->_data) /*node->_data._first > key*/ && (!(*result) || Compare()(node->_data, (*result)->_data) /*node->_data._first < (*result)->_data._first)*/))
+				if (Compare()(make_pair(key, 0), node->_data) /*node->_data.first > key*/ && (!(*result) || Compare()(node->_data, (*result)->_data) /*node->_data.first < (*result)->_data.first)*/))
 					(*result) = node;
 				find_next_util(key, node->_left, result);
 				find_next_util(key, node->_right, result);
@@ -238,7 +239,7 @@ namespace ft
 			{
 				if (!node)
 					return;
-				if (Compare()(node->_data, make_pair(key, 0)) /*node->_data._first < key*/ && (!(*result) || Compare()((*result)->_data, node->_data) /*node->_data._first > (*result)->_data._first*/))
+				if (Compare()(node->_data, make_pair(key, 0)) /*node->_data.first < key*/ && (!(*result) || Compare()((*result)->_data, node->_data) /*node->_data.first > (*result)->_data.first*/))
 					(*result) = node;
 				find_prev_util(key, node->_left, result);
 				find_prev_util(key, node->_right, result);
@@ -266,7 +267,7 @@ namespace ft
 				else
 					return node->_parent->_left;
 			}
-			void remove_util3(node_type* node, node_type* replacement, node_type* x, int nb_case)
+			void remove_util3(node_type* replacement, node_type* x)
 			{
 				node_type* sibling = get_siblings(x);
 				if (x && x->_color == RED) //case 0
@@ -282,7 +283,7 @@ namespace ft
 						leftRotation(sibling);
 					else
 						rightRotation(sibling);
-					return remove_util3(node, replacement, x, 2);
+					return remove_util3(replacement, x);
 				}
 				else if (x && x->_color == BLACK && sibling && sibling->_color == BLACK //case 2
 				&& ((sibling->_left && sibling->_right && sibling->_left->_color == BLACK && sibling->_right->_color == BLACK) || (!sibling->_left && !sibling->_right)))
@@ -295,7 +296,7 @@ namespace ft
 					if (x->_color == RED)
 						x->_color = BLACK;
 					else
-						remove_util3(node, replacement, x, 3);
+						remove_util3(replacement, x);
 				}
 				else if (x && x->_color == BLACK && sibling && sibling->_color == BLACK //case 3
 				&& ((x->_parent->_left == x && sibling->_left && sibling->_left->_color == RED && sibling->_right && sibling->_right->_color == BLACK)
@@ -376,7 +377,7 @@ namespace ft
 				else if (node->_color == RED && replacement && replacement->_color == BLACK)
 				{
 					replacement->_color = RED;
-					remove_util3(node, replacement, x, 4);
+					remove_util3(replacement, x);
 				}
 				else if (!node->_parent) //case root
 				{
@@ -384,13 +385,13 @@ namespace ft
 					nodes = 0;
 				}
 				else
-					remove_util3(node, replacement, node, 4);
+					remove_util3(replacement, node);
 			}
 			void remove_util(node_type* node)
 			{
 				node_type* replacement = 0;
-				find_next_util(node->_data._first, node, &replacement);
-				//find_next_util(node->_data._first, nodes, &replacement);
+				find_next_util(node->_data.first, node, &replacement);
+				//find_next_util(node->_data.first, nodes, &replacement);
 				if (!node->_left && !node->_right)
 					remove_util2(node, replacement, 0);
 				else if ((!node->_left && node->_right) || (node->_left && !node->_right))
@@ -402,15 +403,15 @@ namespace ft
 			{
 				if (!node)
 					return 1;
-				return find_next_util(node->_left) + find_next_util(node->_right);
+				return size_util(node->_right) + size_util(node->_left);
 			}
 			T& find_util(const Key& key, node_type* node) const
 			{
 				if (!node)
 					throw std::string("invalid key");
-				if (node->_data._first == key)
+				if (node->_data.first == key)
 					return node->_data;
-				if (Compare()(node->_data, T(key)) /*node->_data._first < key*/)
+				if (Compare()(node->_data, T(key)) /*node->_data.first < key*/)
 					return find_util(key, node->_right);
 				else
 					return find_util(key, node->_left);
@@ -451,19 +452,15 @@ namespace ft
 					return;
 				*start_node = alloc.allocate(1);
 				alloc.construct(*start_node, node_type(other_nodes->_data, other_nodes->_color, 0, 0, parent));
-				//insert_util(node_type(other_nodes->_data), &nodes);
 				equal_utils(other_nodes->_right, &(*start_node)->_right, *start_node);
 				equal_utils(other_nodes->_left, &(*start_node)->_left, *start_node);
 			}
-		public:
-			
-			typedef ft::bidirectional_iterator_tag	iterator_category;
-			
+		public:			
 			rb_tree()
 			{
 				nodes = 0;
 				nil = alloc.allocate(1);
-				alloc.construct(nil, node_type(0));
+				alloc.construct(nil, node_type());
 				nil->_nil = true;
 			}
 			rb_tree(const rb_tree& other)
@@ -530,7 +527,7 @@ namespace ft
 					node = node->_parent;
 				return node;
 			}
-			node_type* end_node(void)
+			const_node_type* end_node(void) //i'm sure the const is a mistake
 			{
 				return nil;
 			}

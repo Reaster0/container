@@ -96,20 +96,23 @@ namespace ft
 	template <class T, class U>
 	struct pair
 	{
-		T _first;
-		U _second; //maybe a twist on the constructor of pair
-		pair(const T& first = 0, const U& second = 0) : _first(first), _second(second) {};
-		pair(const pair<T, U>& other) : _first(other._first), _second(other._second) {};
+		T first;
+		U second; //maybe a twist on the constructor of pair
+		pair() : first(T()), second(U())
+		{
+		}
+		pair(const T& first_, const U& second_) : first(first_), second(second_) {};
+		pair(const pair<T, U>& other) : first(other.first), second(other.second) {};
 
 		pair<T, U>& operator=(const pair<T, U>& other)
 		{
-			_first = other._first;
-			_second = other._second;
+			first = other.first;
+			second = other.second;
 			return *this;
 		}
 		operator pair<const T, U>() const
 		{
-		    return (pair<const T, U>(_first, _second));
+		    return (pair<const T, U>(first, second));
 		}
 	};
 
@@ -122,7 +125,7 @@ namespace ft
 	template <class T, class U>
 	bool operator==(const pair<T, U>& lhs, const pair<T, U>& rhs)
 	{
-		return lhs._first == rhs._first && lhs._second == rhs._second;
+		return lhs.first == rhs.first && lhs.second == rhs.second;
 	}
 
 	template <class T, class U>
@@ -134,7 +137,7 @@ namespace ft
 	template <class T, class U>
 	bool operator<(const pair<T, U> &lhs, const pair<T, U> &rhs)
 	{
-		return lhs._first < rhs._first; //|| !(rhs._first < lhs._first && lhs._second < rhs._second); //with it insert_util is broken with same key
+		return lhs.first < rhs.first; //|| !(rhs.first < lhs.first && lhs.second < rhs.second); //with it insert_util is broken with same key
 	}
 
 	template <class T, class U>
@@ -158,7 +161,7 @@ namespace ft
 	template <class T, class U>
 	std::ostream& operator<<(std::ostream &os, const pair<T, U> &other)
 	{
-		return os << other._first << ":" << other._second;
+		return os << other.first << ":" << other.second;
 	}
 }
 

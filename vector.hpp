@@ -6,6 +6,7 @@
 #include <stdexcept>
 #include "iterator.hpp"
 #include "rev_iterator.hpp"
+#include "map_iterator.hpp"
 #include "utils.hpp"
 
 namespace ft
@@ -31,6 +32,8 @@ namespace ft
 			typedef ft::iterator<const T> const_iterator;
 			typedef ft::reverse_iterator<iterator> reverse_iterator;
 			typedef ft::reverse_iterator<const_iterator> const_reverse_iterator;
+			//typedef ft::rev_map_iterator<iterator> reverse_iterator;
+			//typedef ft::rev_map_iterator<const_iterator> const_reverse_iterator;
 			typedef size_t size_type; //maybe wrong
 
 			#ifdef __APPLE__

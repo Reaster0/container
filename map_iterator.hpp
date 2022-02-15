@@ -17,12 +17,13 @@ namespace ft
 		private:
 
 			typedef ft::node<T> node_type;
+			typedef ft::node<const T> const_node_type; //this is the solution
 
 			void find_next_util(const Key& key, node_type* node, node_type** result) const
 			{
 				if (!node)
 					return;
-				if (Compare()(make_pair(key, 0), node->_data) /*node->_data._first > key*/ && (!(*result) || Compare()(node->_data, (*result)->_data) /*node->_data._first < (*result)->_data._first*/))
+				if (Compare()(make_pair(key, 0), node->_data) /*node->_data.first > key*/ && (!(*result) || Compare()(node->_data, (*result)->_data) /*node->_data.first < (*result)->_data.first*/))
 					(*result) = node;
 				find_next_util(key, node->_left, result);
 				find_next_util(key, node->_right, result);
@@ -31,7 +32,7 @@ namespace ft
 			{
 				if (!node)
 					return;
-				if (Compare()(node->_data, make_pair(key, 0)) /*node->_data._first < key*/ && (!(*result) || Compare()((*result)->_data, node->_data) /*node->_data._first > (*result)->_data._first*/))
+				if (Compare()(node->_data, make_pair(key, 0)) /*node->_data.first < key*/ && (!(*result) || Compare()((*result)->_data, node->_data) /*node->_data.first > (*result)->_data.first*/))
 					(*result) = node;
 				find_prev_util(key, node->_left, result);
 				find_prev_util(key, node->_right, result);
@@ -75,7 +76,10 @@ namespace ft
 			node_type* _ptr;
 			node_type* _nil;
 		
-			map_iterator(node_type* ptr = 0, node_type* nil = 0) : _ptr(ptr), _nil(nil)
+			map_iterator() : _ptr(0), _nil(0)
+			{				
+			}
+			map_iterator(const_node_type* ptr, const_node_type* nil) : _ptr(ptr), _nil(nil)
 			{
 			}
 			map_iterator(const map_iterator& other) : _ptr(other._ptr), _nil(other._nil)
@@ -90,7 +94,7 @@ namespace ft
 				if (_ptr->_nil)
 			 		_ptr->_left->_color = true; //let's segfault like the stl
 				node_type* result = 0;
-				find_next_util(_ptr->_data._first, root_node(_ptr), &result);
+				find_next_util(_ptr->_data.first, root_node(_ptr), &result);
 				_ptr = result;
 				if (!_ptr)
 					_ptr = _nil;
@@ -111,7 +115,7 @@ namespace ft
 					_ptr = result;
 					return *this;
 				}
-				find_prev_util(_ptr->_data._first, root_node(_ptr), &result);
+				find_prev_util(_ptr->_data.first, root_node(_ptr), &result);
 				_ptr = result;
 				if (!_ptr)
 					_ptr = _nil;
@@ -123,9 +127,9 @@ namespace ft
 				operator--();
 				return tmp;
 			}
-			pointer operator->()
+			pointer operator->() const
 			{
-				return &(_ptr->_data);
+				return (&(this->operator*()));
 			}
 			value_type& operator*()
 			{
@@ -195,7 +199,7 @@ namespace ft
 			{
 				if (!node)
 					return;
-				if (Compare(node_type(make_pair(key, 0)), node->_data) /*node->_data._first > key*/ && (!(*result) || Compare(node->_data, (*result)->_data) /*node->_data._first < (*result)->_data._first*/))
+				if (Compare(node_type(make_pair(key, 0)), node->_data) /*node->_data.first > key*/ && (!(*result) || Compare(node->_data, (*result)->_data) /*node->_data.first < (*result)->_data.first*/))
 					(*result) = node;
 				find_next_util(key, node->_left, result);
 				find_next_util(key, node->_right, result);
@@ -204,7 +208,7 @@ namespace ft
 			{
 				if (!node)
 					return;
-				if (Compare(node->_data, node_type(make_pair(key, 0))) /*node->_data._first < key*/ && (!(*result) || Compare()(*(result)->_data, node->_data) /*node->_data._first > (*result)->_data._first*/))
+				if (Compare(node->_data, node_type(make_pair(key, 0))) /*node->_data.first < key*/ && (!(*result) || Compare()(*(result)->_data, node->_data) /*node->_data.first > (*result)->_data.first*/))
 					(*result) = node;
 				find_prev_util(key, node->_left, result);
 				find_prev_util(key, node->_right, result);
@@ -250,7 +254,7 @@ namespace ft
 					_ptr = result;
 					return *this;
 				}
-				find_prev_util(_ptr->_data._first, root_node(_ptr), &result);
+				find_prev_util(_ptr->_data.first, root_node(_ptr), &result);
 				_ptr = result;
 				if (!_ptr)
 					_ptr = _nil;
@@ -267,7 +271,7 @@ namespace ft
 				if (_ptr->_nil)
 					_ptr->_left->_color = true; //let's segfault like the stl
 				node_type* result = 0;
-				find_next_util(_ptr->_data._first, root_node(_ptr), &result);
+				find_next_util(_ptr->_data.first, root_node(_ptr), &result);
 				_ptr = result;
 				if (!_ptr)
 					_ptr = _nil;

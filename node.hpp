@@ -17,8 +17,21 @@ namespace ft
 		node* _left;
 		node* _right;
 		node* _parent;
-		node(const T& data, const bool& color = RED, node* left = 0, node* right = 0, node* parent = 0) : _data(data), _color(color), _left(left), _right(right), _parent(parent), _nil(false)
+		node()
 		{
+			_left = 0;
+			_right = 0;
+			_parent = 0;
+			_nil = 0;
+			_color = RED;
+		}
+		node(const T& data, const bool& color = RED, node* left = 0, node* right = 0, node* parent = 0) : _data(data), _color(color), _left(left), _right(right), _parent(parent)
+		{
+			_nil = false;
+		}
+		node(const node<T>& other) : _data(other._data), _color(other._color), _left(other._left), _right(other._right), _parent(other._parent)
+		{
+			_nil = other._nil;
 		}
 		~node()
 		{
@@ -29,6 +42,7 @@ namespace ft
 			_left = other._left;
 			_right = other._right;
 			_parent = other._parent;
+			_nil = other._nil;
 			return *this;
 		}
 		
@@ -52,10 +66,10 @@ namespace ft
 			else
 				return BLACK;
 		}
-		// operator node<const Key, const T>() const
-		// {
-		// 	return node<const Key, const T>(_key, _value, _color, _left, _right, _parent);
-		// }
+		operator node<const T>() const
+		{
+			return node<const T>(_data, _color, _left, _right, _parent);
+		}
 	};
 
 	template <class T, class U>

@@ -3,23 +3,17 @@
 
 #include "rb_tree.hpp"
 #include "map_iterator.hpp"
+#include "rev_iterator.hpp"
 
 namespace ft
 {
+	template <class T, class Key, class Compare>
+	class map_iterator;
 	template<class Key, class T, class Allocator = std::allocator<ft::pair<Key, T> >, class Compare = std::less<Key> >
 	class map
 	{
-		private:
+		public:
 			typedef ft::pair<const Key, T> value_type;
-			typedef node<value_type> node_type;
-			typedef Compare key_compare;
-			typedef Allocator allocator_type;
-			typedef typename allocator_type::reference	reference;
-			typedef typename allocator_type::const_reference	const_reference;
-			typedef typename allocator_type::pointer pointer;
-			typedef typename allocator_type::const_pointer const_pointer;
-			typedef size_t size_type;
-			typedef Key key_type;
 			template <class less>
 			class value_compare: public std::binary_function<value_type, value_type, bool>
 			{
@@ -30,30 +24,43 @@ namespace ft
 
 					bool operator() (const value_type& x, const value_type& y) const
 					{
-						return less()(x._first, y._first);
+						return less()(x.first, y.first);
 					}
 			};
-
 			typedef value_compare<Compare> comp;
-			typedef rb_tree<value_type, Key, comp> tree_type;
-			tree_type _tree;
-
-		public://maybe need to incorporate key_compare in rb_tree
-
 			typedef ft::map_iterator<value_type, Key, comp> iterator;
 			typedef ft::map_iterator<const value_type, Key, comp> const_iterator;
-			typedef ft::rev_map_iterator<iterator> reverse_iterator;
-			typedef ft::rev_map_iterator<const iterator> const_reverse_iterator;
+			typedef ft::reverse_iterator<iterator> reverse_iterator;
+			typedef ft::reverse_iterator<const iterator> const_reverse_iterator;
 			typedef typename iterator_traits<iterator>::difference_type difference_type;
+
+		private:
+			typedef node<value_type> node_type;
+			typedef node<const value_type> const_node_type;
+			typedef Compare key_compare;
+			typedef Allocator allocator_type;
+			typedef typename allocator_type::reference	reference;
+			typedef typename allocator_type::const_reference	const_reference;
+			typedef typename allocator_type::pointer pointer;
+			typedef typename allocator_type::const_pointer const_pointer;
+			typedef size_t size_type;
+			typedef Key key_type;
+
+			typedef rb_tree<value_type, Key, comp> tree_type;
+			tree_type _tree;
+			allocator_type _allocator;
+			key_compare _comp;
+
+		public://maybe need to incorporate key_compare in rb_tree
 			
 			explicit map (const key_compare& comp = key_compare(),
-              const allocator_type& alloc = allocator_type())
+              const allocator_type& alloc = allocator_type()) : _allocator(alloc), _comp(comp)
 			{
 			}
 			template<class InputIterator>
 			map(InputIterator first, InputIterator last,
 			const key_compare& comp = key_compare(),
-			const allocator_type& alloc = allocator_type())
+			const allocator_type& alloc = allocator_type()) : _allocator(alloc), _comp(comp)
 			{
 				insert(first, last);
 			}
@@ -79,14 +86,14 @@ namespace ft
 				try
 				{
 					_tree.insert(val);
-					result._first = iterator(_tree.find_node(val), _tree.end_node());
-					result._second = true;
+					result.first = iterator(_tree.find_node(val), _tree.end_node());
+					result.second = true;
 				}
 				catch(const std::string& e)
 				{
 					//std::cerr << e << '\n'; //maybe unusefull
-					result._first = iterator(_tree.find_node(val), _tree.end_node());
-					result._second = false;
+					result.first = iterator(_tree.find_node(val), _tree.end_node());
+					result.second = false;
 				}
 				return result;
 			}
@@ -113,7 +120,7 @@ namespace ft
 				try
 				{
 					for (InputIterator i = first; i != second; ++i)
-						_tree(insert(*i));
+						_tree.insert(*i);
 				}
 				catch(const std::string& e)
 				{
@@ -231,7 +238,7 @@ namespace ft
 			}
 			T& operator[] (const Key& key)
 			{
-				return (*insert(make_pair(key, T()))._first)._data._second;
+				return (*insert(make_pair(key, T())).first)._data.second;
 			}
 
 			iterator lower_bound (const Key& key)
@@ -279,14 +286,12 @@ namespace ft
 				iterator it = first;
 				while (it != last)
 				{
-					std::cout << "deleting " << it._ptr->_data._first << "---------------------------------" << std::endl;
 					it++;
 					erase(first);
 					first = it;
 					print();
 				}
 			}
-
 			void swap(map& x)
 			{
 				ft::map<Key, T, Allocator, Compare> temp(*this);
