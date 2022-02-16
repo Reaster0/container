@@ -79,6 +79,10 @@ namespace ft
 			map_iterator() : _ptr(0), _nil(0)
 			{
 			}
+			// map_iterator(node_type* ptr) : _ptr(ptr) 
+			// {
+			// 	_nil = 0;
+			// }
 			map_iterator(node_type* ptr, node_type* nil) : _ptr(ptr), _nil(nil)
 			{
 			}
@@ -127,13 +131,21 @@ namespace ft
 				operator--();
 				return tmp;
 			}
-			pointer operator->() const
-			{
-				return (&(this->operator*()));
-			}
-			value_type& operator*()
+			reference operator*()
 			{
 				return _ptr->_data;
+			}
+			const value_type& operator*() const
+			{
+				return _ptr->_data;
+			}
+			pointer operator->()
+			{
+				return (&this->operator*());
+			}
+			const value_type *operator->() const
+			{
+				return (&this->operator*());
 			}
 			map_iterator& operator=(const map_iterator& other)
 			{
@@ -141,9 +153,9 @@ namespace ft
 				_nil = other._nil;
 				return *this;
 			}
-			operator map_iterator<const T, Key, Compare>() const
+			operator map_iterator<const T, const Key, Compare>() const
 			{
-			    return (map_iterator<const T, Key, Compare>(_ptr));
+			    return (map_iterator<const T, const Key, Compare>(_ptr));
 			}
 
 	};

@@ -29,7 +29,7 @@ namespace ft
 			};
 			typedef value_compare<Compare> comp;
 			typedef ft::map_iterator<value_type, Key, comp> iterator;
-			typedef ft::map_iterator<const value_type, Key, comp> const_iterator;
+			typedef const ft::map_iterator<value_type, Key, comp> const_iterator; //ft::map_iterator<value_type, Key, comp>
 			typedef ft::reverse_iterator<iterator> reverse_iterator;
 			typedef ft::reverse_iterator<const iterator> const_reverse_iterator;
 			typedef typename iterator_traits<iterator>::difference_type difference_type;
@@ -137,7 +137,7 @@ namespace ft
 			}
 			const_iterator begin() const
 			{
-				node_type* result = 0;
+				const_node_type* result = 0;
 				_tree.min_node(_tree.root_node(), &result);
 				if (!result)
 					return const_iterator(_tree.end_node(), _tree.end_node());
