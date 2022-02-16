@@ -5,7 +5,6 @@
 #include <iostream>
 #include <stdexcept>
 #include "iterator.hpp"
-#include "rev_iterator.hpp"
 #include "map_iterator.hpp"
 #include "utils.hpp"
 

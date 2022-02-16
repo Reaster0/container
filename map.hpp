@@ -3,7 +3,7 @@
 
 #include "rb_tree.hpp"
 #include "map_iterator.hpp"
-#include "rev_iterator.hpp"
+#include "rev_map_iterator.hpp"
 
 namespace ft
 {
@@ -30,8 +30,8 @@ namespace ft
 			typedef value_compare<Compare> comp;
 			typedef ft::map_iterator<value_type, Key, comp> iterator;
 			typedef const ft::map_iterator<value_type, Key, comp> const_iterator; //ft::map_iterator<value_type, Key, comp>
-			typedef ft::reverse_iterator<iterator> reverse_iterator;
-			typedef ft::reverse_iterator<const iterator> const_reverse_iterator;
+			typedef ft::rev_map_iterator<iterator> reverse_iterator;
+			typedef const ft::rev_map_iterator<iterator> const_reverse_iterator;
 			typedef typename iterator_traits<iterator>::difference_type difference_type;
 
 		private:
@@ -153,27 +153,27 @@ namespace ft
 			}
 			reverse_iterator rbegin()
 			{
-				return reverse_iterator(_tree.end_node(), _tree.end_node());
+				return reverse_iterator(iterator(_tree.end_node(), _tree.end_node()));
 			}
 			const_reverse_iterator rbegin() const
 			{
-				return reverse_iterator(_tree.end_node(), _tree.end_node()); 
+				return reverse_iterator(iterator(_tree.end_node(), _tree.end_node())); 
 			}
 			reverse_iterator rend()
 			{
 				node_type* result = 0;
 				_tree.min_node(_tree.root_node(), &result);
 				if (!result)
-					return reverse_iterator(_tree.end_node(), _tree.end_node());
-				return reverse_iterator(result, _tree.end_node());
+					return reverse_iterator(iterator(_tree.end_node(), _tree.end_node()));
+				return reverse_iterator(iterator(result, _tree.end_node()));
 			}
 			const_reverse_iterator rend() const
 			{
 				node_type* result = 0;
 				_tree.min_node(_tree.root_node(), &result);
 				if (!result)
-					return const_reverse_iterator(_tree.end_node(), _tree.end_node());
-				return const_reverse_iterator(result, _tree.end_node());
+					return const_reverse_iterator(iterator(_tree.end_node(), _tree.end_node()));
+				return const_reverse_iterator(iterator(result, _tree.end_node()));
 			}
 			void clear()
 			{

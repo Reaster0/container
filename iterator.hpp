@@ -211,9 +211,6 @@ namespace ft
 			reverse_iterator(iterator_type other) : _iter(other)
 			{
 			}
-			// reverse_iterator(pointer ptr = 0) : _iter(ptr)
-			// {
-			// }
 			reverse_iterator() : _iter()
 			{
 			}

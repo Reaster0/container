@@ -120,6 +120,8 @@ namespace ft
 					return *this;
 				}
 				find_prev_util(_ptr->_data.first, root_node(_ptr), &result);
+				if (!result)
+					result->_left->_color = true; //let's segfault like the stl
 				_ptr = result;
 				if (!_ptr)
 					_ptr = _nil;
@@ -189,143 +191,145 @@ namespace ft
 	// }
 
 
-	template <class Iterator>
-	class rev_map_iterator //maybe unescessary because ghe classic rev_iterator is templated on iterator too
-	{
-		public:
+	// template <class Iterator>
+	// class rev_map_iterator //maybe unescessary because ghe classic rev_iterator is templated on iterator too
+	// {
+	// 	public:
 
-		typedef Iterator	iterator_type;
-		typedef typename ft::iterator_traits<Iterator>::value_type	value_type;
-		typedef typename ft::iterator_traits<Iterator>::difference_type	difference_type;
-		typedef typename ft::iterator_traits<Iterator>::pointer	pointer;
-		typedef typename ft::iterator_traits<Iterator>::reference	reference;
-		typedef typename ft::iterator_traits<Iterator>::iterator_category  iterator_category;
-		typedef typename Iterator::key_value Key;
-		typedef typename iterator_category::Compare Compare;
+	// 	typedef Iterator	iterator_type;
+	// 	typedef typename ft::iterator_traits<Iterator>::value_type	value_type;
+	// 	typedef typename ft::iterator_traits<Iterator>::difference_type	difference_type;
+	// 	typedef typename ft::iterator_traits<Iterator>::pointer	pointer;
+	// 	typedef typename ft::iterator_traits<Iterator>::reference	reference;
+	// 	typedef typename ft::iterator_traits<Iterator>::iterator_category  iterator_category;
+	// 	typedef typename Iterator::key_value Key;
+	// 	typedef typename iterator_category::Compare Compare;
 
-		private:
+	// 	private:
 
-			typedef ft::node<value_type> node_type;
+	// 		typedef ft::node<value_type> node_type;
 
-			void find_next_util(const Key& key, node_type* node, node_type** result) const
-			{
-				if (!node)
-					return;
-				if (Compare(node_type(make_pair(key, 0)), node->_data) /*node->_data.first > key*/ && (!(*result) || Compare(node->_data, (*result)->_data) /*node->_data.first < (*result)->_data.first*/))
-					(*result) = node;
-				find_next_util(key, node->_left, result);
-				find_next_util(key, node->_right, result);
-			}
-			void find_prev_util(const Key& key, node_type* node, node_type** result) const
-			{
-				if (!node)
-					return;
-				if (Compare(node->_data, node_type(make_pair(key, 0))) /*node->_data.first < key*/ && (!(*result) || Compare()(*(result)->_data, node->_data) /*node->_data.first > (*result)->_data.first*/))
-					(*result) = node;
-				find_prev_util(key, node->_left, result);
-				find_prev_util(key, node->_right, result);
-			}
-			node_type* root_node(node_type* nodes) const
-			{
-				node_type* node = nodes;
-				while (node && node->_parent)
-					node = node->_parent;
-				return node;
-			}
-			void min_node(node_type* node_start, node_type **result) const
-			{
-				if (!node_start)
-					return;
-				if (!(*result) || Compare()(node_start->_data, *(result)->_data) /*node_start->_data < (*result)->_data*/)
-					(*result) = node_start;
-				min_node(node_start->_left, result);
-				min_node(node_start->_right, result);
-			}
 
-		public:
 
-			node_type* _ptr;
-			node_type* _nil;
+		// 	void find_next_util(const Key& key, node_type* node, node_type** result) const
+		// 	{
+		// 		if (!node)
+		// 			return;
+		// 		if (Compare(node_type(make_pair(key, 0)), node->_data) /*node->_data.first > key*/ && (!(*result) || Compare(node->_data, (*result)->_data) /*node->_data.first < (*result)->_data.first*/))
+		// 			(*result) = node;
+		// 		find_next_util(key, node->_left, result);
+		// 		find_next_util(key, node->_right, result);
+		// 	}
+		// 	void find_prev_util(const Key& key, node_type* node, node_type** result) const
+		// 	{
+		// 		if (!node)
+		// 			return;
+		// 		if (Compare(node->_data, node_type(make_pair(key, 0))) /*node->_data.first < key*/ && (!(*result) || Compare()(*(result)->_data, node->_data) /*node->_data.first > (*result)->_data.first*/))
+		// 			(*result) = node;
+		// 		find_prev_util(key, node->_left, result);
+		// 		find_prev_util(key, node->_right, result);
+		// 	}
+		// 	node_type* root_node(node_type* nodes) const
+		// 	{
+		// 		node_type* node = nodes;
+		// 		while (node && node->_parent)
+		// 			node = node->_parent;
+		// 		return node;
+		// 	}
+		// 	void min_node(node_type* node_start, node_type **result) const
+		// 	{
+		// 		if (!node_start)
+		// 			return;
+		// 		if (!(*result) || Compare()(node_start->_data, *(result)->_data) /*node_start->_data < (*result)->_data*/)
+		// 			(*result) = node_start;
+		// 		min_node(node_start->_left, result);
+		// 		min_node(node_start->_right, result);
+		// 	}
+
+		// public:
+
+		// 	node_type* _ptr;
+		// 	node_type* _nil;
 		
-			rev_map_iterator(node_type* ptr = 0, node_type* nil = 0) : _ptr(ptr), _nil(nil)
-			{
-			}
-			rev_map_iterator(const rev_map_iterator& other) : _ptr(other._ptr), _nil(other._nil)
-			{
-			}
-			~rev_map_iterator()
-			{
-			}
+		// 	rev_map_iterator(node_type* ptr = 0, node_type* nil = 0) : _ptr(ptr), _nil(nil)
+		// 	{
+		// 	}
+		// 	rev_map_iterator(const rev_map_iterator& other) : _ptr(other._ptr), _nil(other._nil)
+		// 	{
+		// 	}
+		// 	~rev_map_iterator()
+		// 	{
+		// 	}
 
-			rev_map_iterator& operator++()
-			{
-				node_type* result = 0;
-				if (_ptr->_nil)
-				{
-					min_node(root_node(_ptr->_parent), &result);
-					_ptr = result;
-					return *this;
-				}
-				find_prev_util(_ptr->_data.first, root_node(_ptr), &result);
-				_ptr = result;
-				if (!_ptr)
-					_ptr = _nil;
-				return *this;
-			}
-			rev_map_iterator operator++(int)
-			{
-				rev_map_iterator tmp = *this;
-				operator++();
-				return tmp;
-			}
-			rev_map_iterator& operator--()
-			{
-				if (_ptr->_nil)
-					_ptr->_left->_color = true; //let's segfault like the stl
-				node_type* result = 0;
-				find_next_util(_ptr->_data.first, root_node(_ptr), &result);
-				_ptr = result;
-				if (!_ptr)
-					_ptr = _nil;
-				return *this;
-			}
-			rev_map_iterator operator--(int)
-			{
-				rev_map_iterator tmp = *this;
-				operator--();
-				return tmp;
-			}
-			pointer operator->()
-			{
-				return &(_ptr->_data);
-			}
-			value_type& operator*()
-			{
-				return _ptr->_data;
-			}
-			rev_map_iterator& operator=(const rev_map_iterator& other)
-			{
-				_ptr = other._ptr;
-				return *this;
-			}
-			operator rev_map_iterator<const Iterator>() const
-			{
-			    return (rev_map_iterator<const Iterator>(_ptr));
-			}
-	};
+		// 	rev_map_iterator& operator++()
+		// 	{
+		// 		node_type* result = 0;
+		// 		if (_ptr->_nil)
+		// 		{
+		// 			min_node(root_node(_ptr->_parent), &result);
+		// 			_ptr = result;
+		// 			return *this;
+		// 		}
+		// 		find_prev_util(_ptr->_data.first, root_node(_ptr), &result);
+		// 		_ptr = result;
+		// 		if (!_ptr)
+		// 			_ptr = _nil;
+		// 		return *this;
+		// 	}
+		// 	rev_map_iterator operator++(int)
+		// 	{
+		// 		rev_map_iterator tmp = *this;
+		// 		operator++();
+		// 		return tmp;
+		// 	}
+		// 	rev_map_iterator& operator--()
+		// 	{
+		// 		if (_ptr->_nil)
+		// 			_ptr->_left->_color = true; //let's segfault like the stl
+		// 		node_type* result = 0;
+		// 		find_next_util(_ptr->_data.first, root_node(_ptr), &result);
+		// 		_ptr = result;
+		// 		if (!_ptr)
+		// 			_ptr = _nil;
+		// 		return *this;
+		// 	}
+		// 	rev_map_iterator operator--(int)
+		// 	{
+		// 		rev_map_iterator tmp = *this;
+		// 		operator--();
+		// 		return tmp;
+		// 	}
+		// 	pointer operator->()
+		// 	{
+		// 		return &(_ptr->_data);
+		// 	}
+		// 	value_type& operator*()
+		// 	{
+		// 		return _ptr->_data;
+		// 	}
+		// 	rev_map_iterator& operator=(const rev_map_iterator& other)
+		// 	{
+		// 		_ptr = other._ptr;
+		// 		return *this;
+		// 	}
+		// 	operator rev_map_iterator<const Iterator>() const
+		// 	{
+		// 	    return (rev_map_iterator<const Iterator>(_ptr));
+		// 	}
+	//};
 
 	//iterator operator
 
-	template <class Iterator, class Iterator2>
-	bool operator==(const ft::rev_map_iterator<Iterator>& A, const ft::rev_map_iterator<Iterator2>& B)
-	{
-		return (A._ptr == B._ptr);
-	}
+	// template <class Iterator, class Iterator2>
+	// bool operator==(const ft::rev_map_iterator<Iterator>& A, const ft::rev_map_iterator<Iterator2>& B)
+	// {
+	// 	return (A._ptr == B._ptr);
+	// }
 
-	template <class Iterator, class Iterator2>
-	bool operator!=(const ft::rev_map_iterator<Iterator>& A, const ft::rev_map_iterator<Iterator2>& B)
-	{
-		return !(A._ptr == B._ptr);
-	}
+	// template <class Iterator, class Iterator2>
+	// bool operator!=(const ft::rev_map_iterator<Iterator>& A, const ft::rev_map_iterator<Iterator2>& B)
+	// {
+	// 	return !(A._ptr == B._ptr);
+	// }
 }
 #endif

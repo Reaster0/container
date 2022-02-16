@@ -8,7 +8,7 @@
 #include <fstream>
 #include <vector>
 
-//typedef std::pair<int, int> pair
+//typedef std::pair<int, int> pair;
 typedef ft::pair<int, int> pair;
 
 int main()
@@ -48,11 +48,10 @@ int main()
 	testing.insert(pair(400, 400));
 	testing.insert(pair(60, 60));
 	testing.insert(pair(75, 75));
-	testing.print();
 
-	ft::map<int, int>::const_iterator it = testing.begin();
-	//ft::map<int, int>::const_reverse_iterator at = testing.rend();
-	//std::cout << at->first << std::endl;
+	ft::map<int, int>::iterator it = testing.begin();
+	ft::map<int, int>::reverse_iterator at = testing.rend();
+	std::cout << (++at)->first << std::endl;
 
 std::cout << "-------------------------------\n";
 
