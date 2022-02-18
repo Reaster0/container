@@ -70,6 +70,10 @@ namespace ft
 		{
 			return node<const T>(_data, _color, _left, _right, _parent);
 		}
+		// const node<const T> *to_const() const
+		// {
+		// 	return node<const T>(_data, _color, _left, _right, _parent);
+		// }
 	};
 
 	template <class T, class U>

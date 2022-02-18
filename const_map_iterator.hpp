@@ -1,45 +1,41 @@
-#ifndef _tree_iterator_
-#define _tree_iterator_
+#ifndef _const_tree_iterator_
+#define _const_tree_iterator_
 #include <cstddef>
 #include "iterator_traits.hpp"
 #include "utils.hpp"
 #include "rb_tree.hpp"
 #include "map.hpp"
-#include "const_map_iterator.hpp"
 
 namespace ft
 {
-	template <class T, class Key, class Compare>
-	class const_map_iterator;
 
 	template <class T, class Key, class Compare = std::less<Key> >
-	class map_iterator
+	class const_map_iterator
 	{
 		private:
-
 			typedef ft::node<T> node_type;
 
-			void find_next_util(const Key& key, node_type* node, node_type** result) const
+			void find_next_util(const Key& key, const node_type* node, node_type** result) const
 			{
 				if (!node)
 					return;
 				if (Compare()(make_pair(key, 0), node->_data) /*node->_data.first > key*/ && (!(*result) || Compare()(node->_data, (*result)->_data) /*node->_data.first < (*result)->_data.first*/))
-					(*result) = node;
+					(*result) = const_cast<node_type*>(node);
 				find_next_util(key, node->_left, result);
 				find_next_util(key, node->_right, result);
 			}
-			void find_prev_util(const Key& key, node_type* node, node_type** result) const
+			void find_prev_util(const Key& key, const node_type* node, node_type** result) const
 			{
 				if (!node)
 					return;
 				if (Compare()(node->_data, make_pair(key, 0)) /*node->_data.first < key*/ && (!(*result) || Compare()((*result)->_data, node->_data) /*node->_data.first > (*result)->_data.first*/))
-					(*result) = node;
+					(*result) = const_cast<node_type*>(node);
 				find_prev_util(key, node->_left, result);
 				find_prev_util(key, node->_right, result);
 			}
-			node_type* root_node(node_type* nodes) const
+			const node_type* root_node(const node_type* nodes) const
 			{
-				node_type* node = nodes;
+				const node_type* node = nodes;
 				while (node && node->_parent)
 					node = node->_parent;
 				return node;
@@ -57,8 +53,8 @@ namespace ft
 		public:
 
 			typedef T	value_type;
-			typedef T*	pointer;
-			typedef T&	reference;
+			typedef const T*	pointer;
+			typedef const T&	reference;
 			typedef Key key_value;
 			typedef typename ft::bidirectional_iterator_tag iterator_category;
 			
@@ -72,20 +68,19 @@ namespace ft
 			node_type* _ptr;
 			node_type* _nil;
 		
-			map_iterator() : _ptr(0), _nil(0)
+			const_map_iterator() : _ptr(0), _nil(0)
 			{
 			}
-			map_iterator(node_type* ptr, node_type* nil) : _ptr(ptr), _nil(nil)
+			const_map_iterator(node_type* ptr, node_type* nil) : _ptr(ptr), _nil(nil)
 			{
 			}
-			map_iterator(const map_iterator& other) : _ptr(other._ptr), _nil(other._nil)
+			const_map_iterator(const const_map_iterator& other) : _ptr(other._ptr), _nil(other._nil)
 			{
 			}
-			~map_iterator()
+			~const_map_iterator()
 			{
 			}
-
-			map_iterator& operator++()
+			const_map_iterator& operator++()
 			{
 				if (_ptr->_nil)
 			 		_ptr->_left->_color = true; //let's segfault like the stl
@@ -96,13 +91,13 @@ namespace ft
 					_ptr = _nil;
 				return *this;
 			}
-			map_iterator operator++(int)
+			const_map_iterator operator++(int)
 			{
-				map_iterator tmp = *this;
+				const_map_iterator tmp = *this;
 				operator++();
 				return tmp;
 			}
-			map_iterator& operator--()
+			const_map_iterator& operator--()
 			{
 				node_type* result = 0;
 				if (_ptr->_nil)
@@ -119,67 +114,54 @@ namespace ft
 					_ptr = _nil;
 				return *this;
 			}
-			map_iterator operator--(int)
+			const_map_iterator operator--(int)
 			{
-				map_iterator tmp = *this;
+				const_map_iterator tmp = *this;
 				operator--();
 				return tmp;
 			}
-			reference operator*()
+			// reference operator*()
+			// {
+			// 	return const_cast<T&>(_ptr->_data);
+			// }
+			reference operator*() const
 			{
 				return _ptr->_data;
 			}
-			const value_type& operator*() const
+			// pointer operator->()
+			// {
+			// 	return const_cast<T*>(&this->operator*());
+			// }
+			pointer operator->() const
 			{
-				return _ptr->_data;
+				return &this->operator*();
 			}
-			pointer operator->()
-			{
-				return (&this->operator*());
-			}
-			const value_type *operator->() const
-			{
-				return (&this->operator*());
-			}
-			map_iterator& operator=(const map_iterator& other)
+			const_map_iterator& operator=(const const_map_iterator& other)
 			{
 				_ptr = other._ptr;
 				_nil = other._nil;
 				return *this;
 			}
-			// operator map_iterator<const T, const Key, Compare>() const
-			// {
-			//     return (map_iterator<const T, const Key, Compare>(_ptr));
-			// }
+			operator const_map_iterator<const T, const Key, Compare>() const
+			{
+			    return (const_map_iterator<const T, const Key, Compare>(_ptr));
+			} //maybe osef
+
 	};
 
 	//iterator operator
 
 	template <class T, class U, class K, class V, class comp, class comp2>
-	bool operator==(const ft::map_iterator<T, K, comp>& A, const ft::map_iterator<U, V, comp2>& B)
+	bool operator==(const ft::const_map_iterator<T, K, comp>& A, const ft::const_map_iterator<U, V, comp2>& B)
 	{
 		return (A._ptr == B._ptr);
 	}
 
 	template <class T, class U, class K, class V, class comp, class comp2>
-	bool operator!=(const ft::map_iterator<T, K, comp>& A, const ft::map_iterator<U, V, comp2>& B)
+	bool operator!=(const ft::const_map_iterator<T, K, comp>& A, const ft::const_map_iterator<U, V, comp2>& B)
 	{
 		return !(A._ptr == B._ptr);
 	}
+};
 
-	// //func
-	// template<class InputIterator>
-	// typename ft::enable_if<!ft::is_integral<InputIterator>::value, size_t>::type distance(InputIterator first, InputIterator last)
-	// {
-
-	// 	size_t result = 0;
-	// 	while (first != last)
-	// 	{
-	// 		result++;
-	// 		++first;
-	// 	}
-	// 	return result;
-	// }
-
-}
 #endif
