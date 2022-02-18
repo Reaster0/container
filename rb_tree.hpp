@@ -15,7 +15,7 @@
 
 namespace ft
 {
-	template <class T, class Key, class Compare>
+	template <class T, class Key, class Compare, class value_compare>
 	class rb_tree
 	{
 		typedef T value_type;
@@ -27,7 +27,8 @@ namespace ft
 		private:
 			Allocator alloc;
 			node_type* nodes;
-			node_type* nil; // need to add support for nil
+			node_type* nil;
+			value_compare _comp;
 
 			void RightLineRotation(node_type* P)
 			{
@@ -220,7 +221,7 @@ namespace ft
 					throw std::string("invalid key");
 				if (node->_data == value || (node->_data.first && node->_data.first == value.first))
 					return node;
-				if (Compare()(node->_data, value))
+				if (_comp(node->_data, value))
 					return find_node_util(value, node->_right);
 				else
 					return find_node_util(value, node->_left);
@@ -230,7 +231,7 @@ namespace ft
 				if (!node)
 					return;
 				//need to not use make_pair
-				if (Compare()(make_pair(key, 0), node->_data) /*node->_data.first > key*/ && (!(*result) || Compare()(node->_data, (*result)->_data) /*node->_data.first < (*result)->_data.first)*/))
+				if (_comp(make_pair(key, 0), node->_data) /*node->_data.first > key*/ && (!(*result) || _comp(node->_data, (*result)->_data) /*node->_data.first < (*result)->_data.first)*/))
 					(*result) = node;
 				find_next_util(key, node->_left, result);
 				find_next_util(key, node->_right, result);
@@ -239,7 +240,7 @@ namespace ft
 			{
 				if (!node)
 					return;
-				if (Compare()(node->_data, make_pair(key, 0)) /*node->_data.first < key*/ && (!(*result) || Compare()((*result)->_data, node->_data) /*node->_data.first > (*result)->_data.first*/))
+				if (_comp(node->_data, make_pair(key, 0)) /*node->_data.first < key*/ && (!(*result) || _comp((*result)->_data, node->_data) /*node->_data.first > (*result)->_data.first*/))
 					(*result) = node;
 				find_prev_util(key, node->_left, result);
 				find_prev_util(key, node->_right, result);
@@ -411,7 +412,7 @@ namespace ft
 					throw std::string("invalid key");
 				if (node->_data.first == key)
 					return node->_data;
-				if (Compare()(node->_data, T(key)) /*node->_data.first < key*/)
+				if (_comp(node->_data, T(key)) /*node->_data.first < key*/)
 					return find_util(key, node->_right);
 				else
 					return find_util(key, node->_left);
@@ -456,14 +457,14 @@ namespace ft
 				equal_utils(other_nodes->_left, &(*start_node)->_left, *start_node);
 			}
 		public:
-			rb_tree()
+			rb_tree() : _comp(Compare())
 			{
 				nodes = 0;
 				nil = alloc.allocate(1);
 				alloc.construct(nil, node_type());
 				nil->_nil = true;
 			}
-			rb_tree(const rb_tree& other)
+			rb_tree(const rb_tree& other) : _comp(other.comp)
 			{
 				*this = other;
 			}
@@ -478,6 +479,7 @@ namespace ft
 				free_nodes(nodes);
 				nodes = 0;
 				equal_utils(other.nodes, &nodes);
+				_comp = other.comp;
 				return *this;
 			}
 			void print_nodes()
@@ -527,7 +529,7 @@ namespace ft
 					node = node->_parent;
 				return node;
 			}
-			node_type* end_node(void) const //i'm sure the const is a mistake
+			node_type* end_node(void) const
 			{
 				return nil;
 			}
@@ -535,7 +537,7 @@ namespace ft
 			{
 				if (!node_start)
 					return;
-				if (!(*result) || Compare()(node_start->_data, (*result)->_data) /*node_start->_data < (*result)->_data*/)
+				if (!(*result) || _comp(node_start->_data, (*result)->_data) /*node_start->_data < (*result)->_data*/)
 					(*result) = node_start;
 				min_node(node_start->_left, result);
 				min_node(node_start->_right, result);
@@ -544,7 +546,7 @@ namespace ft
 			{
 				if (!node_start)
 					return;
-				if (!(*result) || Compare()((*result)->_data, node_start->_data) /*node_start->_data > (*result)->_data*/)
+				if (!(*result) || _comp((*result)->_data, node_start->_data) /*node_start->_data > (*result)->_data*/)
 					(*result) = node_start;
 				max_node(node_start->_left, result);
 				max_node(node_start->_right, result);

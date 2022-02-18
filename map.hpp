@@ -8,29 +8,36 @@
 
 namespace ft
 {
-	template <class T, class Key, class Compare>
+	template <class T, class Key, class Compare, class Value_compare>
 	class map_iterator;
 	template<class Key, class T, class Allocator = std::allocator<ft::pair<Key, T> >, class Compare = std::less<Key> >
 	class map
 	{
 		public:
 			typedef ft::pair<const Key, T> value_type;
-			template <class less>
 			class value_compare: public std::binary_function<value_type, value_type, bool>
 			{
+				protected:
+
+				Compare comp;
 				public:
-					//Compare comp;
-					value_compare() {}
-					//value_compare (Compare c) : comp(c) {}
+					value_compare(Compare c = Compare()) : comp(c) {}
+					value_compare(const value_compare& other) : comp(other.comp) {}
 
 					bool operator() (const value_type& x, const value_type& y) const
 					{
-						return less()(x.first, y.first);
+						return comp(x.first, y.first);
+					}
+					value_compare& operator=(const value_compare& other)
+					{
+						comp = other.comp;
+						return *this;
 					}
 			};
-			typedef value_compare<Compare> comp;
-			typedef map_iterator<value_type, Key, comp> iterator;
-			typedef const_map_iterator<value_type, Key, comp> const_iterator;
+
+			typedef value_compare comp;
+			typedef map_iterator<value_type, Key, Compare, value_compare> iterator;
+			typedef const_map_iterator<value_type, Key, Compare, value_compare> const_iterator;
 			typedef ft::rev_map_iterator<iterator> reverse_iterator;
 			typedef ft::rev_map_iterator<const_iterator> const_reverse_iterator;
 			typedef typename iterator_traits<iterator>::difference_type difference_type;
@@ -38,7 +45,7 @@ namespace ft
 		private:
 			typedef node<value_type> node_type;
 			typedef node<const value_type> const_node_type;
-			typedef Compare key_compare;
+			typedef comp key_compare;
 			typedef Allocator allocator_type;
 			typedef typename allocator_type::reference	reference;
 			typedef typename allocator_type::const_reference	const_reference;
@@ -47,7 +54,7 @@ namespace ft
 			typedef size_t size_type;
 			typedef Key key_type;
 
-			typedef rb_tree<value_type, Key, comp> tree_type;
+			typedef rb_tree<value_type, Key, Compare, value_compare> tree_type;
 			tree_type _tree;
 			allocator_type _allocator;
 			key_compare _comp;
@@ -260,11 +267,11 @@ namespace ft
 			}
 			key_compare	key_comp() const
 			{
-				return (key_compare());
+				return (_comp);
 			}
-			value_compare<Compare>	value_comp() const
+			value_compare value_comp() const
 			{
-				return (value_compare<Compare>());
+				return (value_compare());
 			}
 			void erase(iterator position)
 			{

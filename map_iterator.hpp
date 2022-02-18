@@ -10,7 +10,7 @@
 namespace ft
 {
 
-	template <class T, class Key, class Compare = std::less<Key> >
+	template <class T, class Key, class Compare, class Value_compare >
 	class map_iterator
 	{
 		private:
@@ -21,7 +21,7 @@ namespace ft
 			{
 				if (!node)
 					return;
-				if (Compare()(make_pair(key, 0), node->_data) /*node->_data.first > key*/ && (!(*result) || Compare()(node->_data, (*result)->_data) /*node->_data.first < (*result)->_data.first*/))
+				if (_comp(make_pair(key, 0), node->_data) /*node->_data.first > key*/ && (!(*result) || _comp(node->_data, (*result)->_data) /*node->_data.first < (*result)->_data.first*/))
 					(*result) = node;
 				find_next_util(key, node->_left, result);
 				find_next_util(key, node->_right, result);
@@ -30,7 +30,7 @@ namespace ft
 			{
 				if (!node)
 					return;
-				if (Compare()(node->_data, make_pair(key, 0)) /*node->_data.first < key*/ && (!(*result) || Compare()((*result)->_data, node->_data) /*node->_data.first > (*result)->_data.first*/))
+				if (_comp(node->_data, make_pair(key, 0)) /*node->_data.first < key*/ && (!(*result) || _comp((*result)->_data, node->_data) /*node->_data.first > (*result)->_data.first*/))
 					(*result) = node;
 				find_prev_util(key, node->_left, result);
 				find_prev_util(key, node->_right, result);
@@ -46,7 +46,7 @@ namespace ft
 			{
 				if (!node_start)
 					return;
-				if (!(*result) || node_start->_data > (*result)->_data)
+				if (!(*result) || _comp((*result)->_data, node_start->_data)) //node_start->_data > (*result)->_data)
 					(*result) = node_start;
 				max_node(node_start->_left, result);
 				max_node(node_start->_right, result);
@@ -69,14 +69,15 @@ namespace ft
 			
 			node_type* _ptr;
 			node_type* _nil;
+			Value_compare _comp;
 		
-			map_iterator() : _ptr(0), _nil(0)
+			map_iterator() : _ptr(0), _nil(0), _comp(Compare())
 			{
 			}
-			map_iterator(node_type* ptr, node_type* nil) : _ptr(ptr), _nil(nil)
+			map_iterator(node_type* ptr, node_type* nil) : _ptr(ptr), _nil(nil), _comp(Compare())
 			{
 			}
-			map_iterator(const map_iterator& other) : _ptr(other._ptr), _nil(other._nil)
+			map_iterator(const map_iterator& other) : _ptr(other._ptr), _nil(other._nil), _comp(other._comp)
 			{
 			}
 			~map_iterator()
@@ -143,11 +144,12 @@ namespace ft
 			{
 				_ptr = other._ptr;
 				_nil = other._nil;
+				_comp = other._comp;
 				return *this;
 			}
-			operator const_map_iterator<T, Key, Compare>() const
+			operator const_map_iterator<T, Key, Compare, Value_compare>() const
 			{
-				return const_map_iterator<T, Key, Compare>(_ptr, _nil);
+				return const_map_iterator<T, Key, Compare, Value_compare>(_ptr, _nil);
 			}
 			// operator map_iterator<const T, const Key, Compare>() const
 			// {
@@ -157,31 +159,16 @@ namespace ft
 
 	//iterator operator
 
-	template <class T, class U, class K, class V, class comp, class comp2>
-	bool operator==(const ft::map_iterator<T, K, comp>& A, const ft::map_iterator<U, V, comp2>& B)
+	template <class T, class U, class K, class V, class comp, class comp2, class comp3, class comp4>
+	bool operator==(const ft::map_iterator<T, K, comp, comp3>& A, const ft::map_iterator<U, V, comp2, comp4>& B)
 	{
 		return (A._ptr == B._ptr);
 	}
 
-	template <class T, class U, class K, class V, class comp, class comp2>
-	bool operator!=(const ft::map_iterator<T, K, comp>& A, const ft::map_iterator<U, V, comp2>& B)
+	template <class T, class U, class K, class V, class comp, class comp2, class comp3, class comp4>
+	bool operator!=(const ft::map_iterator<T, K, comp, comp3>& A, const ft::map_iterator<U, V, comp2, comp4>& B)
 	{
 		return !(A._ptr == B._ptr);
 	}
-
-	// //func
-	// template<class InputIterator>
-	// typename ft::enable_if<!ft::is_integral<InputIterator>::value, size_t>::type distance(InputIterator first, InputIterator last)
-	// {
-
-	// 	size_t result = 0;
-	// 	while (first != last)
-	// 	{
-	// 		result++;
-	// 		++first;
-	// 	}
-	// 	return result;
-	// }
-
 }
 #endif
