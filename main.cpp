@@ -50,7 +50,7 @@ int main()
 	testing.insert(pair(75, 75));
 
 	//ft::map<int, int>::iterator it = testing.begin();
-	ft::map<int, int>::const_iterator at = testing.begin();
+	ft::map<int, int>::const_reverse_iterator at = testing.rbegin();
 	std::cout << (++at)->first << std::endl;
 
 std::cout << "-------------------------------\n";

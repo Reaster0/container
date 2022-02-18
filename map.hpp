@@ -30,9 +30,9 @@ namespace ft
 			};
 			typedef value_compare<Compare> comp;
 			typedef map_iterator<value_type, Key, comp> iterator;
-			typedef const_map_iterator<value_type, Key, comp> const_iterator; //a v2
+			typedef const_map_iterator<value_type, Key, comp> const_iterator;
 			typedef ft::rev_map_iterator<iterator> reverse_iterator;
-			typedef const ft::rev_map_iterator<iterator> const_reverse_iterator;
+			typedef ft::rev_map_iterator<const_iterator> const_reverse_iterator;
 			typedef typename iterator_traits<iterator>::difference_type difference_type;
 
 		private:
@@ -128,14 +128,6 @@ namespace ft
 					std::cerr << e << '\n';
 				}
 			}
-			iterator begin()
-			{
-				node_type* result = 0;
-				_tree.min_node(_tree.root_node(), &result);
-				if (!result)
-					return iterator(_tree.end_node(), _tree.end_node());
-				return iterator(result, _tree.end_node());
-			}
 			const_iterator begin() const
 			{
 				node_type* result = 0;
@@ -143,6 +135,14 @@ namespace ft
 				if (!result)
 					return const_iterator(_tree.end_node(), _tree.end_node());
 				return const_iterator(result, _tree.end_node());
+			}
+			iterator begin()
+			{
+				node_type* result = 0;
+				_tree.min_node(_tree.root_node(), &result);
+				if (!result)
+					return iterator(_tree.end_node(), _tree.end_node());
+				return iterator(result, _tree.end_node());
 			}
 			iterator end()
 			{
@@ -158,7 +158,7 @@ namespace ft
 			}
 			const_reverse_iterator rbegin() const
 			{
-				return reverse_iterator(iterator(_tree.end_node(), _tree.end_node())); 
+				return const_reverse_iterator(const_iterator(_tree.end_node(), _tree.end_node())); 
 			}
 			reverse_iterator rend()
 			{
@@ -173,8 +173,8 @@ namespace ft
 				node_type* result = 0;
 				_tree.min_node(_tree.root_node(), &result);
 				if (!result)
-					return const_reverse_iterator(iterator(_tree.end_node(), _tree.end_node()));
-				return const_reverse_iterator(iterator(result, _tree.end_node()));
+					return const_reverse_iterator(const_iterator(_tree.end_node(), _tree.end_node()));
+				return const_reverse_iterator(const_iterator(result, _tree.end_node()));
 			}
 			void clear()
 			{

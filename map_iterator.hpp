@@ -9,8 +9,6 @@
 
 namespace ft
 {
-	template <class T, class Key, class Compare>
-	class const_map_iterator;
 
 	template <class T, class Key, class Compare = std::less<Key> >
 	class map_iterator
@@ -129,7 +127,7 @@ namespace ft
 			{
 				return _ptr->_data;
 			}
-			const value_type& operator*() const
+			const value_type &operator*() const
 			{
 				return _ptr->_data;
 			}
@@ -146,6 +144,10 @@ namespace ft
 				_ptr = other._ptr;
 				_nil = other._nil;
 				return *this;
+			}
+			operator const_map_iterator<T, Key, Compare>() const
+			{
+				return const_map_iterator<T, Key, Compare>(_ptr, _nil);
 			}
 			// operator map_iterator<const T, const Key, Compare>() const
 			// {

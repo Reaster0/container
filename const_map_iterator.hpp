@@ -40,12 +40,12 @@ namespace ft
 					node = node->_parent;
 				return node;
 			}
-			void max_node(node_type* node_start, node_type **result) const
+			void max_node(const node_type* node_start, node_type **result) const
 			{
 				if (!node_start)
 					return;
 				if (!(*result) || node_start->_data > (*result)->_data)
-					(*result) = node_start;
+					(*result) = const_cast<node_type*>(node_start);
 				max_node(node_start->_left, result);
 				max_node(node_start->_right, result);
 			}
@@ -120,19 +120,11 @@ namespace ft
 				operator--();
 				return tmp;
 			}
-			// reference operator*()
-			// {
-			// 	return const_cast<T&>(_ptr->_data);
-			// }
-			reference operator*() const
+			const value_type &operator*() const
 			{
 				return _ptr->_data;
 			}
-			// pointer operator->()
-			// {
-			// 	return const_cast<T*>(&this->operator*());
-			// }
-			pointer operator->() const
+			const value_type *operator->() const
 			{
 				return &this->operator*();
 			}
