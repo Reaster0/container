@@ -101,8 +101,9 @@ namespace ft
 		pair() : first(T()), second(U())
 		{
 		}
-		pair(const T& first_, const U& second_) : first(first_), second(second_) {};
-		pair(const pair<T, U>& other) : first(other.first), second(other.second) {};
+		pair(const T& first_, const U& second_) : first(first_), second(second_) {}
+		template <class T2, class U2>
+		pair(const pair<T2, U2>& other) : first(other.first), second(other.second) {}
 
 		pair<T, U>& operator=(const pair<T, U>& other)
 		{
@@ -110,10 +111,14 @@ namespace ft
 			second = other.second;
 			return *this;
 		}
-		operator pair<const T, U>() const
+		operator pair<const T, const U>() const
 		{
-		    return (pair<const T, U>(first, second));
+		    return (pair<const T, const U>(first, second));
 		}
+		// operator pair<const T, U>() const
+		// {
+		//     return (pair<const T, U>(first, second));
+		// }
 	};
 
 	template <class T, class U>

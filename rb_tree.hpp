@@ -219,7 +219,8 @@ namespace ft
 			{
 				if (!node)
 					throw std::string("invalid key");
-				if (node->_data == value || (node->_data.first && node->_data.first == value.first))
+				//if (node->_data == value || (node->_data.first && node->_data.first == value.first))
+				if (!_comp(node->_data, value) && !_comp(value, node->_data))
 					return node;
 				if (_comp(node->_data, value))
 					return find_node_util(value, node->_right);
@@ -403,8 +404,8 @@ namespace ft
 			size_t size_util(node_type* node) const
 			{
 				if (!node)
-					return 1;
-				return size_util(node->_right) + size_util(node->_left);
+					return 0;
+				return size_util(node->_right) + size_util(node->_left) + 1;
 			}
 			T& find_util(const Key& key, node_type* node) const
 			{
@@ -479,7 +480,7 @@ namespace ft
 				free_nodes(nodes);
 				nodes = 0;
 				equal_utils(other.nodes, &nodes);
-				_comp = other.comp;
+				_comp = other._comp;
 				return *this;
 			}
 			void print_nodes()
@@ -550,6 +551,12 @@ namespace ft
 					(*result) = node_start;
 				max_node(node_start->_left, result);
 				max_node(node_start->_right, result);
+			}
+			bool empty() const
+			{
+				if (!nodes)
+					return true;
+				return false;
 			}
 	};
 }

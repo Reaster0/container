@@ -19,7 +19,7 @@ namespace ft
 			{
 				protected:
 
-				Compare comp;
+					Compare comp;
 				public:
 					value_compare(Compare c = Compare()) : comp(c) {}
 					value_compare(const value_compare& other) : comp(other.comp) {}
@@ -122,7 +122,7 @@ namespace ft
 				return result;
 			}
 			template <class InputIterator> //check that is is a bidirectionnal iterator
-			typename ft::enable_if<!ft::is_integral<InputIterator>::value, void>::type 
+			typename ft::enable_if<!ft::is_integral<InputIterator>::value, void>::type
 			insert(InputIterator first, InputIterator second)
 			{
 				try
@@ -201,14 +201,19 @@ namespace ft
 			}
 			ft::pair<const_iterator, const_iterator> equal_range(const Key& key) const
 			{
-				return ft::pair<const_iterator, const_iterator>
-				(const_iterator(_tree.find_next_key(key), _tree.end_node()), const_iterator(_tree.find_next_key(key)), _tree.end_node());
+				return ft::pair<const_iterator, const_iterator>(lower_bound(key), upper_bound(key));
+				//return ft::pair<const_iterator, const_iterator>
+				//(const_iterator(_tree.find_next_key(key), _tree.end_node()), const_iterator(_tree.find_next_key(key), _tree.end_node()));
+			}
+			ft::pair<iterator, iterator> equal_range(const Key& key)
+			{
+				return ft::pair<iterator, iterator>(lower_bound(key), upper_bound(key));
+				//return ft::pair<iterator, iterator>
+				//(iterator(_tree.find_next_key(key), _tree.end_node()), iterator(_tree.find_next_key(key), _tree.end_node()));
 			}
 			bool empty() const
 			{
-				if (!_tree.nodes)
-					return true;
-				return false;
+				return _tree.empty();
 			}
 			iterator find(const Key& key)
 			{
@@ -238,7 +243,7 @@ namespace ft
 			}
 			size_t max_size() const
 			{
-				return Allocator().max_size();
+				return std::allocator<node_type>().max_size();
 			}
 			size_t size() const
 			{
@@ -246,28 +251,65 @@ namespace ft
 			}
 			T& operator[] (const Key& key)
 			{
-				return (*insert(make_pair(key, T())).first)._data.second;
+				//pair<Key, T> temp(key, T());
+				//iterator ittemp = insert(temp).first;
+				//return (*ittemp).second;
+				return (*insert(pair<Key, T>(key, T())).first).second;
 			}
 
 			iterator lower_bound (const Key& key)
 			{
-				return iterator(_tree.find_prev_key(key), _tree.end_node());
+				node_type* temp;
+				try
+				{
+					temp = _tree.find_node(make_pair(key, 0));
+					return iterator(temp, _tree.end_node());
+				}
+				catch (const std::string& e)
+				{
+					temp = _tree.find_next_key(key);
+					if (temp)
+						return iterator(temp, _tree.end_node());
+					else
+						return iterator(_tree.end_node(), _tree.end_node());
+				}
 			}
 			const_iterator lower_bound (const Key& key) const
 			{
-				return iterator(_tree.find_prev_key(key), _tree.end_node());
+				node_type* temp;
+				try
+				{
+					temp = _tree.find_node(make_pair(key, 0));
+					return const_iterator(temp, _tree.end_node());
+				}
+				catch (const std::string& e)
+				{
+					temp = _tree.find_next_key(key);
+					if (temp)
+						return const_iterator(temp, _tree.end_node());
+					else
+						return const_iterator(_tree.end_node(), _tree.end_node());
+				}
 			}
 			iterator upper_bound (const Key& k)
 			{
-				return iterator(_tree.find_next_key(k), _tree.end_node());
+				node_type* temp = _tree.find_next_key(k);
+				if (temp)		
+					return iterator(temp, _tree.end_node());
+				else
+					return iterator(_tree.end_node(), _tree.end_node());
 			}
 			const_iterator upper_bound (const Key& k) const
 			{
-				return iterator(_tree.find_next_key(k), _tree.end_node());
+				node_type* temp = _tree.find_next_key(k);
+				if (temp)		
+					return const_iterator(temp, _tree.end_node());
+				else
+					return const_iterator(_tree.end_node(), _tree.end_node());
 			}
-			key_compare	key_comp() const
+			Compare	key_comp() const
 			{
-				return (_comp);
+				return (Compare());
 			}
 			value_compare value_comp() const
 			{

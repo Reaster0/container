@@ -9,7 +9,7 @@
 #include <vector>
 
 //typedef std::pair<int, int> pair;
-typedef ft::pair<int, int> pair;
+typedef ft::pair<const int, std::string> pair;
 
 int main()
 {
@@ -37,25 +37,30 @@ int main()
 	// testing.insert(pair(41, 41));
 	// testing.insert(pair(47,47));
 	// testing.insert(pair(64, 64));
-	testing.insert(pair(50,50));
-	testing.insert(pair(20,20));
-	testing.insert(pair(80,80));
-	testing.insert(pair(70, 70));
-	testing.insert(pair(100, 100));
-	testing.insert(pair(10, 10));
-	testing.insert(pair(40, 40));
-	testing.insert(pair(900, 900));
-	testing.insert(pair(400, 400));
-	testing.insert(pair(60, 60));
-	testing.insert(pair(75, 75));
+	//testing.insert(pair(50,50));
+	//testing.insert(pair(20,20));
+	//testing.insert(pair(80,80));
+	// testing.insert(pair(70, 70));
+	// testing.insert(pair(100, 100));
+	// testing.insert(pair(10, 10));
+	// testing.insert(pair(40, 40));
+	// testing.insert(pair(900, 900));
+	// testing.insert(pair(400, 400));
+	// testing.insert(pair(60, 60));
+	// testing.insert(pair(75, 75));
+	ft::map<int, std::string> test3;
+	test3.insert(pair(42, "ici"));
+	test3.insert(pair(44, "iri"));
+
 
 	//ft::map<int, int>::iterator it = testing.begin();
-	ft::map<int, int>::iterator at = testing.begin();
-	std::cout << (++at)->first << std::endl;
-
+	ft::map<int, int>::const_iterator at = testing.begin();
+	test3[42] = "truc";
 std::cout << "-------------------------------\n";
 
-	testing.print();
+	test3.print();
+	std::string lol = "truc";
+//	testing.print();
 
 	// std::map<int, int> testing2;
 	// testing2.insert(pair(100,10));
