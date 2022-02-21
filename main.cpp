@@ -7,6 +7,8 @@
 #include <map>
 #include <fstream>
 #include <vector>
+#include <list>
+#include <string>
 
 //typedef std::pair<int, int> pair;
 typedef ft::pair<const int, std::string> pair;
@@ -48,13 +50,11 @@ int main()
 	// testing.insert(pair(400, 400));
 	// testing.insert(pair(60, 60));
 	// testing.insert(pair(75, 75));
+
 	ft::map<int, std::string> test3;
-	test3.insert(pair(42, "ici"));
-	test3.insert(pair(44, "iri"));
-
-
+	test3.insert(ft::pair<int, std::string>(4, std::string("lolmdr")));
 	//ft::map<int, int>::iterator it = testing.begin();
-	ft::map<int, int>::const_iterator at = testing.begin();
+	++test3.begin();
 	test3[42] = "truc";
 std::cout << "-------------------------------\n";
 

@@ -102,6 +102,7 @@ namespace ft
 		{
 		}
 		pair(const T& first_, const U& second_) : first(first_), second(second_) {}
+		pair(const T& first_) : first(first_), second(U()) {}
 		template <class T2, class U2>
 		pair(const pair<T2, U2>& other) : first(other.first), second(other.second) {}
 
