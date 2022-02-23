@@ -51,15 +51,29 @@ int main()
 	// testing.insert(pair(60, 60));
 	// testing.insert(pair(75, 75));
 
-	ft::map<int, std::string> test3;
-	test3.insert(ft::pair<int, std::string>(4, std::string("lolmdr")));
+	std::list<pair> lst;
+	unsigned int lst_size = 10;
+	for (unsigned int i = 0; i < lst_size; ++i)
+		lst.push_back(pair(i, std::string((lst_size - i), i + 65)));
+	ft::map<int, std::string> test3(lst.begin(), lst.end());
 	//ft::map<int, int>::iterator it = testing.begin();
-	++test3.begin();
-	test3[42] = "truc";
+	test3.print();
+	std::cout << "size = " << test3.size() << std::endl;
+	test3.erase(++test3.begin());
+	test3.print();
+	test3.erase(test3.begin());
+	test3.print();
+	test3.erase(--test3.end());
+	test3.print();
+	test3.erase(2);
+	std::cout << "------------------------" << std::endl;
+	test3.print();
+	//test3.erase(test3.begin(), ++(++(++test3.begin())));
+	
 std::cout << "-------------------------------\n";
 
 	test3.print();
-	std::string lol = "truc";
+	std::cout << "size = " << test3.size() << std::endl;
 //	testing.print();
 
 	// std::map<int, int> testing2;
