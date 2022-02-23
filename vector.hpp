@@ -5,7 +5,6 @@
 #include <iostream>
 #include <stdexcept>
 #include "iterator.hpp"
-#include "map_iterator.hpp"
 #include "utils.hpp"
 
 namespace ft
@@ -15,7 +14,10 @@ namespace ft
 	class iterator;
 
 	template <class Iterator>
-	class rev_iterator;
+	class reverse_iterator;
+
+	template<class InputIterator>
+	typename ft::enable_if<!ft::is_integral<InputIterator>::value, size_t>::type distance(InputIterator first, InputIterator last);
 
 	template <class T, class Allocator = std::allocator<T> >
 	class vector

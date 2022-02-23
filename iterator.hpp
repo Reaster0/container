@@ -195,11 +195,6 @@ namespace ft
 	class reverse_iterator
 	{
 		public:
-
-			// typedef typename vector::value_type	value_type;
-			// typedef typename vector::difference_type  difference_type;
-			// typedef typename vector::value_type*   pointer;
-			// typedef typename vector::reference& reference;
 			typedef Iterator	iterator_type;
 			typedef typename ft::iterator_traits<Iterator>::value_type	value_type;
 			typedef typename ft::iterator_traits<Iterator>::difference_type	difference_type;
