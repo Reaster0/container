@@ -333,14 +333,18 @@ namespace ft
 			}
     		void erase(iterator first, iterator last)
 			{
-				iterator it = first;
-				while (it != last)
+				int len = ft::distance(first, last);
+				pair<Key, T>* key_list = _allocator.allocate(len);
+				for (int i = 0; first != last; ++first, ++i)
+					_allocator.construct(key_list + i, *first);
+					//key_list[i] = (*first).first;
+				for (int i = 0; i < len; ++i)
 				{
-					it++;
-					erase(first);
-					first = it;
+					erase(key_list[i].first);
+					std::cout << "----------------------------------" << std::endl;
 					print();
 				}
+				//_allocator.deallocate(key_list, len);
 			}
 			void swap(map& x)
 			{
