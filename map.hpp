@@ -5,11 +5,16 @@
 #include "map_iterator.hpp"
 #include "rev_map_iterator.hpp"
 #include "const_map_iterator.hpp"
+#include "iterator.hpp"
 
 namespace ft
 {
 	template <class T, class Key, class Compare, class Value_compare>
 	class map_iterator;
+
+	template<class InputIterator>
+	typename ft::enable_if<!ft::is_integral<InputIterator>::value, size_t>::type distance(InputIterator first, InputIterator last);
+
 	template<class Key, class T, class Allocator = std::allocator<ft::pair<Key, T> >, class Compare = std::less<Key> >
 	class map
 	{
@@ -333,7 +338,7 @@ namespace ft
 			}
     		void erase(iterator first, iterator last)
 			{
-				int len = ft::distance(first, last);
+				int len = distance(first, last);
 				pair<Key, T>* key_list = _allocator.allocate(len);
 				for (int i = 0; first != last; ++first, ++i)
 					_allocator.construct(key_list + i, *first);

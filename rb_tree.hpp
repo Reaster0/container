@@ -276,8 +276,10 @@ namespace ft
 					return 0;
 				if (node->_parent->_left == node)
 					return &node->_parent->_left;
-				else
+				else if (node->_parent->_right == node)
 					return &node->_parent->_right;
+				else
+					return 0;
 			}
 			void delete_node_util(node_type* node)
 			{
@@ -480,7 +482,8 @@ namespace ft
 				else
 				{
 					*parent_emplacement(u) = v;
-					v->_parent = u->_parent;
+					if (v)
+						v->_parent = u->_parent;
 				}
 			}
 			void rb_delete_fixup(node_type* x)
@@ -570,12 +573,28 @@ namespace ft
 				if (!z->_right)
 				{
 					x = z->_left;
-					rb_transplant(z, z->_left);
+					if (x)
+						rb_transplant(z, x);
+					else
+					{
+						x = alloc.allocate(1);
+						alloc.construct(x, node_type(value_type(), BLACK, 0, 0, z->_parent));
+						x->_nil = true;
+						rb_transplant(z, x);
+					}
 				}
 				else if (!z->_left)
 				{
 					x = z->_right;
-					rb_transplant(z, z->_right);
+					if (x)
+						rb_transplant(z, x);
+					else
+					{
+						x = alloc.allocate(1);
+						alloc.construct(x, node_type(value_type(), BLACK, 0, 0, z->_parent));
+						x->_nil = true;
+						rb_transplant(z, x);
+					}
 				}
 				else
 				{
@@ -605,10 +624,17 @@ namespace ft
 					y->_color = z->_color;
 				}
 				if (y_color == BLACK)
-				{
-					print_nodes();
 					rb_delete_fixup(x);
+				if (x->_nil)
+				{
+					if (x->_parent->_left == x) 
+						x->_parent->_left = 0;
+					else if (x->_parent->_right == x)
+						x->_parent->_right = 0;
+					alloc.destroy(x);
+					alloc.deallocate(x, 1);
 				}
+				delete_node_util(z);
 			}
 			T& find_util(const Key& key, node_type* node) const
 			{
@@ -703,7 +729,6 @@ namespace ft
 			void remove(node_type* node)
 			{
 				rb_delete_util(node);
-				//remove_util(node);
 			}
 			node_type* find_node(const T& val) const //maybe not const
 			{
