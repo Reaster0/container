@@ -359,5 +359,4 @@ namespace ft
 		  x.swap(y);
 	  }
 }
-
 #endif
