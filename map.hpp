@@ -256,10 +256,6 @@ namespace ft
 			}
 			T& operator[] (const Key& key)
 			{
-				//pair<Key, T> temp(key, T());
-				//iterator ittemp = insert(temp).first;
-				//return (*ittemp).second;
-				
 				return (*insert(pair<Key, T>(key, T())).first).second;
 			}
 
