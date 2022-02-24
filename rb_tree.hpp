@@ -207,7 +207,6 @@ namespace ft
 					(*start_node)->_parent = parent;
 					fix_color(start_node);
 					_size++;
-					//return ft::pair<ft::iterator<node_type>, bool>(*start_node, true);
 				}
 				else if (_comp(***start_node, *node) && node != **start_node)
 					return insert_util(node, &((*start_node)->_right), *start_node);
@@ -215,7 +214,6 @@ namespace ft
 					return insert_util(node, &((*start_node)->_left), *start_node);
 				else
 					throw std::string("the keys node's are the same");
-					//return ft::pair<ft::iterator<node_type>, bool>(*start_node, false);
 			}
 			node_type* find_node_util(const T& value, node_type* node) const //maybe not const
 			{
