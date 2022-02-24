@@ -66,6 +66,10 @@ namespace ft
 			else
 				return BLACK;
 		}
+		T& operator*()
+		{
+			return _data;
+		}
 		operator node<const T>() const
 		{
 			return node<const T>(_data, _color, _left, _right, _parent);

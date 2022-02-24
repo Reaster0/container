@@ -58,21 +58,35 @@ int main()
 	ft::map<int, std::string> test3(lst.begin(), lst.end());
 	//ft::map<int, int>::iterator it = testing.begin();
 	test3.print();
+		std::cout << "size = " << test3.size() << std::endl;
 	std::cout << "size = " << test3.size() << std::endl;
 	test3.erase(++test3.begin());
 	test3.print();
+		std::cout << "size = " << test3.size() << std::endl;
+			std::cout << "------------------------" << std::endl;
 	test3.erase(test3.begin());
 	test3.print();
+		std::cout << "size = " << test3.size() << std::endl;
+			std::cout << "------------------------" << std::endl;
 	test3.erase(--test3.end());
 	test3.print();
+		std::cout << "size = " << test3.size() << std::endl;
+			std::cout << "------------------------" << std::endl;
 	test3.erase(2);
 	std::cout << "------------------------" << std::endl;
 	test3.print();
+		std::cout << "size = " << test3.size() << std::endl;
+		test3.erase(3);
+	std::cout << "------------------------" << std::endl;
+	test3.print();
+		std::cout << "size = " << test3.size() << std::endl;
+		test3.erase(4);
+	std::cout << "------------------------" << std::endl;
+	test3.print();
+		std::cout << "size = " << test3.size() << std::endl;
 	//test3.erase(test3.begin(), ++(++(++test3.begin())));
 	
 std::cout << "-------------------------------\n";
-
-	test3.print();
 	std::cout << "size = " << test3.size() << std::endl;
 //	testing.print();
 

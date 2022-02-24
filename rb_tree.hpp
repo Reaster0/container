@@ -209,9 +209,9 @@ namespace ft
 					_size++;
 					//return ft::pair<ft::iterator<node_type>, bool>(*start_node, true);
 				}
-				else if (node > **start_node && node != **start_node)
+				else if (_comp(***start_node, *node) && node != **start_node)
 					return insert_util(node, &((*start_node)->_right), *start_node);
-				else if (node < **start_node && node != **start_node)
+				else if (_comp(*node, ***start_node) && node != **start_node)
 					return insert_util(node, &((*start_node)->_left), *start_node);
 				else
 					throw std::string("the keys node's are the same");
@@ -272,8 +272,10 @@ namespace ft
 			}
 			node_type** parent_emplacement(node_type* node)
 			{ //get the adress of the emplacement of the node relative to his parent
-				if (!node || !node->_parent)
+				if (!node)
 					return 0;
+				if (!node->_parent)
+					return &nodes;
 				if (node->_parent->_left == node)
 					return &node->_parent->_left;
 				else if (node->_parent->_right == node)
@@ -488,6 +490,8 @@ namespace ft
 			}
 			void rb_delete_fixup(node_type* x)
 			{
+				if (x == nodes && x->_color == BLACK && x->_right && x->_right->_color == BLACK)
+					x->_right->_color = RED;
 				while (x != nodes && x->_color == BLACK)
 				{
 					if (x == x->_parent->_right)
@@ -497,27 +501,34 @@ namespace ft
 						{
 							w->_color = BLACK;
 							x->_parent->_color = RED;
-							rightRotation(x); //x->_parent
+							rightRotation(w);//x? //x->_parent
+							nodes = root_node();
+							if (!x->_parent)
+								w = x;
+							else
 							w = x->_parent->_left;
 						}
-						if ((!w->_left || w->_left->_color) == BLACK && (!w->_left || w->_right->_color == BLACK))
+						if ((!w->_left || w->_left->_color == BLACK) && (!w->_left || w->_right->_color == BLACK))
 						{
 							w->_color = RED;
 							x = x->_parent;
 						}
 						else
 						{
-							if (w->_left->_color == BLACK)
+							if (!w->_left || w->_left->_color == BLACK)
 							{
-								w->_right->_color = BLACK;
+								if (w->_right)
+									w->_right->_color = BLACK;
 								w->_color = RED;
 								leftRotation(w->_right); //w
+								nodes = root_node();
 								w = x->_parent->_left;
 							}
 							w->_color = x->_parent->_color;
 							x->_parent->_color = BLACK;
-							w->_left->_color = BLACK;
-							rightRotation(x->_parent->_left); //x->_parent // maybe leftrotation
+							if (w->_left)
+								w->_left->_color = BLACK;
+							rightRotation(x->_parent->_left); //x->_parent
 							nodes = root_node();
 							if (x->_left && x->_left->_nil) //remove of the three the temp nill leaf
 								x->_left = 0;
@@ -533,8 +544,12 @@ namespace ft
 						{
 							w->_color = BLACK;
 							x->_parent->_color = RED;
-							leftRotation(x); //x->_parent
-							w = x->_parent->_right;
+							leftRotation(w); //x? //x->_parent
+							nodes = root_node();
+							if (!x->_parent)
+								w = x;
+							else
+								w = x->_parent->_right;
 						}
 						if ((!w->_right || w->_right->_color == BLACK) && (!w->_left || w->_left->_color == BLACK))
 						{
@@ -548,6 +563,7 @@ namespace ft
 								w->_left->_color = BLACK;
 								w->_color = RED;
 								rightRotation(w->_left); //w
+								nodes = root_node();
 								w = x->_parent->_right;
 							}
 							w->_color = x->_parent->_color;
@@ -601,7 +617,10 @@ namespace ft
 					node_type* y_parent = y->_parent;
 					y = rb_tree_min(z->_left);
 					y_color = y->_color;
-					x = y->_left;
+					if (!z->_parent)
+						x = y;
+					else
+						x = y->_left;
 					if (!x)
 					{
 						x = alloc.allocate(1);
@@ -611,6 +630,8 @@ namespace ft
 					}
 					if (y->_parent == z)
 						x->_parent = y;
+					if (!z->_parent) //maybe an error
+						x->_parent = 0;
 					else
 					{
 						rb_transplant(y, y->_left);
@@ -627,13 +648,15 @@ namespace ft
 					rb_delete_fixup(x);
 				if (x->_nil)
 				{
-					if (x->_parent->_left == x) 
+					if (x->_parent && x->_parent->_left == x) 
 						x->_parent->_left = 0;
-					else if (x->_parent->_right == x)
+					else if (x->_parent && x->_parent->_right == x)
 						x->_parent->_right = 0;
 					alloc.destroy(x);
 					alloc.deallocate(x, 1);
 				}
+				if (!z->_parent && !z->_left && !z->_right)
+					nodes = 0;
 				delete_node_util(z);
 			}
 			T& find_util(const Key& key, node_type* node) const
@@ -656,7 +679,7 @@ namespace ft
 				alloc.destroy(node);
 				alloc.deallocate(node, 1);
 			}
-			void print_nodes_utils(node_type* nodes, int spaces = 0)
+			void print_nodes_utils(node_type* nodes, int spaces = 0) const
 			{
 				if (!nodes)
 					return;
@@ -714,7 +737,7 @@ namespace ft
 				_size = other._size;
 				return *this;
 			}
-			void print_nodes()
+			void print_nodes() const
 			{
 				print_nodes_utils(root_node());
 			}
@@ -732,7 +755,14 @@ namespace ft
 			}
 			node_type* find_node(const T& val) const //maybe not const
 			{
-				return find_node_util(val, nodes);
+				try
+				{
+					return find_node_util(val, nodes);
+				}
+				catch (std::string &e)
+				{
+					return end_node();
+				}
 			}
 			T& find_key(const Key& key) const
 			{
