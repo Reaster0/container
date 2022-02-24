@@ -89,7 +89,7 @@ namespace ft
 				_tree = other._tree;
 				return *this;
 			}
-			void print()
+			void print() const
 			{
 				_tree.print_nodes();
 			}
@@ -121,7 +121,7 @@ namespace ft
 				}
 				catch(const std::string& e)
 				{
-					std::cerr << e << '\n'; //maybe unusefull
+					//std::cerr << e << '\n'; //maybe unusefull
 					result = iterator(_tree.find_node(val), _tree.end_node());
 				}
 				return result;
@@ -137,7 +137,7 @@ namespace ft
 				}
 				catch(const std::string& e)
 				{
-					std::cerr << e << '\n';
+					//std::cerr << e << '\n';
 				}
 			}
 			const_iterator begin() const
@@ -259,6 +259,7 @@ namespace ft
 				//pair<Key, T> temp(key, T());
 				//iterator ittemp = insert(temp).first;
 				//return (*ittemp).second;
+				
 				return (*insert(pair<Key, T>(key, T())).first).second;
 			}
 
@@ -282,12 +283,11 @@ namespace ft
 			const_iterator lower_bound (const Key& key) const
 			{
 				node_type* temp;
-				try
-				{
-					temp = _tree.find_node(make_pair(key, 0));
+				
+				temp = _tree.find_node(make_pair(key, 0));
+				if (temp != end())
 					return const_iterator(temp, _tree.end_node());
-				}
-				catch (const std::string& e)
+				else
 				{
 					temp = _tree.find_next_key(key);
 					if (temp)
@@ -338,16 +338,14 @@ namespace ft
 			}
     		void erase(iterator first, iterator last)
 			{
-				int len = distance(first, last);
+				int len = ft::distance(first, last);
+				//int debug = 0;
 				pair<Key, T>* key_list = _allocator.allocate(len);
 				for (int i = 0; first != last; ++first, ++i)
 					_allocator.construct(key_list + i, *first);
-					//key_list[i] = (*first).first;
 				for (int i = 0; i < len; ++i)
 				{
 					erase(key_list[i].first);
-					std::cout << "----------------------------------" << std::endl;
-					print();
 				}
 				//_allocator.deallocate(key_list, len);
 			}
