@@ -130,15 +130,17 @@ namespace ft
 			typename ft::enable_if<!ft::is_integral<InputIterator>::value, void>::type
 			insert(InputIterator first, InputIterator second)
 			{
-				try
-				{
 					for (InputIterator i = first; i != second; ++i)
-						_tree.insert(*i);
-				}
-				catch(const std::string& e)
-				{
-					//std::cerr << e << '\n';
-				}
+					{
+						try
+						{
+							_tree.insert(*i);
+						}
+						catch(const std::string& e)
+						{
+							//std::cerr << e << '\n';
+						}
+					}
 			}
 			const_iterator begin() const
 			{
