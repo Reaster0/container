@@ -358,9 +358,7 @@ namespace ft
 			}
 			void swap(map& x)
 			{
-				ft::map<Key, T, Allocator, Compare> temp(*this);
-				*this = x;
-				x = temp;
+				_tree.swap(x._tree);
 			}
 
 			bool operator==(const map& other) const

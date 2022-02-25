@@ -57,21 +57,23 @@ namespace ft
 		{
 			return _iter[index];
 		}
-		pointer operator->()
-		{
-			return _iter.operator->();
-		}
-		const value_type* operator->() const
-		{
-			return _iter.operator->();
-		}
 		reference operator*()
 		{
-			return _iter.operator*();
+			iterator_type temp = _iter;
+			return *--temp;
 		}
 		const value_type& operator*() const
 		{
-			return _iter.operator*();
+			iterator_type temp = _iter;
+			return *--temp;
+		}
+		pointer operator->()
+		{
+			return  (&(this->operator*()));
+		}
+		const value_type* operator->() const
+		{
+			return  (&(this->operator*()));
 		}
 		template <class T>
 		rev_map_iterator& operator=(const rev_map_iterator<T>& other)

@@ -817,6 +817,12 @@ namespace ft
 					return true;
 				return false;
 			}
+			void swap(rb_tree& other)
+			{
+				std::swap(nodes, other.nodes);
+				std::swap(nil, other.nil);
+				std::swap(_size, other._size);
+			}
 	};
 }
 
