@@ -9,13 +9,13 @@
 
 namespace ft
 {
-	template <class T, class Key, class Compare, class Value_compare>
+	template <class T, class Key, class Compare>
 	class map_iterator;
 
 	template<class InputIterator>
 	typename ft::enable_if<!ft::is_integral<InputIterator>::value, size_t>::type distance(InputIterator first, InputIterator last);
 
-	template<class Key, class T, class Allocator = std::allocator<ft::pair<Key, T> >, class Compare = std::less<Key> >
+	template<class Key, class T, class Compare = std::less<Key>, class Allocator = std::allocator<ft::pair<Key, T> > >
 	class map
 	{
 		public:
@@ -39,9 +39,9 @@ namespace ft
 						return *this;
 					}
 			};
-			typedef value_compare comp;
-			typedef map_iterator<value_type, Key, Compare, value_compare> iterator;
-			typedef const_map_iterator<value_type, Key, Compare, value_compare> const_iterator;
+			//typedef value_compare comp;
+			typedef map_iterator<value_type, Key, Compare> iterator;
+			typedef const_map_iterator<value_type, Key, Compare> const_iterator;
 			typedef ft::rev_map_iterator<iterator> reverse_iterator;
 			typedef ft::rev_map_iterator<const_iterator> const_reverse_iterator;
 			typedef typename iterator_traits<iterator>::difference_type difference_type;
@@ -68,25 +68,25 @@ namespace ft
 
 			typedef node<value_type> node_type;
 			typedef node<const value_type> const_node_type;
-			typedef comp key_compare;
+			typedef Compare key_compare;
 			typedef size_t size_type;
 			typedef Key key_type;
 
-			typedef rb_tree<value_type, Key, Compare, value_compare> tree_type;
+			typedef rb_tree<value_type, Key, value_compare> tree_type; //maybe value_compare
+			//typedef rb_tree<value_type, Key, Compare, value_compare> tree_type;
 			tree_type _tree;
 			allocator_type _allocator;
 			key_compare _comp;
 
 		public://maybe need to incorporate key_compare in rb_tree
 			
-			explicit map (const key_compare& comp = key_compare(),
-              const allocator_type& alloc = allocator_type()) : _allocator(alloc), _comp(comp)
-			{
-			}
+			map() : _allocator(allocator_type()), _comp(key_compare()){}
+			explicit map (const Compare& comp,
+              const allocator_type& alloc = allocator_type()) : _allocator(alloc), _comp(comp){}
 			template<class InputIterator>
 			map(InputIterator first, InputIterator last,
-			const key_compare& comp = key_compare(),
-			const allocator_type& alloc = allocator_type()) : _allocator(alloc), _comp(comp)
+			const Compare& comp = key_compare(),
+			const allocator_type& alloc = allocator_type()) : _allocator(alloc),  _comp(comp)
 			{
 				insert(first, last);
 			}
@@ -273,35 +273,27 @@ namespace ft
 			iterator lower_bound (const Key& key)
 			{
 				node_type* temp;
-				try
-				{
-					temp = _tree.find_node(make_pair(key, 0));
+				temp = _tree.find_node(make_pair(key, 0));
+				if (temp != _tree.end_node())
 					return iterator(temp, _tree.end_node());
-				}
-				catch (const std::string& e)
-				{
-					temp = _tree.find_next_key(key);
-					if (temp)
-						return iterator(temp, _tree.end_node());
-					else
-						return iterator(_tree.end_node(), _tree.end_node());
-				}
+				temp = _tree.find_next_key(key);
+				if (temp)
+					return iterator(temp, _tree.end_node());
+				else
+					return iterator(_tree.end_node(), _tree.end_node());
 			}
 			const_iterator lower_bound (const Key& key) const
 			{
 				node_type* temp;
 				
 				temp = _tree.find_node(make_pair(key, 0));
-				if (temp != end())
+				if (temp != _tree.end_node())
+					return const_iterator(temp, _tree.end_node());
+				temp = _tree.find_next_key(key);
+				if (temp)
 					return const_iterator(temp, _tree.end_node());
 				else
-				{
-					temp = _tree.find_next_key(key);
-					if (temp)
-						return const_iterator(temp, _tree.end_node());
-					else
-						return const_iterator(_tree.end_node(), _tree.end_node());
-				}
+					return const_iterator(_tree.end_node(), _tree.end_node());
 			}
 			iterator upper_bound (const Key& k)
 			{

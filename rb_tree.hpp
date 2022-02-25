@@ -15,7 +15,7 @@
 
 namespace ft
 {
-	template <class T, class Key, class Compare, class value_compare>
+	template <class T, class Key, class Compare>
 	class rb_tree
 	{
 		typedef T value_type;
@@ -28,7 +28,7 @@ namespace ft
 			Allocator alloc;
 			node_type* nodes;
 			node_type* nil;
-			value_compare _comp;
+			Compare _comp;
 			size_t _size;
 
 			void RightLineRotation(node_type* P)

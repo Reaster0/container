@@ -10,7 +10,7 @@
 namespace ft
 {
 
-	template <class T, class Key, class Compare, class Value_compare >
+	template <class T, class Key, class Compare>
 	class map_iterator
 	{
 		private:
@@ -21,7 +21,7 @@ namespace ft
 			{
 				if (!node)
 					return;
-				if (_comp(T(key), node->_data) && (!(*result) || _comp(node->_data, (*result)->_data)))
+				if (_comp(key, node->_data.first) && (!(*result) || _comp(node->_data.first, (*result)->_data.first)))
 					(*result) = node;
 				find_next_util(key, node->_left, result);
 				find_next_util(key, node->_right, result);
@@ -30,7 +30,7 @@ namespace ft
 			{
 				if (!node)
 					return;
-				if (_comp(node->_data, T(key)) && (!(*result) || _comp((*result)->_data, node->_data)))
+				if (_comp(node->_data.first, key) && (!(*result) || _comp((*result)->_data.first, node->_data.first)))
 					(*result) = node;
 				find_prev_util(key, node->_left, result);
 				find_prev_util(key, node->_right, result);
@@ -46,7 +46,7 @@ namespace ft
 			{
 				if (!node_start)
 					return;
-				if (!(*result) || _comp((*result)->_data, node_start->_data)) //node_start->_data > (*result)->_data)
+				if (!(*result) || _comp((*result)->_data.first, node_start->_data.first)) //node_start->_data > (*result)->_data)
 					(*result) = node_start;
 				max_node(node_start->_left, result);
 				max_node(node_start->_right, result);
@@ -69,7 +69,8 @@ namespace ft
 			
 			node_type* _ptr;
 			node_type* _nil;
-			Value_compare _comp;
+			//Value_compare _comp;
+			Compare _comp;
 		
 			map_iterator() : _ptr(0), _nil(0), _comp(Compare())
 			{
@@ -147,9 +148,9 @@ namespace ft
 				_comp = other._comp;
 				return *this;
 			}
-			operator const_map_iterator<T, Key, Compare, Value_compare>() const
+			operator const_map_iterator<T, Key, Compare>() const
 			{
-				return const_map_iterator<T, Key, Compare, Value_compare>(_ptr, _nil);
+				return const_map_iterator<T, Key, Compare>(_ptr, _nil);
 			}
 			// operator map_iterator<const T, const Key, Compare>() const
 			// {
@@ -159,26 +160,26 @@ namespace ft
 
 	//iterator operator
 
-	template <class T, class U, class K, class V, class comp, class comp2, class comp3, class comp4>
-	bool operator==(const ft::map_iterator<T, K, comp, comp3>& A, const ft::map_iterator<U, V, comp2, comp4>& B)
+	template <class T, class U, class K, class V, class comp, class comp2>
+	bool operator==(const ft::map_iterator<T, K, comp>& A, const ft::map_iterator<U, V, comp2>& B)
 	{
 		return (A._ptr == B._ptr);
 	}
 
-	template <class T, class U, class K, class V, class comp, class comp2, class comp3, class comp4>
-	bool operator!=(const ft::map_iterator<T, K, comp, comp3>& A, const ft::map_iterator<U, V, comp2, comp4>& B)
+	template <class T, class U, class K, class V, class comp, class comp2>
+	bool operator!=(const ft::map_iterator<T, K, comp>& A, const ft::map_iterator<U, V, comp2>& B)
 	{
 		return !(A._ptr == B._ptr);
 	}
 
-	template <class T, class U, class K, class V, class comp, class comp2, class comp3, class comp4>
-	bool operator==(const ft::map_iterator<T, K, comp, comp3>& A, const ft::const_map_iterator<U, V, comp2, comp4>& B)
+	template <class T, class U, class K, class V, class comp, class comp2>
+	bool operator==(const ft::map_iterator<T, K, comp>& A, const ft::const_map_iterator<U, V, comp2>& B)
 	{
 		return (A._ptr == B._ptr);
 	}
 
-	template <class T, class U, class K, class V, class comp, class comp2, class comp3, class comp4>
-	bool operator!=(const ft::map_iterator<T, K, comp, comp3>& A, const ft::const_map_iterator<U, V, comp2, comp4>& B)
+	template <class T, class U, class K, class V, class comp, class comp2>
+	bool operator!=(const ft::map_iterator<T, K, comp>& A, const ft::const_map_iterator<U, V, comp2>& B)
 	{
 		return !(A._ptr == B._ptr);
 	}
