@@ -39,23 +39,36 @@ namespace ft
 						return *this;
 					}
 			};
-
 			typedef value_compare comp;
 			typedef map_iterator<value_type, Key, Compare, value_compare> iterator;
 			typedef const_map_iterator<value_type, Key, Compare, value_compare> const_iterator;
 			typedef ft::rev_map_iterator<iterator> reverse_iterator;
 			typedef ft::rev_map_iterator<const_iterator> const_reverse_iterator;
 			typedef typename iterator_traits<iterator>::difference_type difference_type;
+			typedef Allocator allocator_type;
+			typedef T& reference;
+			typedef const T& const_reference;
+			typedef T* pointer;
+			typedef const T* const_pointer;
 
 		private:
+
+			template<class InputIterator, class InputIterator2>
+			bool	lexicographical_compare_(InputIterator first1, InputIterator last1, InputIterator2 first2, InputIterator2 last2) const
+			{
+				for (; (first1 != last1) && (first2 != last2); ++first1, ++first2)
+				{
+					if (first1->first < first2->first || first1->second < first2->second)
+						return (true);
+					if (first1->first > first2->first || first1->second > first2->second)
+						return (false);
+				}
+				return ((first1 == last1) && (first2 != last2));
+			}
+
 			typedef node<value_type> node_type;
 			typedef node<const value_type> const_node_type;
 			typedef comp key_compare;
-			typedef Allocator allocator_type;
-			typedef typename allocator_type::reference	reference;
-			typedef typename allocator_type::const_reference	const_reference;
-			typedef typename allocator_type::pointer pointer;
-			typedef typename allocator_type::const_pointer const_pointer;
 			typedef size_t size_type;
 			typedef Key key_type;
 
@@ -209,14 +222,10 @@ namespace ft
 			ft::pair<const_iterator, const_iterator> equal_range(const Key& key) const
 			{
 				return ft::pair<const_iterator, const_iterator>(lower_bound(key), upper_bound(key));
-				//return ft::pair<const_iterator, const_iterator>
-				//(const_iterator(_tree.find_next_key(key), _tree.end_node()), const_iterator(_tree.find_next_key(key), _tree.end_node()));
 			}
 			ft::pair<iterator, iterator> equal_range(const Key& key)
 			{
 				return ft::pair<iterator, iterator>(lower_bound(key), upper_bound(key));
-				//return ft::pair<iterator, iterator>
-				//(iterator(_tree.find_next_key(key), _tree.end_node()), iterator(_tree.find_next_key(key), _tree.end_node()));
 			}
 			bool empty() const
 			{
@@ -352,6 +361,43 @@ namespace ft
 				ft::map<Key, T, Allocator, Compare> temp(*this);
 				*this = x;
 				x = temp;
+			}
+
+			bool operator==(const map& other) const
+			{
+				if (this->size() != other.size())
+					return false;
+				// for (const_iterator it = begin(), it2 = other.begin(); it != end() && it2 != other.end(); it++, it2++)
+				// {
+				// 	if (it->first != it2->first || it->second != it2->second)
+				// 		return false;
+				// }
+				// return true;
+				return ft::equal(begin(), end(), other.begin(), other.end());
+			}
+			bool operator!=(const map& other) const
+			{
+				return !(*this == other);
+			}
+			bool operator<(const map& other) const
+			{
+				return lexicographical_compare_(begin(), end(), other.begin(), other.end());
+			}
+			bool operator>(const map& other) const
+			{
+				//if (this->size() != other.size())
+					//return false;	
+				return (other < *this);
+			}
+			bool operator<=(const map& other) const
+			{
+				return (*this == other || *this < other);
+				//return !(*this > other);
+			}
+			bool operator>=(const map& other) const
+			{
+				return (*this == other || *this > other);
+				//return !(*this < other);
 			}
 	};
 
