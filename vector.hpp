@@ -360,10 +360,10 @@ namespace ft
 					_nbr_elem -= len;
 					return end();
 				}
-				value_type* new_c = alloc.allocate(len);
+				value_type* new_c = alloc.allocate(ft::distance(begin(), end()) - len);
 				size_t index_start = ft::distance(begin(), first);
 				size_t i = 0;
-				for (iterator iter = begin(); iter != end(); iter++)
+				for (iterator iter = begin(); iter != end(); ++iter)
 				{
 					if (iter < first || iter >= last)
 						alloc.construct(new_c + i++, *iter);
