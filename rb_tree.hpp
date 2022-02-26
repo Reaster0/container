@@ -259,6 +259,12 @@ namespace ft
 					return node;
 				return rb_tree_min(node->_left);
 			}
+			node_type* rb_tree_max(node_type* node)
+			{
+				if (!node->_right)
+					return node;
+				return rb_tree_max(node->_right);
+			}
 			void find_prev_util(const Key& key, node_type* node, node_type** result) const
 			{
 				if (!node)
@@ -613,7 +619,7 @@ namespace ft
 				else
 				{
 					node_type* y_parent = y->_parent;
-					y = rb_tree_min(z->_left);
+					y = rb_tree_max(z->_left);
 					y_color = y->_color;
 					if (!z->_parent)
 						x = y;
@@ -628,8 +634,20 @@ namespace ft
 					}
 					if (y->_parent == z)
 						x->_parent = y;
-					if (!z->_parent) //maybe an error
+					if (!z->_parent)
+					{
+						if (x->_parent && x->_parent != x)
+						{
+							*parent_emplacement(x) = x->_left;
+							if (x->_left)
+								x->_left->_parent = x->_parent;
+						}
 						x->_parent = 0;
+						if (x != z->_left)
+							x->_left = z->_left;
+						if (x->_left)
+							x->_left->_parent = x;
+					}
 					else
 					{
 						rb_transplant(y, y->_left);

@@ -10,92 +10,251 @@
 #include <list>
 #include <string>
 
-//typedef std::pair<int, int> pair;
-typedef ft::pair<const int, std::string> pair;
+#define T1 int
+#define T2 std::string
+//typedef TESTED_NAMESPACE::map<T1, T2>::value_type T3;
+
+static int iter = 0;
+
+template <typename T>
+std::string	printPair(const T &iterator, bool nl = true, std::ostream &o = std::cout)
+{
+	o << "key: " << iterator->first << " | value: " << iterator->second;
+	if (nl)
+		o << std::endl;
+	return ("");
+}
+
+template <typename T_MAP>
+void	printSize(T_MAP const &mp, bool print_content = 1)
+{
+	std::cout << "size: " << mp.size() << std::endl;
+	std::cout << "max_size: " << mp.max_size() << std::endl;
+	if (print_content)
+	{
+		typename T_MAP::const_iterator it = mp.begin(), ite = mp.end();
+		std::cout << std::endl << "Content is:" << std::endl;
+		for (; it != ite; ++it)
+			std::cout << "- " << printPair(it, false) << std::endl;
+	}
+	std::cout << "###############################################" << std::endl;
+}
+
+template <typename MAP>
+void	ft_erase(MAP &mp, const T1 param)
+{
+	std::cout << "\t-- [" << iter++ << "] --" << std::endl;
+	mp.erase(param);
+	printSize(mp);
+}
 
 int main()
 {
-	ft::map<int, int> testing;
-	// testing.insert(pair(7, 7));
-	// testing.insert(pair(3,3));
-	// testing.insert(pair(18, 18));
-	// testing.insert(pair(10, 10));
-	// testing.insert(pair(22, 22));
-	// testing.insert(pair(26, 26));
-	// testing.insert(pair(8, 8));
-	// testing.insert(pair(11, 11));
+	ft::map<T1, T2> mp;
 
-	// testing.insert(pair(10,10));
-	// testing.insert(pair(40, 40));
-	// testing.insert(pair(50, 50));
-	// testing.insert(pair(60, 60));
-	// testing.insert(pair(45, 45));
-	// testing.insert(pair(20, 20));
-	// testing.insert(pair(5, 5));
-	// testing.insert(pair(3, 3));
-	// testing.insert(pair(8, 8));
-	// testing.insert(pair(18, 18));
-	// testing.insert(pair(22, 22));
-	// testing.insert(pair(41, 41));
-	// testing.insert(pair(47,47));
-	// testing.insert(pair(64, 64));
-	//testing.insert(pair(50,50));
-	//testing.insert(pair(20,20));
-	//testing.insert(pair(80,80));
-	// testing.insert(pair(70, 70));
-	// testing.insert(pair(100, 100));
-	// testing.insert(pair(10, 10));
-	// testing.insert(pair(40, 40));
-	// testing.insert(pair(900, 900));
-	// testing.insert(pair(400, 400));
-	// testing.insert(pair(60, 60));
-	// testing.insert(pair(75, 75));
+	mp[42] = "lol";
 
-	std::list<pair> lst;
-	unsigned int lst_size = 10;
-	for (unsigned int i = 0; i < lst_size; ++i)
-		lst.push_back(pair(i, std::string((lst_size - i), i + 65)));
-	ft::map<int, std::string> test3(lst.begin(), lst.end());
-	//ft::map<int, int>::iterator it = testing.begin();
-	test3.print();
-		std::cout << "size = " << test3.size() << std::endl;
-	std::cout << "size = " << test3.size() << std::endl;
-	test3.erase(++test3.begin());
-	test3.print();
-		std::cout << "size = " << test3.size() << std::endl;
-			std::cout << "------------------------" << std::endl;
-	test3.erase(test3.begin());
-	test3.print();
-		std::cout << "size = " << test3.size() << std::endl;
-			std::cout << "------------------------" << std::endl;
-	test3.erase(--test3.end());
-	test3.print();
-		std::cout << "size = " << test3.size() << std::endl;
-			std::cout << "------------------------" << std::endl;
-	test3.erase(2);
-	std::cout << "------------------------" << std::endl;
-	test3.print();
-		std::cout << "size = " << test3.size() << std::endl;
-		test3.erase(3);
-	std::cout << "------------------------" << std::endl;
-	test3.print();
-		std::cout << "size = " << test3.size() << std::endl;
-		test3.erase(4);
-	std::cout << "------------------------" << std::endl;
-	test3.print();
-		std::cout << "size = " << test3.size() << std::endl;
-	//test3.erase(test3.begin(), ++(++(++test3.begin())));
-	
-std::cout << "-------------------------------\n";
-	std::cout << "size = " << test3.size() << std::endl;
-//	testing.print();
+	mp[50] = "mdr";
+	mp[25] = "funny";
 
-	// std::map<int, int> testing2;
-	// testing2.insert(pair(100,10));
-	// testing2.insert(pair(10, 40));
-	// testing2.insert(pair(70, 50));
-	// testing2.insert(pair(69, 60));
-	//std::cout << *test.end() << std::endl;
+	mp[46] = "bunny";
+	mp[21] = "fizz";
+	mp[30] = "buzz";
+	mp[55] = "fuzzy";
+
+	mp[18] = "bee";
+	mp[23] = "coconut";
+	mp[28] = "diary";
+	mp[35] = "fiesta";
+	mp[44] = "hello";
+	mp[48] = "world";
+	mp[53] = "this is a test";
+	mp[80] = "hey";
+
+	mp[12] = "no";
+	mp[20] = "idea";
+	mp[22] = "123";
+	mp[24] = "345";
+	mp[27] = "27";
+	mp[29] = "29";
+	mp[33] = "33";
+	mp[38] = "38";
+
+	mp[43] = "1";
+	mp[45] = "2";
+	mp[47] = "3";
+	mp[49] = "4";
+	mp[51] = "5";
+	mp[54] = "6";
+	mp[60] = "7";
+	mp[90] = "8";
+
+	printSize(mp);
+	mp.print();
+
+	/* A classic btree should give this:
+	 *                                      42
+	 *                     /                                            \
+	 *                    25                                            50
+	 *           /                 \                         /                       \
+	 *          21                 30                       46                       55
+	 *      /       \           /      \                /       \             /           \
+	 *     18       23        28        35            44         48         53             80
+	 *   /   \    /    \    /    \     /   \        /   \       /   \     /    \         /     \
+	 *  12   20  22    24  27    29  33    38     43    45    47    49   51    54       60      90
+	 *
+	 * */
+
+	ft_erase(mp, 25); // right != NULL; left != NULL
+	ft_erase(mp, 55); // right != NULL; left != NULL
+	mp.print();
+	/* After deleting 25 and 55, I would get:
+	 *                                      42
+	 *                     /                                            \
+	 *                    24                                            50
+	 *           /                 \                         /                      \
+	 *          21                 30                       46                      54
+	 *      /       \           /      \                /       \             /           \
+	 *     18       23        28        35            44         48         53             80
+	 *   /   \    /         /    \     /   \        /   \       /   \     /              /     \
+	 *  12   20  22        27    29  33    38     43    45    47    49   51             60      90
+	 *
+	 * */
+
+	ft_erase(mp, 24); // right != NULL; left != NULL
+	ft_erase(mp, 54); // right != NULL; left != NULL
+	mp.print();
+
+	/* After deleting 24 and 54, I would get:
+	 *                                      42
+	 *                     /                                            \
+	 *                    23                                            50
+	 *           /                 \                         /                      \
+	 *          21                 30                       46                      53
+	 *      /       \           /      \                /       \             /           \
+	 *     18       22        28        35            44         48         51             80
+	 *   /   \              /    \     /   \        /   \       /   \                    /     \
+	 *  12   20            27    29  33    38     43    45    47    49                  60      90
+	 *
+	 * */
+
+	ft_erase(mp, 22); // right == NULL; left == NULL
+	mp.print();
+	ft_erase(mp, 51); // right == NULL; left == NULL
+	mp.print();
+	ft_erase(mp, 21); // right == NULL; left != NULL
+	mp.print();
+	ft_erase(mp, 53); // right != NULL; left == NULL
+	mp.print();
+
+	/* After deleting 22, 51 and then 21, 53, I would get:
+	 *                                      42
+	 *                     /                                            \
+	 *                    23                                            50
+	 *           /                 \                         /                      \
+	 *          20                 30                       46                      80
+	 *      /                   /      \                /       \                /        \
+	 *     18                 28        35            44         48             60         90
+	 *   /                  /    \     /   \        /   \       /   \
+	 *  12                 27    29  33    38     43    45    47    49
+	 *
+	 * */
+
+	ft_erase(mp, 20); // right == NULL; left != NULL
+	mp.print();
+
+	/* After deleting 20, I would get:
+	 *                                      42
+	 *                     /                                            \
+	 *                    23                                            50
+	 *           /                 \                         /                      \
+	 *          18                 30                       46                      80
+	 *      /                   /      \                /       \                /        \
+	 *     12                 28        35            44         48             60         90
+	 *                      /    \     /   \        /   \       /   \
+	 *                     27    29  33    38     43    45    47    49
+	 *
+	 * */
+
+	ft_erase(mp, 23); // right != NULL; left != NULL
+	mp.print();
+
+	/* After deleting 23, I would get:
+	 *                                      42
+	 *                     /                                            \
+	 *                    18                                            50
+	 *           /                 \                         /                      \
+	 *          12                 30                       46                      80
+	 *                          /      \                /       \                /        \
+	 *                        28        35            44         48             60         90
+	 *                      /    \     /   \        /   \       /   \
+	 *                     27    29  33    38     43    45    47    49
+	 *
+	 * */
+
+	ft_erase(mp, 42); // right != NULL; left != NULL; parent == NULL
+	mp.print();
+	/* After deleting 42, I would get:
+	 *                                      38
+	 *                     /                                            \
+	 *                    18                                            50
+	 *           /                 \                         /                      \
+	 *          12                 30                       46                      80
+	 *                          /      \                /       \                /        \
+	 *                        28        35            44         48             60         90
+	 *                      /    \     /            /   \       /   \
+	 *                     27    29  33           43    45    47    49
+	 *
+	 * */
+
+	ft_erase(mp, 38); // right != NULL; left != NULL; parent == NULL
+	mp.print();
+
+	/* After deleting 38, I would get:
+	 *                                      35
+	 *                     /                                            \
+	 *                    18                                            50
+	 *           /                 \                         /                      \
+	 *          12                 30                       46                      80
+	 *                          /      \                /       \                /        \
+	 *                        28        33            44         48             60         90
+	 *                      /    \                  /   \       /   \
+	 *                     27    29               43    45    47    49
+	 *
+	 * */
+
+	ft_erase(mp, 35); // right != NULL; left != NULL; parent == NULL
+	mp.print();
+
+	/* After deleting 35, I would get:
+	 *                                      33
+	 *                     /                                            \
+	 *                    18                                            50
+	 *           /                 \                         /                      \
+	 *          12                 30                       46                      80
+	 *                          /                       /       \                /        \
+	 *                        28                      44         48             60         90
+	 *                      /    \                  /   \       /   \
+	 *                     27    29               43    45    47    49
+	 *
+	 * */
+
+	ft_erase(mp, 33); // right != NULL; left != NULL; parent == NULL
+	mp.print();
+
+	/* After deleting 33, I would get:
+	 *                                      30
+	 *                     /                                            \
+	 *                    18                                            50
+	 *           /                 \                         /                      \
+	 *          12                 28                       46                      80
+	 *                          /      \                /       \                /        \
+	 *                        27       29             44         48             60         90
+	 *                                              /   \       /   \
+	 *                                            43    45    47    49
+	 *
+	 * */
+
 	return 1;
 }
 

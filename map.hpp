@@ -338,7 +338,6 @@ namespace ft
     		void erase(iterator first, iterator last)
 			{
 				int len = ft::distance(first, last);
-				//int debug = 0;
 				pair<Key, T>* key_list = _allocator.allocate(len);
 				for (int i = 0; first != last; ++first, ++i)
 					_allocator.construct(key_list + i, *first);
@@ -346,7 +345,7 @@ namespace ft
 				{
 					erase(key_list[i].first);
 				}
-				//_allocator.deallocate(key_list, len);
+				_allocator.deallocate(key_list, len);
 			}
 			void swap(map& x)
 			{
@@ -357,12 +356,6 @@ namespace ft
 			{
 				if (this->size() != other.size())
 					return false;
-				// for (const_iterator it = begin(), it2 = other.begin(); it != end() && it2 != other.end(); it++, it2++)
-				// {
-				// 	if (it->first != it2->first || it->second != it2->second)
-				// 		return false;
-				// }
-				// return true;
 				return ft::equal(begin(), end(), other.begin(), other.end());
 			}
 			bool operator!=(const map& other) const
@@ -375,19 +368,15 @@ namespace ft
 			}
 			bool operator>(const map& other) const
 			{
-				//if (this->size() != other.size())
-					//return false;	
 				return (other < *this);
 			}
 			bool operator<=(const map& other) const
 			{
 				return (*this == other || *this < other);
-				//return !(*this > other);
 			}
 			bool operator>=(const map& other) const
 			{
 				return (*this == other || *this > other);
-				//return !(*this < other);
 			}
 	};
 
