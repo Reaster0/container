@@ -205,7 +205,7 @@ namespace ft
 			void reserve(size_type n)
 			{
 				if (n > max_size())
-					throw std::length_error("vector");
+					throw std::length_error("vector::reserve");
 				if (n <= capacity())
 					return;
 				Allocator alloc;
@@ -289,6 +289,7 @@ namespace ft
 			void insert(iterator position, size_type n, const value_type& x)
 			{
 				Allocator alloc;
+				size_t old_n = n;
 				if ((_capacity - _nbr_elem) < n)
 				{
 					size_t index = ft::distance(begin(), position);
@@ -298,8 +299,11 @@ namespace ft
 				for (iterator it = end() + n; it > position; --it)
 				{
 					alloc.construct(it._ptr, *(it - n));
-					alloc.destroy((it - n)._ptr);
+					if (it - n == begin())
+						break;
+					//alloc.destroy((it - n)._ptr);
 				}
+				n = old_n;
 				for (size_t i = 0; i < n; ++i)
 					alloc.construct((position + i)._ptr, x);
 				_nbr_elem += n;
@@ -318,7 +322,9 @@ namespace ft
 				for (iterator it = end() + len; it > position; --it)
 				{
 					alloc.construct(it._ptr, *(it - len));
-					alloc.destroy((it - len)._ptr);
+					if (it - len == begin())
+						break;
+					//alloc.destroy((it - len)._ptr);
 				}
 				for (size_t i = 0; i < len; ++i)
 					alloc.construct((position + i)._ptr, *(first++));
