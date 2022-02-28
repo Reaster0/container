@@ -50,6 +50,8 @@ namespace ft
 			typedef const T& const_reference;
 			typedef T* pointer;
 			typedef const T* const_pointer;
+			typedef Compare key_compare;
+			key_compare _comp;
 
 		private:
 
@@ -68,7 +70,6 @@ namespace ft
 
 			typedef node<value_type> node_type;
 			typedef node<const value_type> const_node_type;
-			typedef Compare key_compare;
 			typedef size_t size_type;
 			typedef Key key_type;
 
@@ -76,17 +77,16 @@ namespace ft
 			//typedef rb_tree<value_type, Key, Compare, value_compare> tree_type;
 			tree_type _tree;
 			allocator_type _allocator;
-			key_compare _comp;
 
 		public://maybe need to incorporate key_compare in rb_tree
 			
-			map() : _allocator(allocator_type()), _comp(key_compare()){}
+			map() : _comp(key_compare()), _allocator(allocator_type()) {}
 			explicit map (const Compare& comp,
-              const allocator_type& alloc = allocator_type()) : _allocator(alloc), _comp(comp){}
+              const allocator_type& alloc = allocator_type()) :  _comp(comp), _allocator(alloc){}
 			template<class InputIterator>
 			map(InputIterator first, InputIterator last,
 			const Compare& comp = key_compare(),
-			const allocator_type& alloc = allocator_type()) : _allocator(alloc),  _comp(comp)
+			const allocator_type& alloc = allocator_type()) : _comp(comp), _allocator(alloc)
 			{
 				insert(first, last);
 			}
@@ -273,7 +273,7 @@ namespace ft
 			iterator lower_bound (const Key& key)
 			{
 				node_type* temp;
-				temp = _tree.find_node(make_pair(key, 0));
+				temp = _tree.find_node(pair<Key, T>(key, T())); //
 				if (temp != _tree.end_node())
 					return iterator(temp, _tree.end_node());
 				temp = _tree.find_next_key(key);
