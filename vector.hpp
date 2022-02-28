@@ -41,7 +41,7 @@ namespace ft
 			typedef ptrdiff_t difference_type; //macos
 			#endif
 			#ifdef __linux__
-			typedef __gnu_cxx::ptrdiff_t difference_type; //linux
+			typedef ptrdiff_t difference_type; //linux
 			#endif
 
 			typedef T value_type;
