@@ -73,12 +73,11 @@ namespace ft
 			typedef size_t size_type;
 			typedef Key key_type;
 
-			typedef rb_tree<value_type, Key, value_compare, allocator_type> tree_type; //maybe value_compare
-			//typedef rb_tree<value_type, Key, Compare, value_compare> tree_type;
+			typedef rb_tree<value_type, Key, value_compare, allocator_type> tree_type;
 			tree_type _tree;
 			allocator_type _allocator;
 
-		public://maybe need to incorporate key_compare in rb_tree
+		public:
 			
 			map() : _comp(key_compare()), _allocator(allocator_type()) {}
 			explicit map (const Compare& comp,
@@ -134,7 +133,6 @@ namespace ft
 				}
 				catch(const std::string& e)
 				{
-					//std::cerr << e << '\n'; //maybe unusefull
 					result = iterator(_tree.find_node(val), _tree.end_node());
 				}
 				return result;
@@ -150,8 +148,7 @@ namespace ft
 							_tree.insert(*i);
 						}
 						catch(const std::string& e)
-						{
-							//std::cerr << e << '\n';
+						{	
 						}
 					}
 			}

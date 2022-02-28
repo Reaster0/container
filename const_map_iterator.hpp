@@ -69,7 +69,6 @@ namespace ft
 			
 			node_type* _ptr;
 			node_type* _nil;
-			//Value_compare _comp;
 			Compare _comp;
 		
 			const_map_iterator() : _ptr(0), _nil(0)
@@ -142,7 +141,7 @@ namespace ft
 			operator const_map_iterator<const T, const Key, Compare>() const
 			{
 			    return (const_map_iterator<const T, const Key, Compare>(_ptr));
-			} //maybe osef
+			}
 
 	};
 

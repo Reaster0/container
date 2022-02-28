@@ -10,16 +10,12 @@ namespace ft
 	template <class T, class Allocator >
 	class vector;
 
-	//template <typename vector>
 	template <class T>
 	class iterator
 	{
 		public:
 
-			// typedef typename vector::value_type	value_type;
-			// typedef typename vector::difference_type  difference_type;
-			// typedef typename vector::value_type*   pointer;
-			// typedef typename vector::reference& reference;
+
 			typedef T	value_type;
 			typedef T*	pointer;
 			typedef T&	reference;
@@ -115,7 +111,7 @@ namespace ft
 				return *this;
 			}
 
-			operator iterator<const T>() const //the version with template<T>
+			operator iterator<const T>() const
 			{
 			    return (iterator<const T>(_ptr));
 			}
@@ -186,11 +182,6 @@ namespace ft
 		return result;
 	}
 
-
-		// template <class T, class Allocator >
-	// class vector;
-
-	//template <typename vector>
 	template <class Iterator>
 	class reverse_iterator
 	{
@@ -286,11 +277,6 @@ namespace ft
 				_iter = other._iter;
 				return *this;
 			}
-
-			// operator reverse_iterator<const ft::vector<const value_type, std::allocator<value_type> > >() const
-			// {
-    		// 	return (reverse_iterator<ft::vector<const value_type, std::allocator<value_type> > >(_iter));
-			// }
 
 			operator reverse_iterator<const Iterator>() const
 			{

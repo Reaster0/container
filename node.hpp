@@ -46,7 +46,7 @@ namespace ft
 			return *this;
 		}
 		
-		node_type* uncle()//node_type* node)
+		node_type* uncle()
 		{
 			if (!_parent || !_parent->_parent)
 				return 0;
@@ -74,10 +74,6 @@ namespace ft
 		{
 			return node<const T>(_data, _color, _left, _right, _parent);
 		}
-		// const node<const T> *to_const() const
-		// {
-		// 	return node<const T>(_data, _color, _left, _right, _parent);
-		// }
 	};
 
 	template <class T, class U>

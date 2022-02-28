@@ -97,7 +97,7 @@ namespace ft
 	struct pair
 	{
 		T first;
-		U second; //maybe a twist on the constructor of pair
+		U second;
 		pair() : first(T()), second(U())
 		{
 		}
@@ -116,10 +116,6 @@ namespace ft
 		{
 		    return (pair<const T, const U>(first, second));
 		}
-		// operator pair<const T, U>() const
-		// {
-		//     return (pair<const T, U>(first, second));
-		// }
 	};
 
 	template <class T, class U>
@@ -131,7 +127,7 @@ namespace ft
 	template <class T, class U>
 	bool operator==(const pair<T, U>& lhs, const pair<T, U>& rhs)
 	{
-		return lhs.first == rhs.first;// && lhs.second == rhs.second;
+		return lhs.first == rhs.first;
 	}
 
 	template <class T, class U>
@@ -143,7 +139,7 @@ namespace ft
 	template <class T, class U>
 	bool operator<(const pair<T, U> &lhs, const pair<T, U> &rhs)
 	{
-		return lhs.first < rhs.first || !(rhs.first < lhs.first && lhs.second < rhs.second); //with it insert_util is broken with same key
+		return lhs.first < rhs.first || !(rhs.first < lhs.first && lhs.second < rhs.second);
 	}
 
 	template <class T, class U>

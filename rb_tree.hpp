@@ -19,10 +19,8 @@ namespace ft
 	class rb_tree
 	{
 		typedef T value_type;
-		//typedef	Key key_type;
 		typedef node<T> node_type;
 		typedef node<const T> const_node_type;
-		//typedef std::allocator<ft::node<T> > Allocator;
 		typedef typename Allocator_class::template rebind<ft::node<T> >::other Allocator;
 
 		private:
@@ -47,8 +45,6 @@ namespace ft
 				P->_parent = tempParentParent;
 				P->_color = BLACK;
 				P->_right->_color = RED;
-				//if (P->_left)
-					//P->_left->_color = RED; //maybe not usefull
 			}
 			void LeftLineRotation(node_type* P)
 			{
@@ -64,8 +60,6 @@ namespace ft
 				P->_parent->_parent = P;
 				P->_parent = tempParentParent;
 				P->_color = BLACK;
-				//if (P->_right)
-					//P->_right->_color = RED; //maybe not usefull
 				P->_left->_color = RED;
 			}
 			void LeftTriangleRotation(node_type* P)
@@ -122,7 +116,6 @@ namespace ft
 			}
 			void collor_node(node_type** node)
 			{
-				//*node = check_pointer;
 				if (!(*node)->_parent) //case root
 					(*node)->_color = BLACK;
 					//other cases
@@ -141,7 +134,6 @@ namespace ft
 						node_type* P = *node;
 						LeftTriangleRotation(P);
 						LeftLineRotation(P);
-						//maybe an issue here with many node
 					}
 					//triangle case rev
 					else if ((*node) == (*node)->_parent->_right && (*node)->_parent == (*node)->_parent->_parent->_left && (*node)->_parent->_color == RED) // case triangle left
@@ -149,7 +141,6 @@ namespace ft
 						node_type* P = *node;
 						RightTriangleRotation(P);
 						RightLineRotation(P);
-						//maybe an issue here with many node
 					}
 					//line rotation left
 					else if ((*node) == (*node)->_parent->_left && (*node)->_parent == (*node)->_parent->_parent->_left && (*node)->_parent->_color == RED)
@@ -158,7 +149,6 @@ namespace ft
 						while (P->_parent->_color == RED)
 							P = P->_parent;
 						RightLineRotation(P);
-						//maybe an issue here with many node
 					}
 					//line rotation right
 					else if ((*node) == (*node)->_parent->_right && (*node)->_parent == (*node)->_parent->_parent->_right && (*node)->_parent->_color == RED)
@@ -167,7 +157,6 @@ namespace ft
 						while (P->_parent->_color == RED)
 							P = P->_parent;
 						LeftLineRotation(P);
-						//maybe an issue here with many node
 					}
 				}
 				else
@@ -216,7 +205,7 @@ namespace ft
 				else
 					throw std::string("the keys node's are the same");
 			}
-			node_type* find_node_util(const T& value, node_type* node) const //maybe not const
+			node_type* find_node_util(const T& value, node_type* node) const
 			{
 				if (!node)
 					throw std::string("invalid key");
@@ -240,7 +229,7 @@ namespace ft
 			{
 				if (!node)
 					return;
-				if (_comp((*result)->_data, node->_data)) //_comp(node->_data, (*result)->_data))
+				if (_comp((*result)->_data, node->_data))
 					(*result) = node;
 				find_next_node_util(node->_left, result);
 				find_next_node_util(node->_right, result);
@@ -294,194 +283,6 @@ namespace ft
 				alloc.deallocate(node, 1);
 				_size--;
 			}
-			node_type* get_siblings(const node_type *node)
-			{
-				if (!node || !node->_parent)
-					return 0;
-				if (node->_parent->_left == node)
-					return node->_parent->_right;
-				else
-					return node->_parent->_left;
-			}
-			void remove_util4(node_type* x) //if there is an error on remove it's here
-			{
-				if (x && x->_parent && x->_parent->_left == x)
-				{
-					node_type *largest = x;
-					find_next_node_util(x->_left, &largest);
-					*parent_emplacement(x) = largest;
-					if (largest != x)
-					{
-						*parent_emplacement(largest) = 0;
-						largest->_parent = x->_parent;
-						if (largest != x->_left)
-							largest->_left = x->_left;
-						else
-							largest->_left = 0;
-						if (x->_right)
-						{
-							x->_right->_parent = largest;
-							largest->_right = x->_right;
-							x->_right->_color = RED; //?
-						}
-					}
-				}
-				else if (x && x->_parent && x->_parent->_right == x)
-				{
-					node_type *largest = x;
-					find_next_node_util(x->_right, &largest);
-					*parent_emplacement(x) = largest;
-					if (largest != x)
-					{
-						*parent_emplacement(largest) = 0;
-						largest->_parent = x->_parent;
-						if (largest != x->_right)
-							largest->_right = x->_right;
-						else
-							largest->_right = 0;
-						if (x->_left)
-						{
-							x->_left->_parent = largest;
-							largest->_left = x->_left;
-							x->_left->_color = RED;
-						}
-					}
-				}
-			}
-			void remove_util3(node_type* replacement, node_type* x)
-			{
-				node_type* sibling = get_siblings(x);
-				if (x && x->_color == RED) //case 0
-				{
-					x->_color = BLACK;
-					return;
-				}
-				else if (sibling && sibling->_color == RED) //case 1
-				{
-					sibling->_color = BLACK;
-					x->_parent->_color = RED;
-					if(x->_parent->_left == x)
-						leftRotation(sibling);
-					else
-						rightRotation(sibling);
-					return remove_util3(replacement, x);
-				}
-				else if (x && x->_color == BLACK && sibling && sibling->_color == BLACK //case 2
-				&& ((sibling->_left && sibling->_right && sibling->_left->_color == BLACK && sibling->_right->_color == BLACK) || (!sibling->_left && !sibling->_right)))
-				{
-					sibling->_color = RED;
-					node_type* tempParent = x->_parent;
-					*parent_emplacement(x) = 0;
-					delete_node_util(x);
-					x = tempParent;
-					if (x->_color == RED)
-						x->_color = BLACK;
-					else
-						remove_util3(replacement, x);
-				}
-				else if (x && x->_color == BLACK && sibling && sibling->_color == BLACK //case 3
-				&& ((x->_parent->_left == x && sibling->_left && sibling->_left->_color == RED && sibling->_right && sibling->_right->_color == BLACK)
-				|| (x->_parent->_right == x && sibling->_left && sibling->_left->_color == BLACK && sibling->_right && sibling->_right->_color == RED)))
-				{
-					if (x->_parent->_left == x)
-					{
-						sibling->_left->_color = BLACK;
-						sibling->_color = RED;
-						rightRotation(sibling);
-						x->_parent->_right = sibling; //not sure of theses, check their values
-						sibling->_parent = x->_parent; //
-					}
-					else
-					{
-						sibling->_right->_color = BLACK;
-						sibling->_color = RED;
-						leftRotation(sibling);
-						x->_parent->_left = sibling; // not sure of theses, check their values
-						sibling->_parent = x->_parent; //
-					}
-					//return remove_util3(node, replacement, x, 0);
-				}
-				if (x && x->_color == BLACK && sibling && sibling->_color == BLACK //case 4
-				&& ((x->_parent->_left == x && sibling->_right && sibling->_right->_color == RED)
-				|| (x->_parent->_right == x && sibling->_left && sibling->_left->_color == RED)))
-				{
-					sibling->_color = x->_parent->_color;
-					x->_parent->_color = BLACK;
-					if (x->_parent->_left == x)
-					{
-						sibling->_right->_color = BLACK;
-						leftRotation(sibling);
-						remove_util4(x);
-					}
-					else
-					{
-						sibling->_left->_color = BLACK;
-						rightRotation(sibling);
-						remove_util4(x);
-					}
-					//*parent_emplacement(x) = 0;
-					delete_node_util(x);
-				}
-			}
-			void remove_util2(node_type* node, node_type* replacement, node_type* x)
-			{
-				if (node->_color == RED && (!replacement || replacement->_color == RED))
-				{
-					if (parent_emplacement(replacement))
-						*parent_emplacement(replacement) = x;
-					if (x)
-						x->_parent = replacement->_parent;
-					*parent_emplacement(node) = replacement;
-					if (replacement)
-					{
-						replacement->_parent = node->_parent;
-						replacement->_left = node->_left;
-						if (replacement->_left)
-							replacement->_left->_parent = replacement;
-						replacement->_right = node->_right;
-						if (replacement->_right)
-							replacement->_right->_parent = replacement;
-					}
-					delete_node_util(node);
-				}
-				else if (node->_color == BLACK && replacement && replacement->_color == RED)
-				{
-					if (parent_emplacement(node))
-						*parent_emplacement(node) = replacement;
-					replacement->_parent = node->_parent;
-					replacement->_color = BLACK;
-					replacement->_left = node->_left;
-					if (replacement->_left)
-						replacement->_left->_parent = replacement;
-					delete_node_util(node);
-					nodes = replacement;
-					nodes = root_node();
-				}
-				else if (node->_color == RED && replacement && replacement->_color == BLACK)
-				{
-					replacement->_color = RED;
-					remove_util3(replacement, x);
-				}
-				else if (!node->_parent) //case root
-				{
-					delete_node_util(node);
-					nodes = 0;
-				}
-				else
-					remove_util3(replacement, node);
-			}
-			void remove_util(node_type* node)
-			{
-				node_type* replacement = 0; //node->_data.first to be fixed
-				find_next_util(node->_data.first, node, &replacement);
-				if (!node->_left && !node->_right)
-					remove_util2(node, replacement, 0);
-				else if ((!node->_left && node->_right) || (node->_left && !node->_right))
-					remove_util2(node, replacement, replacement);
-				else
-					remove_util2(node, replacement, replacement->_right);
-			}
-			
 			void rb_transplant(node_type* u, node_type* v)
 			{
 				if (!u)
@@ -506,7 +307,7 @@ namespace ft
 						{
 							w->_color = BLACK;
 							x->_parent->_color = RED;
-							rightRotation(w);//x? //x->_parent
+							rightRotation(w);
 							nodes = root_node();
 							if (!x->_parent)
 								w = x;
@@ -533,9 +334,9 @@ namespace ft
 							x->_parent->_color = BLACK;
 							if (w->_left)
 								w->_left->_color = BLACK;
-							rightRotation(x->_parent->_left); //x->_parent
+							rightRotation(x->_parent->_left);
 							nodes = root_node();
-							if (x->_left && x->_left->_nil) //remove of the three the temp nill leaf
+							if (x->_left && x->_left->_nil)
 								x->_left = 0;
 							else if (x->_right && x->_right->_nil)
 								x->_right = 0;
@@ -549,7 +350,7 @@ namespace ft
 						{
 							w->_color = BLACK;
 							x->_parent->_color = RED;
-							leftRotation(w); //x? //x->_parent
+							leftRotation(w);
 							nodes = root_node();
 							if (!x->_parent)
 								w = x;
@@ -567,16 +368,16 @@ namespace ft
 							{
 								w->_left->_color = BLACK;
 								w->_color = RED;
-								rightRotation(w->_left); //w
+								rightRotation(w->_left);
 								nodes = root_node();
 								w = x->_parent->_right;
 							}
 							w->_color = x->_parent->_color;
 							x->_parent->_color = BLACK;
 							w->_right->_color = BLACK;
-							leftRotation(x->_parent->_right); //x->_parent
+							leftRotation(x->_parent->_right); 
 							nodes = root_node();
-							if (x->_left && x->_left->_nil) //remove of the three the temp nill leaf
+							if (x->_left && x->_left->_nil)
 								x->_left = 0;
 							else if (x->_right && x->_right->_nil)
 								x->_right = 0;
@@ -682,7 +483,7 @@ namespace ft
 					throw std::string("invalid key");
 				if (node->_data.first == key)
 					return node->_data;
-				if (_comp(node->_data, T(key)) /*node->_data.first < key*/)
+				if (_comp(node->_data, T(key)))
 					return find_util(key, node->_right);
 				else
 					return find_util(key, node->_left);
@@ -707,12 +508,12 @@ namespace ft
 					std::cout << "	";
 				if (nodes->_color == RED)
 				{
-					std::cout << "\033[31m" << nodes->_data << "\033[0m"; //<< std::endl;
+					std::cout << "\033[31m" << nodes->_data << "\033[0m";
 					std::cout << std::endl;
 				}
 				else
 				{
-					std::cout << nodes->_data; //<< std::endl;
+					std::cout << nodes->_data;
 					std::cout << std::endl;
 				}
 				print_nodes_utils(nodes->_right, spaces);
@@ -770,7 +571,7 @@ namespace ft
 			{
 				rb_delete_util(node);
 			}
-			node_type* find_node(const T& val) const //maybe not const
+			node_type* find_node(const T& val) const
 			{
 				try
 				{
@@ -816,7 +617,7 @@ namespace ft
 			{
 				if (!node_start)
 					return;
-				if (!(*result) || _comp(node_start->_data, (*result)->_data) /*node_start->_data < (*result)->_data*/)
+				if (!(*result) || _comp(node_start->_data, (*result)->_data))
 					(*result) = node_start;
 				min_node(node_start->_left, result);
 				min_node(node_start->_right, result);
@@ -825,7 +626,7 @@ namespace ft
 			{
 				if (!node_start)
 					return;
-				if (!(*result) || _comp((*result)->_data, node_start->_data) /*node_start->_data > (*result)->_data*/)
+				if (!(*result) || _comp((*result)->_data, node_start->_data))
 					(*result) = node_start;
 				max_node(node_start->_left, result);
 				max_node(node_start->_right, result);

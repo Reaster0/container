@@ -23,19 +23,13 @@ namespace ft
 	class vector
 	{
 		public:
-
-			//all the alias
 			typedef typename Allocator::reference reference;
 			typedef typename Allocator::const_reference const_reference;
-			//typedef ft::iterator<vector<T> > iterator;
-			//typedef const ft::iterator<vector<T> > const_iterator;
 			typedef ft::iterator<T>	iterator;
 			typedef ft::iterator<const T> const_iterator;
 			typedef ft::reverse_iterator<iterator> reverse_iterator;
 			typedef ft::reverse_iterator<const_iterator> const_reverse_iterator;
-			//typedef ft::rev_map_iterator<iterator> reverse_iterator;
-			//typedef ft::rev_map_iterator<const_iterator> const_reverse_iterator;
-			typedef size_t size_type; //maybe wrong
+			typedef size_t size_type;
 
 			#ifdef __APPLE__
 			typedef ptrdiff_t difference_type; //macos
@@ -112,8 +106,6 @@ namespace ft
 				for (size_t i = 0; i < _nbr_elem; i++)
 					alloc.destroy(c + i);
 				alloc.deallocate(c, _capacity);
-				// size_t val_test = ft::distance(first, last);
-				// (void)val_test;
 				c = alloc.allocate(ft::distance(first, last));
 				size_t i = 0;
 				for (InputIterator it = first; it != last; ++it, ++i)
@@ -209,7 +201,7 @@ namespace ft
 				if (n <= capacity())
 					return;
 				Allocator alloc;
-				T* new_c = alloc.allocate(capacity() + n); //maybe i need the +1 even if it's really weird
+				T* new_c = alloc.allocate(capacity() + n);
 				for (size_type i = 0; i < _nbr_elem; i++)
 					alloc.construct(new_c + i, c[i]);
 				for (size_t i = 0; i < _nbr_elem; i++)
@@ -268,7 +260,7 @@ namespace ft
 			void pop_back()
 			{
 				Allocator alloc;
-				alloc.destroy(c + --_nbr_elem); //maybe an issue here, it was _nbr_elem-- before
+				alloc.destroy(c + --_nbr_elem);
 			}
 			iterator insert(iterator position, const value_type& x)
 			{
@@ -438,7 +430,7 @@ namespace ft
 			}
 	};
 	//operator vector
-	template <class T, class Allocator> //need to make a ft::equal
+	template <class T, class Allocator>
 	bool operator==(const ft::vector<T,Allocator>& x, const ft::vector<T,Allocator>& y)
 	{
 		if (x.size() != y.size())
@@ -449,7 +441,6 @@ namespace ft
 	bool operator<(const ft::vector<T,Allocator>& x, const ft::vector<T,Allocator>& y)
 	{
 		return lexicographical_compare(x.begin(), x.end(), y.begin(), y.end());
-		//return x.size() < y.size();
 	}
 	template <class T, class Allocator>
 	bool operator!=(const ft::vector<T,Allocator>& x, const ft::vector<T,Allocator>& y)
