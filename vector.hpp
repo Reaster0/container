@@ -112,8 +112,8 @@ namespace ft
 				for (size_t i = 0; i < _nbr_elem; i++)
 					alloc.destroy(c + i);
 				alloc.deallocate(c, _capacity);
-				size_t val_test = ft::distance(first, last);
-				(void)val_test;
+				// size_t val_test = ft::distance(first, last);
+				// (void)val_test;
 				c = alloc.allocate(ft::distance(first, last));
 				size_t i = 0;
 				for (InputIterator it = first; it != last; ++it, ++i)
@@ -212,6 +212,8 @@ namespace ft
 				T* new_c = alloc.allocate(capacity() + n); //maybe i need the +1 even if it's really weird
 				for (size_type i = 0; i < _nbr_elem; i++)
 					alloc.construct(new_c + i, c[i]);
+				for (size_t i = 0; i < _nbr_elem; i++)
+					alloc.destroy(c + i);
 				alloc.deallocate(c, _capacity);
 				c = new_c;
 				_capacity = n;
@@ -266,7 +268,7 @@ namespace ft
 			void pop_back()
 			{
 				Allocator alloc;
-				alloc.destroy(c + _nbr_elem--);
+				alloc.destroy(c + --_nbr_elem); //maybe an issue here, it was _nbr_elem-- before
 			}
 			iterator insert(iterator position, const value_type& x)
 			{
@@ -289,23 +291,27 @@ namespace ft
 			void insert(iterator position, size_type n, const value_type& x)
 			{
 				Allocator alloc;
-				size_t old_n = n;
+				iterator end_temp = end();
+				size_t index = ft::distance(begin(), position);
 				if ((_capacity - _nbr_elem) < n)
 				{
-					size_t index = ft::distance(begin(), position);
 					reserve(capacity() + n);
 					position = begin() + index;
 				}
-				for (iterator it = end() + n; it > position; --it)
+				for (iterator it = end() + (n - 1); it > position; --it)
 				{
+					if (it < end())
+						alloc.destroy(it._ptr);
 					alloc.construct(it._ptr, *(it - n));
 					if (it - n == begin())
 						break;
-					//alloc.destroy((it - n)._ptr);
 				}
-				n = old_n;
 				for (size_t i = 0; i < n; ++i)
+				{
+					if (position + i < end())
+						alloc.destroy((position + i)._ptr);
 					alloc.construct((position + i)._ptr, x);
+				}
 				_nbr_elem += n;
 			}
 			template <class InputIterator>
@@ -319,15 +325,20 @@ namespace ft
 					reserve(capacity() + len);
 					position = begin() + index;
 				}
-				for (iterator it = end() + len; it > position; --it)
+				for (iterator it = end() + (len - 1); it - (len - 1) > position; --it)
 				{
+					if (it < end())
+						alloc.destroy(it._ptr);
 					alloc.construct(it._ptr, *(it - len));
 					if (it - len == begin())
 						break;
-					//alloc.destroy((it - len)._ptr);
 				}
 				for (size_t i = 0; i < len; ++i)
+				{
+					if (position + i < end())
+						alloc.destroy((position + i)._ptr);
 					alloc.construct((position + i)._ptr, *(first++));
+				}
 				_nbr_elem += len;
 			}
 			iterator erase(iterator position)
