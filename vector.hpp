@@ -98,7 +98,7 @@ namespace ft
 				for (size_t i = 0; i < _nbr_elem; i++)
 					alloc.destroy(c + i);
 				alloc.deallocate(c, _capacity);
-				c = alloc.allocate(x.size());
+				c = alloc.allocate(x._capacity);
 				for (size_t i = 0; i < x.size(); i++)
 					alloc.construct(c + i, x[i]);
 				_capacity = x.capacity();
