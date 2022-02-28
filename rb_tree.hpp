@@ -15,14 +15,15 @@
 
 namespace ft
 {
-	template <class T, class Key, class Compare>
+	template <class T, class Key, class Compare, class Allocator_class>
 	class rb_tree
 	{
 		typedef T value_type;
 		//typedef	Key key_type;
 		typedef node<T> node_type;
 		typedef node<const T> const_node_type;
-		typedef std::allocator<ft::node<T> > Allocator;
+		//typedef std::allocator<ft::node<T> > Allocator;
+		typedef typename Allocator_class::template rebind<ft::node<T> >::other Allocator;
 
 		private:
 			Allocator alloc;

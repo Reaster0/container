@@ -10,13 +10,14 @@ namespace ft
 	template <class T, class Container = ft::vector<T, std::allocator<T> > >
 	class stack
 	{
+		protected:
+			typedef Container 	container_type;
+			container_type _container;
 		public:
 			typedef T 	value_type;
-			typedef Container 	container_type;
 			typedef typename Container::reference 	reference;
 			typedef typename Container::size_type 	size_type;
 			typedef typename Container::const_reference const_reference;
-			container_type _container;
 
 			explicit stack (const container_type& container = container_type()) : _container(container)
 			{

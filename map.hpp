@@ -73,7 +73,7 @@ namespace ft
 			typedef size_t size_type;
 			typedef Key key_type;
 
-			typedef rb_tree<value_type, Key, value_compare> tree_type; //maybe value_compare
+			typedef rb_tree<value_type, Key, value_compare, allocator_type> tree_type; //maybe value_compare
 			//typedef rb_tree<value_type, Key, Compare, value_compare> tree_type;
 			tree_type _tree;
 			allocator_type _allocator;
